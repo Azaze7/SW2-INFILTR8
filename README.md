@@ -36,7 +36,7 @@ Special Thanks to All Team Members!
 [Luis Sanchez](https://github.com/ldsanchez3 "Luis's Github") - *Planning Manager/Analyst*: Assisted In ...
 
 <p align="center">
-<img src="https://raw.githubusercontent.com/Azaze7/SW2-INFILTR8/main/Initial-Dependencies-And-Resources/The%20Nine-Bytes-Logo.png?token=GHSAT0AAAAAACXHVUUAZO3FG6SI3XRBBS64ZW65ROA" height="375px"> 
+<img src="https://github.com/Azaze7/SW2-INFILTR8/blob/main/Initial-Dependencies-And-Resources/The%20Nine-Bytes-Logo.png" height="375px"> 
 </p>
 
 ## 🗂️ What Files are Enclosed Here?
