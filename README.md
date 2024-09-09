@@ -13,7 +13,7 @@
 
 ## 🎏 Team Composition [The Nine-Bytes]
 
-**This Project was completed with the assistance of *nine* team members!**
+**This Project was completed through the cooperation of *nine* team members!**
 
 [Gilbert I. Guzman](https://github.com/Azaze7 "Gilbert's Github") - *Team Lead/Analyst/Repo Master*: Created GitHub Repo, Communicated with Staff, Bugfixed code, ...
 
