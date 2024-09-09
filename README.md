@@ -13,9 +13,7 @@
 
 ## 🎏 Team Composition [The Nine-Bytes]
 
-**This Project was completed with the assistance of *eight* group members!**
-
-Special Thanks to All Team Members!
+**This Project was completed with the assistance of *nine* team members!**
 
 [Gilbert I. Guzman](https://github.com/Azaze7 "Gilbert's Github") - *Team Lead/Analyst/Repo Master*: Created GitHub Repo, Communicated with Staff, Bugfixed code, ...
 
@@ -34,6 +32,8 @@ Special Thanks to All Team Members!
 [Kimberly Kocian](https://github.com/kkocian7 "Kimberly's Github") - *Support Manager/V&V*: Assisted In ...
 
 [Luis Sanchez](https://github.com/ldsanchez3 "Luis's Github") - *Planning Manager/Analyst*: Assisted In ...
+
+Special Thanks to All of those who contributed! We could not do it without you!
 
 <p align="center">
 <img src="https://github.com/Azaze7/SW2-INFILTR8/blob/main/Initial-Dependencies-And-Resources/The%20Nine-Bytes-Logo.png" height="200px"> 
