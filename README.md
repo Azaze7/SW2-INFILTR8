@@ -1,5 +1,5 @@
 # CS4311_INFILTR8_6TheNine-Bytes_Fall2024
-## SW2-INFILTR8-DevelopmentVersion
+## 🤖 SW2 INFILTR8 Development Repo
 (Course Work) Breathing Implementation of the INFILTR8 system created by The Nine Bytes team. This is based on the finalized SRS and is to be finished at the end of the FALL 2024 Semester. [🧠]
 
 <p align="center">
