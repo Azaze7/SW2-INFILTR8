@@ -2,7 +2,7 @@
 (Course Work) Breathing Implementation of the INFILTR8 system created by The Nine Bytes team. This is the finalized version to be finished at the end of the FALL 2024 Semester. [🧠]
 
 <p align="center">
-<img src="https://github.com/Azaze7/SW2-INFILTR8/blob/main/Initial-Dependencies-And-Resources/Infiltr8-Title-Page.png" height="250px"> 
+<img src="https://github.com/Azaze7/SW2-INFILTR8/blob/main/Initial-Dependencies-And-Resources/Infiltr8-Title-Page.png" height="200px"> 
 </p>
 
 ## 🔎 Table of Contents.
@@ -36,7 +36,7 @@ Special Thanks to All Team Members!
 [Luis Sanchez](https://github.com/ldsanchez3 "Luis's Github") - *Planning Manager/Analyst*: Assisted In ...
 
 <p align="center">
-<img src="https://github.com/Azaze7/SW2-INFILTR8/blob/main/Initial-Dependencies-And-Resources/The%20Nine-Bytes-Logo.png" height="375px"> 
+<img src="https://github.com/Azaze7/SW2-INFILTR8/blob/main/Initial-Dependencies-And-Resources/The%20Nine-Bytes-Logo.png" height="200px"> 
 </p>
 
 ## 🗂️ What Files are Enclosed Here?
