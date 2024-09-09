@@ -34,11 +34,11 @@
 [Luis Sanchez](https://github.com/ldsanchez3 "Luis's Github") - *Planning Manager/Analyst*: Assisted In ...
 
 <p align="center">
-Special Thanks to All of those who contributed! We could not do it without you!
+<img src="https://github.com/Azaze7/SW2-INFILTR8/blob/main/Initial-Dependencies-And-Resources/The%20Nine-Bytes-Logo.png" height="200px"> 
 </p>
 
 <p align="center">
-<img src="https://github.com/Azaze7/SW2-INFILTR8/blob/main/Initial-Dependencies-And-Resources/The%20Nine-Bytes-Logo.png" height="200px"> 
+Special Thanks to All of those who contributed! We could not do it without you!
 </p>
 
 ## 🗂️ What Files are Enclosed Here?
