@@ -43,13 +43,9 @@ Special Thanks to All Team Members!
 
 | Filename | Type | Description | 
 | --------------- | --------------- | --------------- |
-| MAVERICK_PlayableBuild | 🗂️ | Contains Precompiled files to play MAVERICK. See README to get large assets! |
-| MAVERICK_SourceCode | 🗂️ | Contains main C# Source code for MAVERICK. See README for Google Drive Containing *ALL* Code! |
-| ReadMeAssets | 🗂️ | Contains pictures, gifs, and other assets to make this README! |
-| SpriteComparisonAssets | 🗂️ | Contains Sprites for "The Cutting Room Floor" Section. |
-| SteamGridAssets | 🗂️ | Contains Steam Hero, Grid, Background, Logo, etc. to make MAVERICK fit in better on Steam. |
+| Gil-Test-Resources | 🗂️ | Contains Pre-fixed files to run the .nessus file. maing.py has been modified to handle new outputs and get a sample output. This is not the final version, and exists only for testing! |
+| Initial-Dependecies-And-Resources | 🗂️ | Contains main source code, sample *broken* .nessus file, the finalized SRS, and some diagrams. These files will help kickstart development. |
 | README | .md | All of the text that you are currently reading. |
-| gitattributes | .txt | Allowed for larger assets (Bigger than 20MB) to be stored on this Github Repo. |
 
 ## 🎞️ Video Demonstration.
 
