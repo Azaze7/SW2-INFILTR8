@@ -1,5 +1,5 @@
 # SW2-INFILTR8
-(Course Work) Breathing Implementation of the INFILTR8 system created by The Nine Bytes team. This is the finalized version to be finished at the end of the FALL 2024 Semester. [🧠]
+(Course Work) Breathing Implementation of the INFILTR8 system created by The Nine Bytes team. This is based on the finalized SRS and is to be finished at the end of the FALL 2024 Semester. [🧠]
 
 <p align="center">
 <img src="https://github.com/Azaze7/SW2-INFILTR8/blob/main/Initial-Dependencies-And-Resources/Infiltr8-Title-Page.png" height="200px"> 
