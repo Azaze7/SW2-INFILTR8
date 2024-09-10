@@ -1,7 +1,9 @@
 <script>
 	import Sparkles from '$lib/components/ui/Sparkles/Sparkles.svelte';
 	import { IconSquareRoundedX } from '@tabler/icons-svelte';
+	import { EvervaultCard, Icon } from '$lib/components/ui/EvervaultCard';
 	import MultiStepLoader from '$lib/components/ui/MultiStepLoader/MultiStepLoader.svelte';
+	
 	let loading = false;
 
 const loadingStates = [
@@ -28,7 +30,7 @@ const loadingStates = [
 
 </script>
 
-<div class="relative flex items-center justify-center h-screen w-screen overflow-hidden">
+<div class="relative flex items-center justify-center">
 	<!-- Sparkles background -->
 	<Sparkles 
 		minSize={0.8} 
@@ -55,7 +57,7 @@ const loadingStates = [
 			
 				{#if loading}
 					<button
-						class="fixed right-4 top-4 z-[120] text-black dark:text-white"
+						class="fixed right-4 top-4 z-[20] text-black dark:text-white"
 						on:click={() => (loading = false)}
 					>
 						<IconSquareRoundedX class="h-10 w-10" />
