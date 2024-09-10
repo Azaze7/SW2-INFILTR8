@@ -7,6 +7,22 @@
 const loadingStates = [
 	{
 		text: 'POGGERS'
+	},
+	{
+		text: 'LOADING...'
+
+	},
+	{
+		text: 'CHECKING...'
+	},
+	{
+        text: 'VALIDATING...'
+    },
+	{
+        text: 'CONNECTING...'
+    },
+	{
+		text: 'Welcome to INFILTR8'
 	}
 ];
 
