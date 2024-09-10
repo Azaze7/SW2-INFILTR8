@@ -11,6 +11,7 @@
 		className="absolute inset-0 z-0" 
 		particleColor="blue" 
 	/>
+	
 
 	<!-- Main content -->
 	<div class="relative z-10 flex flex-col items-center justify-center text-center text-black">
@@ -30,7 +31,6 @@
 </div>
 
 <style>
-
 
 
 

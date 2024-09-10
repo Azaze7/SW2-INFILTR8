@@ -44,6 +44,7 @@
 		className
 	)}
 >
+	<!-- svelte-ignore a11y-no-static-element-interactions -->
 	<div
 		on:mousemove={onMouseMove}
 		class="group/card relative flex h-full w-full items-center justify-center overflow-hidden rounded-3xl bg-transparent"
