@@ -26,16 +26,16 @@
         {/if}
         <label>
             <p class={email ? " above" : " center"}>Email</p>
-            <input bind:value={email} type="email" placeholder="Email"/>
+            <input bind:value={email} type="email" placeholder="Email" required/>
         </label>
         <label>
             <p class={password ? " above" : " center"}>Password</p>
-            <input bind:value={password} type="password" placeholder="Password"/>
+            <input bind:value={password} type="password" placeholder="Password" required/>
         </label>
         {#if register}
             <label>
                 <p class={confirmPass ? " above" : " center"}>Confirm Password</p>
-                <input bind:value={confirmPass} type="password" placeholder="Confirm Password"/>
+                <input bind:value={confirmPass} type="password" placeholder="Confirm Password" required/>
             </label>
         {/if}
         <button type="button">Submit</button>
