@@ -6,5 +6,14 @@
 </script>
 
 <Navbar/>
-<Sidebar/>
+<div class="test">
+    <Sidebar/>
+    home
+</div>
+
 <Footer/>
+<style>
+    .test {
+        display: flex;
+    }
+</style>

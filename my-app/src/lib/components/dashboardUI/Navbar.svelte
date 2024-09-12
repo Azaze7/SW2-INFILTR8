@@ -1,21 +1,59 @@
+<head>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+</head>
+<script>
+    import notification from "../../../img/notifications.svg"
+    import search from "../../../img/search.svg"
+    import settings from "../../../img/settings.svg"
+    import inbox from "../../../img/inbox.svg"
+    import addFile from "../../../img/fileAdd.svg"
+    import robot from "../../../img/robot.svg"
+
+    // Reactive variable for the greeting
+    /**
+     * @type {string}
+     */
+    let greeting;
+
+    // Function to determine the time of day
+    function updateGreeting() {
+        const hours = new Date().getHours();
+        if (hours < 12) {
+            greeting = 'Good Morning';
+        } else if (hours < 18) {
+            greeting = 'Good Afternoon';
+        } else {
+            greeting = 'Good Evening';
+        }
+    }
+
+    // Call the function once when the component loads
+    updateGreeting();
+
+
+</script>
 <div class="navbar">
     <div class="logo">
         <img src="" alt="INFILTR8"> <!--Insert LOGO HERE-->
-        <span>Name1</span>
+        <span>{greeting}</span>
     </div>
     <div class="icons">
-        <img src="" alt="Search" class="icon"> <!--Search Icon-->
-        <img src="" alt="App" class="icon"> <!--Another Icon-->
-        <img src="" alt="Expand" class="icon"> <!--Another Icon-->
+        <img src={search} alt="Search" class="icon"> <!--Search Icon-->
+        <img src={inbox} alt="Inbox" class="icon"> <!--Another Icon-->
+        <img src={addFile} alt="Expand" class="icon"> <!--Another Icon-->
         <div class="notification">
-            <img src="" alt="Notification"> <!--Notification Icon-->
+            <span class="material-symbols-outlined">
+                notifications
+                </span>
+            <img src={notification} alt="Notification"> <!--Notification Icon-->
             <span>1</span>
         </div>
         <div class="user">
-            <img src="" alt="Pic">
-            <span>Name1</span>
+            <img src={robot} alt="Pic">
+            <span>Name</span>
         </div>
-        <img src="" alt="Settings" class="icon"> <!--Settings Icon-->
+        <img src={settings} alt="Settings" class="icon"> <!--Settings Icon-->
     </div>
 </div>
 
@@ -40,8 +78,24 @@
         gap: 20px;
     }
 
+    
+
+    .icons img{
+        &:hover {
+            cursor: pointer;
+            background-color: lightcyan;
+        }
+    }
+
     .notification {
         position: relative;
+    }
+
+    .notification img {
+        &:hover {
+            cursor: pointer;
+            background-color: lightcyan;
+        }
     }
 
     .notification span {
@@ -70,6 +124,7 @@
         height: 26px;
         border-radius: 50%;
         object-fit: cover;
-        background-color: pink;
+        /*background-color: pink;*/
     }
+
 </style>
