@@ -27,7 +27,7 @@
 
     /* Sidebar-specific styles */
     .sidebar-container {
-        width: 250px;
+        width: 150px;
         position: sticky;
         top: 0;
         height: 100vh;
@@ -46,16 +46,16 @@
     }
 
     /* Footer specific styles */
-    Footer {
+    /*Footer {
         position: fixed;
         bottom: 0;
         left: 0;
-        width: 100%; /* Stretches across the page */
+        width: 100%;  Stretches across the page 
         background-color: #333;
         color: white;
         padding: 10px;
         text-align: center;
-    }
+    }*/
 
     /* Ensure no content overlaps the footer */
     .content {

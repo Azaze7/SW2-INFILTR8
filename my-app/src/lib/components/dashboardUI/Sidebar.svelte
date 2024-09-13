@@ -64,6 +64,15 @@
             <img src={person} alt="Profile"> <!--Home Icon-->
             <span class="listItemTitle">Profile</span>
         </a>
+
+        <a href="/" class="listItem">
+            <img src={Homepage} alt="Home"> <!--Home Icon-->
+            <span class="listItemTitle">Charts</span>
+        </a>
+        <a href="/" class="listItem">
+            <img src={person} alt="Profile"> <!--Home Icon-->
+            <span class="listItemTitle">Logs</span>
+        </a>
     </div>
     <div class="item">
         <span class="title">Analytics</span>
@@ -99,6 +108,10 @@
 </div>
 
 <style>
+    .sidebar {
+        padding: 5px;
+    }
+
     .sidebar .item {
         display: flex;
         flex-direction: column;

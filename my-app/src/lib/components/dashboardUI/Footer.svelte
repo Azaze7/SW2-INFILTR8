@@ -10,6 +10,7 @@
         justify-content: space-between;
         padding: 30px;
         background-color: #333;
+        height: 5vh;
     }
 
     span {

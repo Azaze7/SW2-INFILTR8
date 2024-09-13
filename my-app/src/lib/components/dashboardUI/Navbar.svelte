@@ -35,8 +35,8 @@
 </script>
 <div class="navbar">
     <div class="logo">
-        <img src="" alt="INFILTR8"> <!--Insert LOGO HERE-->
-        <span>{greeting}</span>
+        <img src={robot} alt="INFILTR8"> <!--Insert LOGO HERE-->
+        <span>INFILTR8 Says {greeting}</span>
     </div>
     <div class="icons">
         <img src={search} alt="Search" class="icon"> <!--Search Icon-->
