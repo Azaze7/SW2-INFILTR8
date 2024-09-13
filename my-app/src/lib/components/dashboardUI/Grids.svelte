@@ -23,7 +23,10 @@
         display: grid;
         gap: 20px;
         grid-template-columns: repeat(4, 1fr);
-        grid-auto-rows: minmax(180px, auto);
+        grid-auto-rows: minmax(160px, auto);
+        margin-top: -1.5rem;
+        
+        
     }
 
     .box {

@@ -6,7 +6,6 @@
 </script>
 
 <Navbar/>
-
 <div class="main-container">
     <div class="sidebar-container">
         <Sidebar/>
@@ -32,6 +31,7 @@
         width: 150px;
         position: sticky;
         top: 0;
+        margin-top: -.5rem;
         height: 100vh;
         overflow-y: auto; /* Enable scrolling independently */
         background-color: #333; /* Set a background color to avoid transparency */
@@ -44,11 +44,7 @@
     }
 
     .bottom-container {
-        bottom: 0;
+        bottom: 20px;
     }
 
-    /* Ensure no content overlaps the footer */
-    .content {
-        padding-bottom: 10px; /* Extra padding so content doesn't overlap with the footer */
-    }
 </style>

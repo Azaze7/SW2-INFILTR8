@@ -110,6 +110,7 @@
 <style>
     .sidebar {
         padding: 5px;
+        height: 100vh;
     }
 
     .sidebar .item {
