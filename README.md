@@ -46,8 +46,9 @@ Special Thanks to All of those who contributed! We could not do it without you!
 
 | Filename | Type | Description | 
 | --------------- | --------------- | --------------- |
-| Gil-Test-Resources | 🗂️ | Contains Pre-fixed files to run the .nessus file. maing.py has been modified to handle new inputs and get a sample output. This is not the final version, and exists only for testing! |
+| Gil-Test-Resources | 🗂️ | Contains Pre-fixed files to run the .nessus file. maing.py has been modified to handle new inputs and get a sample output. This is not the final version, and exists only for testing backend! |
 | Initial-Dependecies-And-Resources | 🗂️ | Contains main source code, sample *broken* .nessus file, the finalized SRS, and some diagrams. These files will help kickstart development. |
+| my-app | 🗂️ | Contains files necessary to build and run INFILTR8's GUI. |
 | README | .md | All of the text that you are currently reading. |
 
 ## 🎞️ Video Demonstration.
