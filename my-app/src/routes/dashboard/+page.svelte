@@ -1,5 +1,6 @@
 <script>
     import Footer from "$lib/components/dashboardUI/Footer.svelte";
+    import Grids from "$lib/components/dashboardUI/Grids.svelte";
     import Navbar from "$lib/components/dashboardUI/Navbar.svelte";
     import Sidebar from "$lib/components/dashboardUI/Sidebar.svelte";
 </script>
@@ -11,7 +12,8 @@
         <Sidebar/>
     </div>
     <div class="content">
-        <p>Home content goes here</p>
+        <Grids/>
+        <!--<p>Home content goes here</p>-->
     </div>
 </div>
 <div class="bottom-container">
@@ -38,27 +40,15 @@
     .content {
         flex-grow: 1; /* Allow content to take the rest of the space */
         padding: 20px;
-        background-color: #f5f5f5;
+        background-color: #333;
     }
 
     .bottom-container {
         bottom: 0;
     }
 
-    /* Footer specific styles */
-    /*Footer {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        width: 100%;  Stretches across the page 
-        background-color: #333;
-        color: white;
-        padding: 10px;
-        text-align: center;
-    }*/
-
     /* Ensure no content overlaps the footer */
     .content {
-        padding-bottom: 70px; /* Extra padding so content doesn't overlap with the footer */
+        padding-bottom: 10px; /* Extra padding so content doesn't overlap with the footer */
     }
 </style>
