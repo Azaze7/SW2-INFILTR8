@@ -63,6 +63,7 @@
         padding: 20px;
         display: flex;
         justify-content: space-between;
+        background-color: #333;
     }
 
     .logo {
