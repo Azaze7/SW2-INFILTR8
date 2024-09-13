@@ -9,17 +9,18 @@
         align-items: center;
         justify-content: space-between;
         padding: 30px;
+        background-color: #333;
     }
 
     span {
         &:first-child {
             font-weight: bold;
-            background-color: pink;
+            /*background-color: pink;*/
         }
 
         &:last-child {
             font-size: 14px;
-            background-color: aquamarine;
+            /*background-color: aquamarine;*/
         }
     }
 </style>
