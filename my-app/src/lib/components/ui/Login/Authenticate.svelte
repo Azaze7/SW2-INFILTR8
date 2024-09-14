@@ -1,20 +1,79 @@
 <script>
-    /* could possibly move to JavaScript file in future */
+    import neo4j from 'neo4j-driver';
+
     let email = "";
     let password = "";
     let confirmPass = "";
     let error = false;
     let register = false;
+    let authMessage = "";
 
-    function handleAuthentication() {
-        if (!email || !password || (register && !confirmPass)) {
+    // Neo4j connection setup
+    const driver = neo4j.driver(
+        "bolt://<your-neo4j-database-url>",  // Example: "bolt://localhost:7687" for local DB
+        neo4j.auth.basic("<your-username>", "<your-password>")  // Replace with your Neo4j username and password
+    );
+
+    async function handleAuthentication() {
+        error = false;
+        authMessage = "";
+
+        if (!email || !password || (register && password !== confirmPass)) {
             error = true;
             return;
+        }
+
+        const session = driver.session();
+
+        if (register) {
+            // Register new user
+            try {
+                const result = await session.run(
+                    'MATCH (u:User {email: $email}) RETURN u',
+                    { email }
+                );
+
+                if (result.records.length > 0) {
+                    authMessage = "User already exists!";
+                } else {
+                    await session.run(
+                        'CREATE (u:User {email: $email, password: $password})',
+                        { email, password }
+                    );
+                    authMessage = "Registration successful!";
+                }
+            } catch (err) {
+                console.error(err);
+                authMessage = "An error occurred during registration.";
+            } finally {
+                await session.close();
+            }
+        } else {
+            // Log in user
+            try {
+                const result = await session.run(
+                    'MATCH (u:User {email: $email, password: $password}) RETURN u',
+                    { email, password }
+                );
+
+                if (result.records.length === 0) {
+                    authMessage = "Invalid email or password!";
+                } else {
+                    authMessage = "Login successful!";
+                }
+            } catch (err) {
+                console.error(err);
+                authMessage = "An error occurred during login.";
+            } finally {
+                await session.close();
+            }
         }
     }
 
     function handleRegister() {
         register = !register;
+        error = false;
+        authMessage = "";
     }
 </script>
 
@@ -22,7 +81,10 @@
     <form>
         <h1>{register ? "Register" : "Login"}</h1>
         {#if error}
-            <p class="error">The information you have entered is not correct</p>
+            <p class="error">Please fill out all fields correctly.</p>
+        {/if}
+        {#if authMessage}
+            <p class="authMessage">{authMessage}</p>
         {/if}
         <label>
             <p class={email ? " above" : " center"}>Email</p>
@@ -38,7 +100,7 @@
                 <input bind:value={confirmPass} type="password" placeholder="Confirm Password" required/>
             </label>
         {/if}
-        <button type="button">Submit</button>
+        <button type="button" on:click={handleAuthentication}>Submit</button>
     </form>
 
     <div class="options">
@@ -46,165 +108,25 @@
         {#if register}
             <div>
                 <p>Already have an account?</p>
-                <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                <p on:click={handleRegister} on:keydown={() => {}}>Login</p>
+                <p on:click={handleRegister}>Login</p>
             </div>
         {:else}
             <div>
                 <p>Don't have an account?</p>
-                <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                <p on:click={handleRegister} on:keydown={() => {}}>Register</p>
+                <p on:click={handleRegister}>Register</p>
             </div>
         {/if}
     </div>
 </div>
 
 <style>
-    .authContainer {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        flex: 1;
-        padding: 24px;
+    /* Add your existing styles here */
+    .authMessage {
+        color: limegreen;
+        font-size: 1rem;
     }
-
-    form {
-        display: flex;
-        flex-direction: column;
-        gap: 14px;
-    }
-
-    form,
-    .options {
-        width: 400px;
-        max-width: 100%;
-        margin: 0 auto;
-    }
-
-    form input {
-        width: 100%;
-    }
-
-    h1 {
-        text-align: center;
-        font-size: 3rem;
-    }
-
-    form label {
-        position: relative;
-        border: 1px solid navy;
-        border-radius: 5px;
-    }
-
-    form label:focus-within {
-        border-color: blue;
-    }
-
-    form input {
-        border: none;
-        background: transparent;
-        color: white;
-        padding: 14px;
-    }
-
-    form input:focus {
-        border: none;
-        outline: none;
-    }
-
-    
-
-    form button {
-        background: navy;
-        color: white;
-        border: none;
-        padding: 14px;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 1.1rem;
-    }
-
-    form button:hover {
-        background: blue;
-    }
-
-    .above, 
-    .center {
-        position: absolute;
-        transform: translateY(-50%);
-        pointer-events: none;
-        color: white;
-        border-radius: 4px;
-        padding: 0 6px;
-        font-size: 0.8rem;
-    }
-
-    .above {
-        top: 0;
-        left: 24px;
-        background: navy;
-        border: 1px solid blue;
-        font-size: 0.7rem;
-    }
-
-    .center {
-        top: 50%;
-        left: 6px;
-        border: 1px solid transparent;
-        opacity: 0;
-    }
-
     .error {
         color: coral;
         font-size: 0.9rem;
-    }
-
-    .options {
-        padding: 14px 0;
-        overflow: hidden;
-        font-size: 0.9rem;
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
-    }
-
-    .options > p {
-        position: relative;
-        text-align: center;
-        width: fit-content;
-        margin: 0 auto;
-        padding: 0 8px;
-    }
-
-    .options > p::after,
-    .options > p::before {
-        position: absolute;
-        content: '';
-        top: 50%;
-        transform: translateY(-50%);
-        width: 100vw;
-        height: 1.5px;
-        background: white;
-    }
-
-    .options > p::after {
-        right: 100%;
-    }
-
-    .options > p::before {
-        left: 100%;
-    }
-
-    .options div {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        justify-content: center;
-    }
-
-    .options div p:last-of-type {
-        color: cyan;
-        cursor: pointer;
     }
 </style>
