@@ -12,6 +12,12 @@
             return;
         }
     }
+    
+    // Change this when the authentication and database works
+    // So the user is redirected once their credentials are verified
+    function handleSubmit() {
+        window.location.href = "/dashboard";
+    }
 
     function handleRegister() {
         register = !register;
@@ -19,7 +25,7 @@
 </script>
 
 <div class="authContainer">
-    <form>
+    <form on:submit={handleSubmit}>
         <h1>{register ? "Register" : "Login"}</h1>
         {#if error}
             <p class="error">The information you have entered is not correct</p>
@@ -38,7 +44,7 @@
                 <input bind:value={confirmPass} type="password" placeholder="Confirm Password" required/>
             </label>
         {/if}
-        <button type="button">Submit</button>
+        <button type="submit">Submit</button>
     </form>
 
     <div class="options">
