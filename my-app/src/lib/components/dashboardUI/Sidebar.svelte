@@ -20,19 +20,19 @@
         <span class="title">List</span>
         <a href="/" class="listItem">
             <img src={Homepage} alt="Home"> <!--Home Icon-->
-            <span class="listItemTitle">Home</span>
+            <span class="listItemTitle">Dashboard</span>
         </a>
         <a href="/" class="listItem">
             <img src={Homepage} alt="Profile"> <!--Home Icon-->
-            <span class="listItemTitle">Profile</span>
+            <span class="listItemTitle">Project Manager</span>
         </a>
         <a href="/" class="listItem">
             <img src={Homepage} alt="Profile"> <!--Home Icon-->
-            <span class="listItemTitle">Profile</span>
+            <span class="listItemTitle">Analysis</span>
         </a>
         <a href="/" class="listItem">
             <img src={Homepage} alt="Profile"> <!--Home Icon-->
-            <span class="listItemTitle">Profile</span>
+            <span class="listItemTitle">Reports</span>
         </a>
     </div>
     <div class="item">
