@@ -1,21 +1,11 @@
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <script>
+	import Settings from './../../../../node_modules/@tabler/icons-svelte/dist/icons/settings.svelte';
     import Homepage from "../../../img/home.svg"
     import person from "../../../img/person.svg"
 
 </script>
 <div class="sidebar">
-    <div class="item">
-        <span class="title">MAIN</span>
-        <a href="/" class="listItem">
-            <img src={Homepage} alt="Home"> <!--Home Icon-->
-            <span class="listItemTitle">Home</span>
-        </a>
-        <a href="/" class="listItem">
-            <img src={person} alt="Profile"> <!--Home Icon-->
-            <span class="listItemTitle">Profile</span>
-        </a>
-    </div>
     <div class="item">
         <span class="title">List</span>
         <a href="/" class="listItem">
@@ -34,57 +24,6 @@
             <img src={Homepage} alt="Profile"> <!--Home Icon-->
             <span class="listItemTitle">Reports</span>
         </a>
-    </div>
-    <div class="item">
-        <span class="title">General</span>
-        <a href="/" class="listItem">
-            <img src={Homepage} alt="Home"> <!--Home Icon-->
-            <span class="listItemTitle">Home</span>
-        </a>
-        <a href="/" class="listItem">
-            <img src={Homepage} alt="Profile"> <!--Home Icon-->
-            <span class="listItemTitle">Profile</span>
-        </a>
-        <a href="/" class="listItem">
-            <img src={Homepage} alt="Profile"> <!--Home Icon-->
-            <span class="listItemTitle">Profile</span>
-        </a>
-        <a href="/" class="listItem">
-            <img src={Homepage} alt="Profile"> <!--Home Icon-->
-            <span class="listItemTitle">Profile</span>
-        </a>
-    </div>
-    <div class="item">
-        <span class="title">Maintence</span>
-        <a href="/" class="listItem">
-            <img src={Homepage} alt="Home"> <!--Home Icon-->
-            <span class="listItemTitle">Home</span>
-        </a>
-        <a href="/" class="listItem">
-            <img src={person} alt="Profile"> <!--Home Icon-->
-            <span class="listItemTitle">Profile</span>
-        </a>
-
-        <a href="/" class="listItem">
-            <img src={Homepage} alt="Home"> <!--Home Icon-->
-            <span class="listItemTitle">Charts</span>
-        </a>
-        <a href="/" class="listItem">
-            <img src={person} alt="Profile"> <!--Home Icon-->
-            <span class="listItemTitle">Logs</span>
-        </a>
-    </div>
-    <div class="item">
-        <span class="title">Analytics</span>
-        <a href="/" class="listItem">
-            <img src={Homepage} alt="Home"> <!--Home Icon-->
-            <span class="listItemTitle">Charts</span>
-        </a>
-        <a href="/" class="listItem">
-            <img src={person} alt="Profile"> <!--Home Icon-->
-            <span class="listItemTitle">Logs</span>
-        </a>
-
 
         <a href="/" class="listItem">
             <img src={Homepage} alt="Home"> <!--Home Icon-->
@@ -103,6 +42,17 @@
             <img src={person} alt="Profile"> <!--Home Icon-->
             <span class="listItemTitle">Logs</span>
         </a>
+        <div class="item">
+            <span class="title">MAIN</span>
+            <a href="/" class="listItem">
+                <img src={Homepage} alt="Home"> <!--Home Icon-->
+                <span class="listItemTitle">Settings</span>
+            </a>
+            <a href="/" class="listItem">
+                <img src={person} alt="Profile"> <!--Home Icon-->
+                <span class="listItemTitle">Support</span>
+            </a>
+        </div>
 
     </div>
 </div>
