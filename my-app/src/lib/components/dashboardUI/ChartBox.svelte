@@ -1,4 +1,10 @@
+
+<script>
+  import TestingScreen from "./TestingScreen.svelte";
+
+</script>
 <div class="chartBox">
     <h1>ChartBox</h1>
-    <p>Content goes here</p>
+    <p> </p>
+
 </div>
