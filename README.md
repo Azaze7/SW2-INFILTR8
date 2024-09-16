@@ -76,7 +76,7 @@ Special Thanks to All of those who contributed! We could not do it without you!
 3. After that finishes run:
   3a. npm run build
    
-5. Finally to run the website: 
+4. Finally to run the website: 
   4a. npm run dev
 
 ## 🎞️ Video Demonstration.
