@@ -1,161 +1,169 @@
 <script>
-  import Sidebar from "$lib/components/dashboardUI/Sidebar.svelte"; 
+  import Sidebar from "$lib/components/dashboardUI/Sidebar.svelte"; // Ensure the correct path to your Sidebar component
 
-  let currentProject = "Project Alpha";
-  let ipList = ["192.168.1.10", "192.168.1.15", "192.168.1.20"];
-  let analyses = ["Port Scan", "Vulnerability Scan", "Configuration Check"];
-  let availableProjects = ["Project Alpha", "Project Beta", "Project Gamma"];
+  let currentProject = "Example Project";
+  let devices = [
+    { ip: "192.168.1.11", device: "Device A", vulnerability: "CVE-2019-14899 [VPN Traffic Hijack]", status: "Exploited" },
+    { ip: "192.168.1.5", device: "Device B", vulnerability: "CVE-2022-21907 [HTTP Protocol Stack]", status: "Not Exploited" },
+    { ip: "192.168.1.20", device: "Device C", vulnerability: "CVE-2024-139 [VPN Traffic Hijack]", status: "Exploited" },
+    { ip: "192.168.1.25", device: "Device D", vulnerability: "CVE-2019-14899 [VPN Traffic Hijack]", status: "Not Exploited" }
+  ];
 
-  function moveUp(index, list) {
-    if (index > 0) {
-      [list[index - 1], list[index]] = [list[index], list[index - 1]];
-    }
-  }
+  let exportFormat = "PDF"; // Default export format
+  let availableFormats = ["PDF", "CSV", "XML"];
 
-  function moveDown(index, list) {
-    if (index < list.length - 1) {
-      [list[index], list[index + 1]] = [list[index + 1], list[index]];
-    }
-  }
-
-  function startAnalysis() {
-    console.log("Starting analysis for:", currentProject);
-  }
-
-  function loadProject(project) {
-    currentProject = project;
-    console.log("Loaded project:", currentProject);
+  // Function to handle export action
+  function exportReport() {
+    console.log("Exporting report in format:", exportFormat);
   }
 </script>
 
-<!-- Layout with Sidebar and ProjectScreen content -->
+<!-- Layout with Sidebar and Report Screen -->
 <div class="main-container">
   <!-- Sidebar -->
   <div class="sidebar-container">
     <Sidebar />
   </div>
 
-  <!-- Main content of the Project Screen -->
-  <div class="project-content">
-    <div class="project-screen">
-      <!-- Current Project Section -->
-      <h1>Current project folder: {currentProject}</h1>
-      <button on:click={() => console.log("Opening folder for:", currentProject)}>Open Current Project Folder</button>
+  <!-- Report Screen UI -->
+  <div class="report-screen">
+    <!-- Header Section -->
+    <h1>Report</h1>
+    <button class="folder-btn" on:click={() => console.log("Opening project folder for:", currentProject)}>Open Current Project Folder</button>
 
-      <!-- Scope IP List Section -->
-      <section class="scope-ip-list">
-        <h2>Scope IP List</h2>
-        <ul>
-          {#each ipList as ip, index}
-            <li>
-              {ip}
-              <button on:click={() => moveUp(index, ipList)}>⬆️</button>
-              <button on:click={() => moveDown(index, ipList)}>⬇️</button>
-            </li>
+    <!-- Table Section: Device Vulnerability Report -->
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>IP Address</th>
+            <th>Device</th>
+            <th>Vulnerability</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {#each devices as device}
+            <tr>
+              <td>{device.ip}</td>
+              <td>{device.device}</td>
+              <td>{device.vulnerability}</td>
+              <td>{device.status}</td>
+            </tr>
           {/each}
-        </ul>
-      </section>
+        </tbody>
+      </table>
+    </div>
 
-      <!-- Entry Points Allowed Section -->
-      <section class="entry-points">
-        <h2>Entry Points Allowed</h2>
-        <ul>
-          {#each analyses as analysis, index}
-            <li>
-              {analysis}
-              <button on:click={() => moveUp(index, analyses)}>⬆️</button>
-              <button on:click={() => moveDown(index, analyses)}>⬇️</button>
-            </li>
-          {/each}
-        </ul>
-      </section>
-
-      <!-- Start Analysis Button -->
-      <button class="start-analysis-btn" on:click={startAnalysis}>Start Analysis</button>
-
-      <!-- Load Projects Section -->
-      <section class="load-projects">
-        <h2>Load Projects</h2>
-        <ul>
-          {#each availableProjects as project}
-            <li>
-              <button on:click={() => loadProject(project)}>{project}</button>
-            </li>
-          {/each}
-        </ul>
-      </section>
+    <!-- Export Section -->
+    <div class="export-section">
+      <label for="export-format">Format to export</label>
+      <select id="export-format" bind:value={exportFormat}>
+        {#each availableFormats as format}
+          <option value={format}>{format}</option>
+        {/each}
+      </select>
+      <button class="export-btn" on:click={exportReport}>Export</button>
     </div>
   </div>
 </div>
 
-<!-- Styles for the layout and components -->
+<!-- Styling -->
 <style>
-  /* Main container for sidebar and content */
   .main-container {
     display: flex;
-    min-height: 100vh;
+    min-height: 100vh; /* Ensures the layout stretches to full viewport height */
   }
 
   /* Sidebar-specific styles */
   .sidebar-container {
-    width: 150px;
+    width: 200px;
     position: sticky;
     top: 0;
-    margin-top: -.5rem;
     height: 100vh;
+    background-color: #333;
     overflow-y: auto;
+  }
+
+  /* Report screen-specific styles */
+  .report-screen {
+    flex-grow: 1;
+    padding: 20px;
+    font-family: Arial, sans-serif;
     background-color: #333;
   }
 
-  /* Project screen content */
-  .project-content {
-    flex-grow: 1;
-    padding: 20px;
-    background-color: #2c3e50;
-    color: white;
-    font-family: Arial, sans-serif;
+  h1 {
+    margin-bottom: 20px;
   }
 
-  .project-screen {
-    padding: 20px;
-  }
-
-  h1, h2 {
-    margin-bottom: 10px;
-  }
-
-  button {
+  .folder-btn {
     background-color: #1abc9c;
     color: white;
     border: none;
     padding: 10px;
-    margin: 5px;
     cursor: pointer;
+    margin-bottom: 20px;
+    border-radius: 5px;
   }
 
-  button:hover {
+  .folder-btn:hover {
     background-color: #16a085;
   }
 
-  .start-analysis-btn {
-    margin-top: 20px;
-    background-color: #e74c3c;
+  .table-container {
+    margin-bottom: 20px;
+    overflow-x: auto;
   }
 
-  .start-analysis-btn:hover {
-    background-color: #c0392b;
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: rgb(56, 49, 49);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
   }
 
-  ul {
-    list-style-type: none;
-    padding: 0;
+  table th, table td {
+    text-align: left;
+    padding: 12px;
+    border-bottom: 1px solid #220606;
   }
 
-  li {
-    margin-bottom: 10px;
+  table thead {
+    background-color: #333;
+    font-weight: bold;
   }
 
-  .scope-ip-list, .entry-points, .load-projects {
-    margin-bottom: 30px;
+  table tr:nth-child(even) {
+    background-color: #333;
+  }
+
+  .export-section {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  label {
+    font-weight: bold;
+  }
+
+  select {
+    padding: 10px;
+    font-size: 16px;
+  }
+
+  .export-btn {
+    background-color: #1abc9c;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+
+  .export-btn:hover {
+    background-color: #16a085;
   }
 </style>

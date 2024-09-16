@@ -21,7 +21,7 @@
             <img src={Homepage} alt="Profile"> <!--Home Icon-->
             <span class="listItemTitle">Analysis</span>
         </a>
-        <a href="/" class="listItem">
+        <a href="/dashboard/reports" class="listItem">
             <img src={Homepage} alt="Profile"> <!--Home Icon-->
             <span class="listItemTitle">Reports</span>
         </a>
