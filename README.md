@@ -67,12 +67,16 @@ Special Thanks to All of those who contributed! We could not do it without you!
 
 ## 💾 Install Instructions.
 0. After pulling github code, open terminal.
+
 1.cd into the folder called "my-app"
   1a.you do this by: cd my-app
+
 2. run npm i
+   
 3. After that finishes run:
   3a. npm run build
-4. Finally to run the website: 
+   
+5. Finally to run the website: 
   4a. npm run dev
 
 ## 🎞️ Video Demonstration.
