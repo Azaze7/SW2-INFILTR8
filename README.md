@@ -11,7 +11,8 @@
 1. Team Composition [The Nine-Bytes] 
 2. What Files are Enclosed Here?
 3. Tech Stack Foundation.
-4. Vieo Demonstration.
+4. Install Instructions
+5. Vieo Demonstration.
 
 ## 🎏 Team Composition [The Nine-Bytes]
 
@@ -63,6 +64,16 @@ Special Thanks to All of those who contributed! We could not do it without you!
 | Neo4j | Database | Graph database management system designed to store and query complex relationships between data. [Used for Backend].|
 | Python | Langauge | High-level, interpreted programming language known for its readability and versatility. [Used for Code].|
 | Tailwind | Library | Utility-first CSS framework for rapidly building custom user interfaces. [Used for Frontend].|
+
+## 💾 Install Instructions.
+0. After pulling github code, open terminal.
+1.cd into the folder called "my-app"
+  1a.you do this by: cd my-app
+2. run npm i
+3. After that finishes run:
+  3a. npm run build
+4. Finally to run the website: 
+  4a. npm run dev
 
 ## 🎞️ Video Demonstration.
 
