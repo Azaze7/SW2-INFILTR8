@@ -11,3 +11,8 @@ declare global {
 }
 
 export {};
+declare namespace App {
+	interface Locals {
+	  auth: import('@auth/core').Auth; // Replace with the correct type if known
+	}
+  }

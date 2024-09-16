@@ -1,13 +1,15 @@
 // src/routes/register.json.ts
 import type { RequestHandler } from '@sveltejs/kit';
+import { json } from '@sveltejs/kit';
 import { driver } from '$lib/db';
 import bcrypt from 'bcrypt';
 
-export const post: RequestHandler = async ({ request }) => {
-  const { email, password } = await request.json();
+export const POST: RequestHandler = async ({ request }) => {
   const session = driver.session();
 
   try {
+    const { email, password } = await request.json();
+
     // Check if user already exists
     const userResult = await session.run(
       'MATCH (u:User {email: $email}) RETURN u',
@@ -15,10 +17,7 @@ export const post: RequestHandler = async ({ request }) => {
     );
 
     if (userResult.records.length > 0) {
-      return {
-        status: 400,
-        body: { message: 'User already exists' },
-      };
+      return json({ message: 'User already exists' }, { status: 400 });
     }
 
     // Hash the password
@@ -30,16 +29,13 @@ export const post: RequestHandler = async ({ request }) => {
       { email, password: hashedPassword }
     );
 
-    return {
-      status: 201,
-      body: { message: 'Registration successful' },
-    };
+    return json({ message: 'Registration successful' }, { status: 201 });
   } catch (err) {
     console.error(err);
-    return {
-      status: 500,
-      body: { message: 'An error occurred during registration' },
-    };
+    return json(
+      { message: 'An error occurred during registration' },
+      { status: 500 }
+    );
   } finally {
     await session.close();
   }
