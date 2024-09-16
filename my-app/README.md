@@ -1,38 +1,71 @@
-# create-svelte
+# CS4311_INFILTR8_6TheNine-Bytes_Fall2024
+## 🤖 SW2 INFILTR8 Development Repo
+(Course Work) Breathing Implementation of the INFILTR8 system created by The Nine Bytes team. This is based on the finalized SRS and is to be finished at the end of the FALL 2024 Semester. [🧠]
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/main/packages/create-svelte).
+<p align="center">
+<img src="https://github.com/Azaze7/SW2-INFILTR8/blob/main/Initial-Dependencies-And-Resources/Infiltr8-Title-Page.png" height="200px"> 
+</p>
 
-## Creating a project
+## 🔎 Table of Contents.
 
-If you're seeing this, you've probably already done this step. Congrats!
+1. Team Composition [The Nine-Bytes] 
+2. What Files are Enclosed Here?
+3. Tech Stack Foundation.
+4. Vieo Demonstration.
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
+## 🎏 Team Composition [The Nine-Bytes]
 
-# create a new project in my-app
-npm create svelte@latest my-app
-```
+**This Project was completed through the cooperation of *nine* team members!**
 
-## Developing
+[Gilbert I. Guzman](https://github.com/Azaze7 "Gilbert's Github") - *Team Lead/Analyst/Repo Master*: Created GitHub Repo, Communicated with Staff, Bugfixed code, ...
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+[Alberto Villegas](https://github.com/bertvillegas "Alberto's Github") - *Quality Manager/Programmer*: Assisted In Creation of all UX, Bugfixed code, ...
 
-```bash
-npm run dev
+[Brian Mata](https://github.com/donburgers "Brian's Github") - *Dataflow & Business Manager/Programmer*: Assisted In Creation of all UX, Bugfixed code, ...
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
+[Christian Garcia](https://github.com/chris-garcia01 "Christian G.'s Github") - *Quality Manager/V&V*: Assisted In ...
 
-## Building
+[Christian Revilla ](https://github.com/carevilla "Christian R.'s Github") - *Analysis Manager/Programmer*: Assisted In Creation of all UX, Bugfixed code, ...
 
-To create a production version of your app:
+[Janelle Guzman](https://github.com/jbguzman "Janelle's Github") - *Customer Interface Manager/Designer*: Assisted In ...
 
-```bash
-npm run build
-```
+[Jose Luis Rojas](https://github.com/joseluisrojas21 "Jose's Github") - *Bahavioral Model Manager/Designer*: Assisted In ...
 
-You can preview the production build with `npm run preview`.
+[Kimberly Kocian](https://github.com/kkocian7 "Kimberly's Github") - *Support Manager/V&V*: Assisted In ...
 
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+[Luis Sanchez](https://github.com/ldsanchez3 "Luis's Github") - *Planning Manager/Analyst*: Assisted In ...
+
+<p align="center">
+<img src="https://github.com/Azaze7/SW2-INFILTR8/blob/main/Initial-Dependencies-And-Resources/The%20Nine-Bytes-Logo.png" height="200px"> 
+</p>
+
+<p align="center">
+Special Thanks to All of those who contributed! We could not do it without you!
+</p>
+
+## 🗂️ What Files are Enclosed Here?
+
+| Filename | Type | Description | 
+| --------------- | --------------- | --------------- |
+| Gil-Test-Resources | 🗂️ | Contains Pre-fixed files to run the .nessus file. maing.py has been modified to handle new inputs and get a sample output. This is not the final version, and exists only for testing backend! |
+| Initial-Dependecies-And-Resources | 🗂️ | Contains main source code, sample *broken* .nessus file, the finalized SRS, and some diagrams. These files will help kickstart development. |
+| my-app | 🗂️ | Contains files necessary to build and run INFILTR8, including its backend and GUI. |
+| README | .md | All of the text that you are currently reading. |
+
+## 🖥️ Tech Stack Foundation
+
+**The following table shows the technology to be used to develop INFILTR8, taken explicitly from the given SRS document.**
+
+| Name | Type | Description | 
+| --------------- | --------------- | --------------- |
+| Github | Version Control | A web-based platform for version control and collaboration, using Git for managing code repositories. Will be used to store INFILTR8 as it develops. |
+| JS | Language | JavaScript, a versatile scripting language primarily used for web development to create interactive effects within web browsers. [Used for Site].|
+| Neo4j | Database | Graph database management system designed to store and query complex relationships between data. [Used for Backend].|
+| Python | Langauge | High-level, interpreted programming language known for its readability and versatility. [Used for Code].|
+| Tailwind | Library | Utility-first CSS framework for rapidly building custom user interfaces. [Used for Frontend].|
+
+## 🎞️ Video Demonstration.
+
+* Video's demonstrating the various vertical slices for INFILTR8 have been recorded for archive purposes.
+* DEMO #1 - Non-Functional GUI
+  * https://www.youtube.com/watch?v=jpO2zd9zbng
