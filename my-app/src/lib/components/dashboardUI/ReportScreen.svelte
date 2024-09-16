@@ -1,31 +1,27 @@
 <script>
-  import Sidebar from "$lib/components/dashboardUI/Sidebar.svelte"; // Adjust the path if necessary
-  
+  import Sidebar from "$lib/components/dashboardUI/Sidebar.svelte"; 
+
   let currentProject = "Project Alpha";
   let ipList = ["192.168.1.10", "192.168.1.15", "192.168.1.20"];
   let analyses = ["Port Scan", "Vulnerability Scan", "Configuration Check"];
   let availableProjects = ["Project Alpha", "Project Beta", "Project Gamma"];
 
-  // Move IP or Analysis up in the list
   function moveUp(index, list) {
     if (index > 0) {
       [list[index - 1], list[index]] = [list[index], list[index - 1]];
     }
   }
 
-  // Move IP or Analysis down in the list
   function moveDown(index, list) {
     if (index < list.length - 1) {
       [list[index], list[index + 1]] = [list[index + 1], list[index]];
     }
   }
 
-  // Start analysis function
   function startAnalysis() {
     console.log("Starting analysis for:", currentProject);
   }
 
-  // Load a selected project
   function loadProject(project) {
     currentProject = project;
     console.log("Loaded project:", currentProject);
@@ -92,22 +88,23 @@
   </div>
 </div>
 
-<!-- Styling for the Project Screen and Sidebar -->
+<!-- Styles for the layout and components -->
 <style>
   /* Main container for sidebar and content */
   .main-container {
     display: flex;
-    min-height: 100vh; /* Ensures the layout stretches to full viewport height */
+    min-height: 100vh;
   }
 
   /* Sidebar-specific styles */
   .sidebar-container {
-    width: 200px;
+    width: 150px;
     position: sticky;
     top: 0;
+    margin-top: -.5rem;
     height: 100vh;
-    background-color: #333;
     overflow-y: auto;
+    background-color: #333;
   }
 
   /* Project screen content */
