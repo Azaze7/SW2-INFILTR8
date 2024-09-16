@@ -51,6 +51,7 @@
     function removeFile(index) {
         selectedFiles.splice(index, 1);
     }
+
 </script>
 
 <Navbar/>
@@ -59,6 +60,7 @@
         <Sidebar/>
     </div>
     <div class="content">
+
         <!-- Greeting the analyst -->
         <h1>{greeting}</h1>
 
@@ -126,7 +128,9 @@
     /* Main container to organize sidebar and content */
     .main-container {
         display: flex;
+
         min-height: 100vh;
+
     }
 
     /* Sidebar-specific styles */
@@ -136,6 +140,7 @@
         top: 0;
         margin-top: -.5rem;
         height: 100vh;
+
         overflow-y: auto;
         background-color: #333;
     }
@@ -145,6 +150,7 @@
         padding: 20px;
         background-color: #333;
         color: white;
+
     }
 
     .bottom-container {
@@ -265,4 +271,5 @@
         border-radius: 10px;
         z-index: 1000;
     }
+
 </style>
