@@ -68,4 +68,4 @@ Special Thanks to All of those who contributed! We could not do it without you!
 
 * Video's demonstrating the various vertical slices for INFILTR8 have been recorded for archive purposes.
 * DEMO #1 - Non-Functional GUI
-  * https://www.youtube.com/watch?v=jpO2zd9zbng
+  * https://youtu.be/wsV8tB8XbOw
