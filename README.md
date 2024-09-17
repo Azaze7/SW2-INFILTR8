@@ -94,6 +94,32 @@ Or use the install script if you’ve downloaded the source code from GitHub as 
 ./install.sh
 ```
 
+## 🖥️ Tech Stack Foundation
+
+**The following table shows the technology to be used to develop INFILTR8, taken explicitly from the given SRS document.**
+
+| Name | Type | Description | 
+| --------------- | --------------- | --------------- |
+| Github | Version Control | A web-based platform for version control and collaboration, using Git for managing code repositories. Will be used to store INFILTR8 as it develops. |
+| JS | Language | JavaScript, a versatile scripting language primarily used for web development to create interactive effects within web browsers. [Used for Site].|
+| Neo4j | Database | Graph database management system designed to store and query complex relationships between data. [Used for Backend].|
+| Python | Langauge | High-level, interpreted programming language known for its readability and versatility. [Used for Code].|
+| Tailwind | Library | Utility-first CSS framework for rapidly building custom user interfaces. [Used for Frontend].|
+
+## 💾 Install Instructions.
+0. After pulling github code, open terminal.
+
+1.cd into the folder called "my-app"
+  1a.you do this by: cd my-app
+
+2. run npm i
+   
+3. After that finishes run:
+  3a. npm run build
+   
+4. Finally to run the website: 
+  4a. npm run dev
+
 ## 🎞️ Video Demonstration.
 
 * Videos demonstrating the various vertical slices for INFILTR8 have been recorded for archive purposes.

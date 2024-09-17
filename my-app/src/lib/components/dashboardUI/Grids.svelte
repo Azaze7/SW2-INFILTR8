@@ -9,13 +9,12 @@
 <div class="grids">
     <div class="box box1"><TopBox/></div>
     <div class="box box2"><ChartBox/></div>
-    <div class="box box3"><ChartBox/></div>
+
     <div class="box box4"><PieChartBox/></div>
     <div class="box box5"><ChartBox/></div>
-    <div class="box box6"><ChartBox/></div>
     <div class="box box7"><BottomBox/></div>
-    <div class="box box8"><BarChartBox/></div>
-    <div class="box box9"><BarChartBox/></div>
+
+
 </div>
 
 <style>
