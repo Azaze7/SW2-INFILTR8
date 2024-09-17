@@ -9,7 +9,8 @@ check_command() {
 }
 
 # Variables
-ZIP_FILE="program.zip"
+# Assuming the source code has been downloaded directly from GitHub
+ZIP_FILE="CS4311_INFILTR8_6TheNine-Bytes_Fall2024-main.zip"
 APP_DIR="CS4311_INFILTR8_6TheNine-Bytes_Fall2024-main/my-app"
 
 # Check if the OS is macOS or Linux
@@ -32,7 +33,7 @@ if [ "$os_name" == "Darwin" ]; then
         echo "NPM version: $(npm -v)"
     fi
 
-    # Unzip the program.zip file
+    # Unzip file
     if [ -f "$ZIP_FILE" ]; then
         echo "Unzipping $ZIP_FILE"
         unzip -q "$ZIP_FILE"
@@ -76,7 +77,7 @@ elif [ "$os_name" == "Linux" ]; then
         echo "NPM version: $(npm -v)"
     fi
 
-    # Unzip the program.zip file
+    # Unzip file
     if [ -f "$ZIP_FILE" ]; then
         echo "Unzipping $ZIP_FILE"
         unzip -q "$ZIP_FILE"
