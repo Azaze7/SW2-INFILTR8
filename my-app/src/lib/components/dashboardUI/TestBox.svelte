@@ -1,0 +1,243 @@
+
+
+
+<head>
+	
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+</head>
+<body>
+	<div class="wrapper">
+
+    <div class="notifications">
+    <h2>Notifications</h2>
+
+    <div class="notifications__item">
+      <div class="notifications__item__avatar">
+        <img src="https://cdn.pixabay.com/photo/2018/11/13/21/43/instagram-3814049__340.png" />
+      </div>
+
+      <div class="notifications__item__content">
+        <span class="notifications__item__title">Kumaran Roa</span>
+        <span class="notifications__item__message">Lorem ipsum More lorem</span>
+      </div>
+
+      <div>
+        <div class="notifications__item__option archive js-option">
+          <i class="fas fa-folder"></i>
+        </div>
+        <div class="notifications__item__option delete js-option">
+          <i class="fas fa-trash"></i>
+        </div>
+      </div>
+    </div>
+
+    <div class="notifications__item">
+      <div class="notifications__item__avatar">
+        <img src="https://cdn.pixabay.com/photo/2018/11/13/21/43/instagram-3814049__340.png" />
+      </div>
+
+      <div class="notifications__item__content">
+        <span class="notifications__item__title">Udhaya Chetty</span>
+        <span class="notifications__item__message">Lorem ipsum More lorem</span>
+      </div>
+
+      <div>
+        <div class="notifications__item__option archive js-option">
+          <i class="fas fa-folder"></i>
+        </div>
+        <div class="notifications__item__option delete js-option">
+          <i class="fas fa-trash"></i>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="notifications__item">
+      <div class="notifications__item__avatar">
+        <img src="https://cdn.pixabay.com/photo/2018/11/13/21/43/instagram-3814049__340.png" />
+      </div>
+
+      <div class="notifications__item__content">
+        <span class="notifications__item__title">Josh Manu</span>
+        <span class="notifications__item__message">Lorem ipsum More lorem</span>
+      </div>
+
+      <div>
+        <div class="notifications__item__option archive js-option">
+          <i class="fas fa-folder"></i>
+        </div>
+        <div class="notifications__item__option delete js-option">
+          <i class="fas fa-trash"></i>
+        </div>
+      </div>
+    </div>
+
+    <div class="notifications__item">
+      <div class="notifications__item__avatar">
+        <!-- svelte-ignore a11y-missing-attribute -->
+        <img src="https://cdn.pixabay.com/photo/2018/11/13/21/43/instagram-3814049__340.png" />
+      </div>
+
+      <div class="notifications__item__content">
+        <span class="notifications__item__title">Niranjan</span>
+        <span class="notifications__item__message">Lorem ipsum More lorem</span>
+      </div>
+
+      <div>
+        <div class="notifications__item__option archive js-option">
+          <i class="fas fa-folder"></i>
+        </div>
+        <div class="notifications__item__option delete js-option">
+          <i class="fas fa-trash"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- svelte-ignore a11y-invalid-attribute -->
+<!-- svelte-ignore a11y-missing-content -->
+<div class="credit"><a href="#"></a>Go to Notifications</div>
+</body>
+
+<style>
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+* { box-sizing: border-box; }
+
+.wrapper {
+  width: 100%;
+  margin: 5px auto;
+}
+
+
+.notifications__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 50%;
+  margin-bottom: 20px;
+  margin-top: 10px;
+  padding: 0 10px;
+  background-color: white;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  transition: all .3s ease-in;
+  cursor: pointer;
+}
+
+.notifications__item__avatar {
+  width: 75px;
+  height: 75px;
+  overflow: hidden;
+  margin-right: 20px;
+
+  border-radius: 50%;
+}
+
+.notifications__item__avatar img {
+  width: 100%;
+  height: 100%;
+}
+
+.notifications__item__content { width: calc( 100% - 100px ); }
+.notifications__item__title,
+.notifications__item__message { display: block; }
+
+.notifications__item__title {
+  letter-spacing: 2px;
+  font-family: 'atvice', sans-serif;
+  font-size: 17px;
+}
+
+.notifications__item__message {
+  font-family: Roboto, sans-serif;
+  font-size: 14px;
+  color: #929292;
+}
+
+.notifications__item__option {
+  width: 20px;
+  height: 20px;
+  margin: 8px 0;
+
+  border-radius: 50%;
+  color: white;
+  opacity: 0;
+
+  font-size: 10px;
+  text-align: center;
+  line-height: 20px;
+
+  cursor: pointer;
+  transition: all .2s;
+}
+
+.notifications__item__option.archive { background-color: #3dc98c; }
+
+.notifications__item__option.delete { background-color: #c93d4d; }
+
+
+/*
+* Animation part
+*/
+.notifications__item:hover {
+  background-color: #f7f7f7;
+  transform: scale( 0.95 );
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.notifications__item:hover .notifications__item__option { opacity: 1; }
+
+.notifications__item.archive .notifications__item__title,
+.notifications__item.delete .notifications__item__title {
+  color: white;
+}
+
+.notifications__item.archive .notifications__item__message,
+.notifications__item.delete .notifications__item__message {
+  color: #f3f3f3;
+}
+
+.notifications__item.archive {
+  background-color: #3dc98c;
+  animation: archiveAnimation 1.5s cubic-bezier(0, 0, 0, 1.12) forwards;
+  animation-delay: .6s;
+}
+
+.notifications__item.delete {
+  background-color: #c93d4d;
+  animation: deleteAnimation 1.5s cubic-bezier(0, 0, 0, 1.12) forwards;
+  animation-delay: .6s;
+}
+
+
+@keyframes archiveAnimation{
+  to {
+    transform: translateX( 100px );
+    opacity: 0;
+  }
+}
+
+@keyframes deleteAnimation{
+  to {
+    transform: translateX( -100px );
+    opacity: 0;
+  }
+}
+.credit a {
+    text-decoration: none;
+    color: #000;
+    font-weight: 800;
+}
+
+.credit {
+    text-align: center;
+    font-family: Verdana,Geneva,Tahoma,sans-serif;
+}
+
+
+</style>
+

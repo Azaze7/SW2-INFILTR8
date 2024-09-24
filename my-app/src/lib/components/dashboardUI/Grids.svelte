@@ -4,10 +4,11 @@
     import ChartBox from "./ChartBox.svelte";
     import PieChartBox from "./PieChartBox.svelte";
     import TopBox from "./TopBox.svelte";
+    import TestBox from "./TestBox.svelte";
 
 </script>
 <div class="grids">
-    <div class="box box1"><TopBox/></div>
+    <div class="box box1"><TestBox/></div>
     <div class="box box2"><ChartBox/></div>
 
     <div class="box box4"><PieChartBox/></div>
@@ -37,7 +38,7 @@
 
     .box1{
         grid-column: span 1;
-        grid-row: span 3;
+        grid-row: span 2;
         
     }
 
