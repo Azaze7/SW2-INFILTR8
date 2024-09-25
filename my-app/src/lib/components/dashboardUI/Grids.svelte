@@ -9,11 +9,9 @@
 </script>
 <div class="grids">
     <div class="box box1"><TestBox/></div>
-    <div class="box box2"><ChartBox/></div>
-
     <div class="box box4"><PieChartBox/></div>
-    <div class="box box5"><ChartBox/></div>
-    <div class="box box7"><BottomBox/></div>
+    <div class="box box2"><ChartBox/></div>
+    <!--<div class="box box7"><BottomBox/></div>-->
 
 
 </div>
@@ -22,7 +20,7 @@
     .grids {
         display: grid;
         gap: 20px;
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(2, 1fr);
         grid-auto-rows: minmax(160px, auto);
         margin-top: -1.5rem;
         
@@ -30,9 +28,9 @@
     }
 
     .box {
-        padding: 20px;
-        border-radius: 10px;
-        border: 2px solid #384256;
+        padding: 10px;
+        border-radius: 5px;
+        /*border: 2px solid #384256;*/
 
     }
 

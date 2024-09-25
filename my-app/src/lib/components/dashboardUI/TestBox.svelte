@@ -19,27 +19,7 @@
       </div>
 
       <div class="notifications__item__content">
-        <span class="notifications__item__title">Kumaran Roa</span>
-        <span class="notifications__item__message">Lorem ipsum More lorem</span>
-      </div>
-
-      <div>
-        <div class="notifications__item__option archive js-option">
-          <i class="fas fa-folder"></i>
-        </div>
-        <div class="notifications__item__option delete js-option">
-          <i class="fas fa-trash"></i>
-        </div>
-      </div>
-    </div>
-
-    <div class="notifications__item">
-      <div class="notifications__item__avatar">
-        <img src="https://cdn.pixabay.com/photo/2018/11/13/21/43/instagram-3814049__340.png" />
-      </div>
-
-      <div class="notifications__item__content">
-        <span class="notifications__item__title">Udhaya Chetty</span>
+        <span class="notifications__item__title">URGENT</span>
         <span class="notifications__item__message">Lorem ipsum More lorem</span>
       </div>
 
@@ -60,7 +40,7 @@
       </div>
 
       <div class="notifications__item__content">
-        <span class="notifications__item__title">Josh Manu</span>
+        <span class="notifications__item__title">IP 193.2.2.0</span>
         <span class="notifications__item__message">Lorem ipsum More lorem</span>
       </div>
 
@@ -116,7 +96,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 100%;
+  width: 50%;
   height: 50%;
   margin-bottom: 20px;
   margin-top: 10px;
@@ -234,7 +214,7 @@
 }
 
 .credit {
-    text-align: center;
+    text-align:left;
     font-family: Verdana,Geneva,Tahoma,sans-serif;
 }
 
