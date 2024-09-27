@@ -99,12 +99,14 @@ You can also use the install script if you’ve downloaded the source code from 
 
 ## 🎞️ Video Demonstration.
 
-* Videos demonstrating the various vertical slices for INFILTR8 have been recorded for archive purposes.
+* Short video archives demonstrating the various vertical slices for INFILTR8 have been recorded to show the software design process.
+
   
 * DEMO #1 - Non-Functional GUI, Data Storage, GitHub Configuration, & Project Dashboard.
-* [9/16/24]
+* Due: [9/16/24]
   * https://youtu.be/wsV8tB8XbOw
+
   
 * DEMO #2 - GUI Update, Improved GitHub & Database, Processing Recon Data, Allowed/Off-limit IPs, Entry Point Selection, & Start of Logs.
-* [9/30/24]
-  * https://youtu.be/wsV8tB8XbOw
+* Due: [9/30/24]
+  * https://www.youtube.com/watch?v=jpO2zd9zbng
