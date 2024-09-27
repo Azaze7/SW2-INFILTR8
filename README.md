@@ -53,7 +53,7 @@ Special Thanks to All of those who contributed! We could not do it without you!
 | my-app | 🗂️ | Contains files necessary to build and run INFILTR8, including its backend and GUI. |
 | README | .md | All of the text that you are currently reading. |
 | install | .sh | Shell-script that installs the system for you. |
-| .DS_Store | - | Stores folder customization options (MacOS Only) |
+| .DS_Store | - | Stores folder customization options (MacOS Only). |
 
 ## 🖥️ Tech Stack Foundation
 
@@ -99,5 +99,12 @@ Or use the install script if you’ve downloaded the source code from GitHub as 
 ## 🎞️ Video Demonstration.
 
 * Videos demonstrating the various vertical slices for INFILTR8 have been recorded for archive purposes.
-* DEMO #1 - Non-Functional GUI
+* 
+* DEMO #1 - Non-Functional GUI, Data Storage, GitHub Configuration, & Project Dashboard.
+* [9/16/24]
   * https://youtu.be/wsV8tB8XbOw
+* 
+* DEMO #2 - GUI Update, Improved GitHub & Database, Processing Recon Data, Allowed/Off-limit IPs, Entry Point Selection, & Start of Logs.
+* [9/30/24]
+  * https://youtu.be/wsV8tB8XbOw
+
