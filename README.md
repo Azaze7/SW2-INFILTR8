@@ -45,7 +45,7 @@
 Special Thanks to All of those who contributed! We could not do it without you!
 </p>
 
-# 🎖️ Guidance Team & Customer Information [DEVCOM] 
+## 🎖️ Guidance Team & Customer Information [DEVCOM] 
 
 **The following individuals are the guidance team for the development of INFILTR8. They are:**
 
@@ -56,6 +56,7 @@ Special Thanks to All of those who contributed! We could not do it without you!
 * Consuelo Ramirez – TA
 
 **This Project is being worked on at the behest of the U.S. Army Combat Capabilities Development Command, also known as DEVCOM.**
+
 **Our official customer list includes:**
 
 * Sebastian Quinones  
