@@ -52,6 +52,8 @@ Special Thanks to All of those who contributed! We could not do it without you!
 | Initial-Dependecies-And-Resources | 🗂️ | Contains main source code, sample *broken* .nessus file, the finalized SRS, and some diagrams. These files will help kickstart development. |
 | my-app | 🗂️ | Contains files necessary to build and run INFILTR8, including its backend and GUI. |
 | README | .md | All of the text that you are currently reading. |
+| install | .sh | Shell-script that installs the system for you. |
+| .DS_Store | - | Stores folder customization options (MacOS Only) |
 
 ## 🖥️ Tech Stack Foundation
 
@@ -65,7 +67,7 @@ Special Thanks to All of those who contributed! We could not do it without you!
 | Python | Langauge | High-level, interpreted programming language known for its readability and versatility. [Used for Code].|
 | Tailwind | Library | Utility-first CSS framework for rapidly building custom user interfaces. [Used for Frontend].|
 
-## 💾 Install Instructions.
+## 💾 Install Instructions
 1. After pulling GitHub code, open terminal.
 
 2. `cd` into the folder called "my-app":
