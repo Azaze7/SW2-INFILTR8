@@ -49,26 +49,26 @@ Special Thanks to All of those who contributed! We could not do it without you!
 
 **The following individuals are the guidance team for the development of INFILTR8. They are:**
 
-Dr. Salamah Salamah - Manager
+* Dr. Salamah Salamah - Manager
 
-Scott R. Ledford - TA
+* Scott R. Ledford - TA
 
-Consuelo Ramirez – TA
+* Consuelo Ramirez – TA
 
 **This Project is being worked on at the behest of the U.S. Army Combat Capabilities Development Command, also known as DEVCOM.**
 **Our official customer list includes:**
 
-Sebastian Quinones  
+* Sebastian Quinones  
 
-Diana Ramirez  
+* Diana Ramirez  
 
-Timothy Hannan  
+* Timothy Hannan  
 
-Lucia Rodriguez-Melgoza  
+* Lucia Rodriguez-Melgoza  
 
-Thomas Tenorio  
+* Thomas Tenorio  
 
-Miriam Olague 	
+* Miriam Olague 	
 
 <p align="center">
 Team #6 extends its sincere gratitude to all of our customers and our guidance team! Thank you for believing in us!
