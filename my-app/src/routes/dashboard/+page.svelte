@@ -2,8 +2,12 @@
     import Footer from "$lib/components/dashboardUI/Footer.svelte";
     import Navbar from "$lib/components/dashboardUI/Navbar.svelte";
     import Sidebar from "$lib/components/dashboardUI/Sidebar.svelte";
+    import Grids from "$lib/components/dashboardUI/Grids.svelte"
 
     let showCreateProjectModal = false;
+    /**
+     * @type {any[]}
+     */
     let selectedFiles = [];
     let notifications = [
         { id: 1, text: "New vulnerability detected", unread: true },
@@ -31,6 +35,7 @@
     }
 
     function openFileExplorer() {
+        // @ts-ignore
         document.getElementById('file-input').click();
     }
 
@@ -39,15 +44,24 @@
         console.log("All files discarded");
     }
 
+    /**
+     * @param {{ id?: number; text: any; unread: any; }} notification
+     */
     function openNotification(notification) {
         notification.unread = false;
         alert(notification.text);
     }
 
+    /**
+     * @param {{ target: { files: Iterable<any> | ArrayLike<any>; }; }} event
+     */
     function handleFileSelection(event) {
         selectedFiles = Array.from(event.target.files);
     }
 
+    /**
+     * @param {number} index
+     */
     function removeFile(index) {
         selectedFiles.splice(index, 1);
     }
@@ -60,6 +74,7 @@
         <Sidebar/>
     </div>
     <div class="content">
+        <Grids/>
 
         <!-- Greeting the analyst -->
         <h1>{greeting}</h1>

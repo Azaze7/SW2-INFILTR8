@@ -1,22 +1,69 @@
 <script>
-    /* could possibly move to JavaScript file in future */
     let email = "";
     let password = "";
     let confirmPass = "";
     let error = false;
     let register = false;
+    let errorMessage = "";
+    let loading = false;
 
-    function handleAuthentication() {
+    async function handleAuthentication() {
+        error = false;
+        loading = true;
+
         if (!email || !password || (register && !confirmPass)) {
+            errorMessage = "All fields are required.";
             error = true;
+            loading = false;
             return;
         }
+
+        if (register && password !== confirmPass) {
+            errorMessage = "Passwords do not match.";
+            error = true;
+            loading = false;
+            return;
+        }
+
+        const endpoint = register ? 'http://localhost:3000/register' : 'http://localhost:3000/login';
+        const payload = {
+            username: email,
+            password: password
+        };
+
+        try {
+            const response = await fetch(endpoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                errorMessage = result.message || 'Authentication failed';
+                error = true;
+            } else {
+                handleSuccess();
+            }
+        } catch (e) {
+            errorMessage = "An error occurred during the request.";
+            error = true;
+        }
+
+        loading = false;
     }
-    
-    // Change this when the authentication and database works
-    // So the user is redirected once their credentials are verified
-    function handleSubmit() {
+
+    function handleSuccess() {
+        // Redirect to dashboard after successful login/registration
         window.location.href = "/dashboard";
+    }
+
+    function handleSubmit(event) {
+        event.preventDefault(); // Prevent the default form submission
+        handleAuthentication(); // Call the API
     }
 
     function handleRegister() {
@@ -25,26 +72,28 @@
 </script>
 
 <div class="authContainer">
-    <form on:submit={handleSubmit}>
+    <form on:submit|preventDefault={handleSubmit}>
         <h1>{register ? "Register" : "Login"}</h1>
         {#if error}
-            <p class="error">The information you have entered is not correct</p>
+            <p class="error">{errorMessage}</p>
         {/if}
         <label>
-            <p class={email ? " above" : " center"}>Email</p>
+            <p class={email ? "above" : "center"}>Email</p>
             <input bind:value={email} type="email" placeholder="Email" required/>
         </label>
         <label>
-            <p class={password ? " above" : " center"}>Password</p>
+            <p class={password ? "above" : "center"}>Password</p>
             <input bind:value={password} type="password" placeholder="Password" required/>
         </label>
         {#if register}
             <label>
-                <p class={confirmPass ? " above" : " center"}>Confirm Password</p>
+                <p class={confirmPass ? "above" : "center"}>Confirm Password</p>
                 <input bind:value={confirmPass} type="password" placeholder="Confirm Password" required/>
             </label>
         {/if}
-        <button type="submit">Submit</button>
+        <button type="submit" disabled={loading}>
+            {loading ? 'Processing...' : 'Submit'}
+        </button>
     </form>
 
     <div class="options">
@@ -52,18 +101,17 @@
         {#if register}
             <div>
                 <p>Already have an account?</p>
-                <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                <p on:click={handleRegister} on:keydown={() => {}}>Login</p>
+                <button type="button" on:click={handleRegister}>Login</button>
             </div>
         {:else}
             <div>
                 <p>Don't have an account?</p>
-                <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                <p on:click={handleRegister} on:keydown={() => {}}>Register</p>
+                <button type="button" on:click={handleRegister}>Register</button>
             </div>
         {/if}
     </div>
 </div>
+
 
 <style>
     .authContainer {
