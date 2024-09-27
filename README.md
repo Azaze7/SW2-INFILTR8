@@ -99,7 +99,7 @@ You can also use the install script if you’ve downloaded the source code from 
 
 ## 🎞️ Video Demonstration.
 
-* Short video archives demonstrating the various vertical slices for INFILTR8 have been recorded to show the software design process.
+Short video archives demonstrating the various vertical slices for INFILTR8 have been recorded to show the software design process.
 
   
 * DEMO #1 - Non-Functional GUI, Data Storage, GitHub Configuration, & Project Dashboard.
