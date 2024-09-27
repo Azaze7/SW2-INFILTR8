@@ -68,7 +68,7 @@ Special Thanks to All of those who contributed! We could not do it without you!
 | Tailwind | Library | Utility-first CSS framework for rapidly building custom user interfaces. [Used for Frontend].|
 
 ## 💾 Install Instructions
-1. After pulling GitHub code, open terminal.
+1. After pulling GitHub code (via your preferred method), open the terminal.
 
 2. `cd` into the folder called "my-app":
     ```bash
@@ -90,21 +90,21 @@ Special Thanks to All of those who contributed! We could not do it without you!
     npm run dev
     ```
 
-Or use the install script if you’ve downloaded the source code from GitHub as a ZIP file.
+You can also use the install script if you’ve downloaded the source code from GitHub as a ZIP file.
 
-```bash
-./install.sh
-```
+1. Run Install Script:
+    ```bash
+    ./install.sh
+    ```
 
 ## 🎞️ Video Demonstration.
 
 * Videos demonstrating the various vertical slices for INFILTR8 have been recorded for archive purposes.
-* 
+  
 * DEMO #1 - Non-Functional GUI, Data Storage, GitHub Configuration, & Project Dashboard.
 * [9/16/24]
   * https://youtu.be/wsV8tB8XbOw
-* 
+  
 * DEMO #2 - GUI Update, Improved GitHub & Database, Processing Recon Data, Allowed/Off-limit IPs, Entry Point Selection, & Start of Logs.
 * [9/30/24]
   * https://youtu.be/wsV8tB8XbOw
-
