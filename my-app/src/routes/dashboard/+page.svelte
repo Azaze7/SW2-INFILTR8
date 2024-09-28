@@ -4,9 +4,6 @@
 
 </script>
 
-<div class="main-container">
+<div class="side-container">
     <TestSidebar/>
-    <!----<div class="side-container">
-        <TestSidebar/>
-    </div>-->
 </div>

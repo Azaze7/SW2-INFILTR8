@@ -5,7 +5,240 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Responsive TestSidebar</title>
-    <link rel="stylesheet" type="text/css" href="sidebar.css">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+        
+        :root {
+            --bg: #1d1b28;
+            --color-main: #4628e9;
+            --color-main-dark: #191528;
+            --color-second: #aaa7b9;
+            --transition: all .3s ease-out;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        
+        *, ::before, ::after {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 1.5;
+        }
+        
+        a {
+            text-decoration: none;
+            vertical-align: middle;
+            color: var(--color-second);
+        }
+        
+        ul {
+            list-style: none;
+        }
+        
+        .site {
+            display: flex;
+            flex-direction: row;
+        }
+        
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 280px;
+            background-color: var(--bg);
+            display: flex;
+            flex-direction: column;
+            transition: var(--transition);
+            -webkit-transition: var(--transition);
+            overflow: hidden;
+        }
+        
+        /* Brand / Logo section */
+        .brand {
+            height: 80px;
+            padding: 25px;
+            margin-right: 15px;
+            border-bottom: 1px solid;
+            border-color: var(--color-main-dark);
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .brand :is(div.a) {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo a {
+            font-weight: 800;
+            font-size: 1.5rem;
+            color: white;
+        }
+        
+        .logo span {
+            color: var(--color-main)
+        }
+        
+        .trigger ion-icon, nav a ion-icon:first-child {
+            font-size: 20px;
+        }
+        
+        .trigger [name="menu-outline"], .mininav .trigger [name='chevron-back-outline'] {
+            display: none;
+        }
+        
+        .mininav .trigger [name='menu-outline'] {
+            display: block;
+        }
+        
+        /* Navigation */
+        nav {
+            overflow-y: scroll;
+            overflow-x: hidden;
+            height: 80vh;
+        }
+        
+        nav li a, .sign-out a {
+            position: relative;
+            padding: 15px 25px;
+            display: flex;
+            flex: 0 0 100%;
+            align-items: center;
+            transform: var(--transition);
+            -webkit-transform: var(--transition);
+        }
+        
+        nav li :is(a:hover, .active) {
+            background-color: var(--color-main-dark);
+        }
+        
+        nav li a > * {
+            display: flex;
+            align-items: center;
+        }
+        
+        nav a ion-icon {
+            flex-shrink: 0;
+            transition: var(--transition);
+            -webkit-transition: var(--transition);
+        }
+        
+        nav a ion-icon:first-child {
+            margin-right: 15px;
+            color: #504a6e;
+        }
+        
+        nav li a span {
+            display: flex;
+            flex-grow: 1;
+            transform: var(--transition);
+            -webkit-transform: var(--transition);
+        }
+        
+        nav li a:hover, .collapse a span {
+            color: white;
+        }
+        
+        nav ul ul li a::before {
+            content: '';
+            width: 5px;
+            height: 5px;
+            background-color: var(--color-second);
+            border-radius: 50%;
+            margin: 0 15px;
+        }
+        
+        nav li a:hover::before {
+            background-color: var(--color-main);
+        }
+        
+        nav :is(a:hover, .active) ion-icon:first-child,
+        .trigger a:hover ion-icon {
+            color: var(--color-main);
+        }
+        
+        nav li.small {
+            color: #504a6e;
+            text-transform: uppercase;
+            font-size: 10px;
+            margin: 25px 25px 5px;
+            letter-spacing: 2px;
+        }
+        
+        
+        /* Hide Submenu */
+        nav li.has-child-collapse ul {
+            max-height: 0;
+            opacity: 0;
+            /*visibility: hidden;
+            overflow: hidden;*/
+            transition: all .2s ease-out;
+        }
+        
+        /* Show Submenu */
+        nav li.collapse ul {
+            max-height: 100vh;
+            opacity: 1;
+            visibility: visible;
+            overflow: visible;
+            transition: all .5s ease-in;
+        }
+        
+        nav li.collapse ion-icon:last-child {
+            transform: rotate(-90deg);
+            -webkit-transform: rotate(-90deg);
+        }
+        
+        
+        /* Sing Out */
+        .sign-out {
+            display: flex;
+            align-items: center;
+        }
+        
+        /* Mini Nav */
+        .mininav .sidebar {
+            width: 70px;
+        }
+        
+        .mininav :is(.logo, nav ul ul a) {
+            display: none;
+        }
+        
+        .mininav nav a *:not(ion-icon:first-child),
+        .mininav nav .small {
+            opacity: 0;
+        }
+        
+        .mininav .main {
+            padding-left: 70px;
+        }
+        
+        /* Scroll Bar */
+        nav::-webkit-scrollbar {
+            width: 7px;
+        }
+        
+        nav::-webkit-scrollbar-thumb {
+            background-color: transparent;
+        }
+        
+        nav:hover::-webkit-scrollbar-thumb {
+            background-color: #4c4091;
+        }
+        
+        </style>
+
+
 </head>
 
 <script>
@@ -219,234 +452,3 @@
 
 </html>
 
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
-
-:root {
-    --bg: #1d1b28;
-    --color-main: #4628e9;
-    --color-main-dark: #191528;
-    --color-second: #aaa7b9;
-    --transition: all .3s ease-out;
-}
-
-* {
-    margin: 0;
-    padding: 0;
-}
-
-*, ::before, ::after {
-    box-sizing: border-box;
-}
-
-body {
-    font-family: 'Poppins', sans-serif;
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 1.5;
-}
-
-a {
-    text-decoration: none;
-    vertical-align: middle;
-    color: var(--color-second);
-}
-
-ul {
-    list-style: none;
-}
-
-.site {
-    display: flex;
-    flex-direction: row;
-}
-
-.sidebar {
-    position: fixed;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 280px;
-    background-color: var(--bg);
-    display: flex;
-    flex-direction: column;
-    transition: var(--transition);
-    -webkit-transition: var(--transition);
-    overflow: hidden;
-}
-
-/* Brand / Logo section */
-.brand {
-    height: 80px;
-    padding: 25px;
-    margin-right: 15px;
-    border-bottom: 1px solid;
-    border-color: var(--color-main-dark);
-    display: flex;
-    justify-content: space-between;
-}
-
-.brand :is(div.a) {
-    display: flex;
-    align-items: center;
-}
-
-.logo a {
-    font-weight: 800;
-    font-size: 1.5rem;
-    color: white;
-}
-
-.logo span {
-    color: var(--color-main)
-}
-
-.trigger ion-icon, nav a ion-icon:first-child {
-    font-size: 20px;
-}
-
-.trigger [name="menu-outline"], .mininav .trigger [name='chevron-back-outline'] {
-    display: none;
-}
-
-.mininav .trigger [name='menu-outline'] {
-    display: block;
-}
-
-/* Navigation */
-nav {
-    overflow-y: scroll;
-    overflow-x: hidden;
-    height: 80vh;
-}
-
-nav li a, .sign-out a {
-    position: relative;
-    padding: 15px 25px;
-    display: flex;
-    flex: 0 0 100%;
-    align-items: center;
-    transform: var(--transition);
-    -webkit-transform: var(--transition);
-}
-
-nav li :is(a:hover, .active) {
-    background-color: var(--color-main-dark);
-}
-
-nav li a > * {
-    display: flex;
-    align-items: center;
-}
-
-nav a ion-icon {
-    flex-shrink: 0;
-    transition: var(--transition);
-    -webkit-transition: var(--transition);
-}
-
-nav a ion-icon:first-child {
-    margin-right: 15px;
-    color: #504a6e;
-}
-
-nav li a span {
-    display: flex;
-    flex-grow: 1;
-    transform: var(--transition);
-    -webkit-transform: var(--transition);
-}
-
-nav li a:hover, .collapse a span {
-    color: white;
-}
-
-nav ul ul li a::before {
-    content: '';
-    width: 5px;
-    height: 5px;
-    background-color: var(--color-second);
-    border-radius: 50%;
-    margin: 0 15px;
-}
-
-nav li a:hover::before {
-    background-color: var(--color-main);
-}
-
-nav :is(a:hover, .active) ion-icon:first-child,
-.trigger a:hover ion-icon {
-    color: var(--color-main);
-}
-
-nav li.small {
-    color: #504a6e;
-    text-transform: uppercase;
-    font-size: 10px;
-    margin: 25px 25px 5px;
-    letter-spacing: 2px;
-}
-
-
-/* Hide Submenu */
-nav li.has-child-collapse ul {
-    max-height: 0;
-    opacity: 0;
-    /*visibility: hidden;
-    overflow: hidden;*/
-    transition: all .2s ease-out;
-}
-
-/* Show Submenu */
-nav li.collapse ul {
-    max-height: 100vh;
-    opacity: 1;
-    visibility: visible;
-    overflow: visible;
-    transition: all .5s ease-in;
-}
-
-nav li.collapse ion-icon:last-child {
-    transform: rotate(-90deg);
-    -webkit-transform: rotate(-90deg);
-}
-
-
-/* Sing Out */
-.sign-out {
-    display: flex;
-    align-items: center;
-}
-
-/* Mini Nav */
-.mininav .sidebar {
-    width: 70px;
-}
-
-.mininav :is(.logo, nav ul ul a) {
-    display: none;
-}
-
-.mininav nav a *:not(ion-icon:first-child),
-.mininav nav .small {
-    opacity: 0;
-}
-
-.mininav .main {
-    padding-left: 70px;
-}
-
-/* Scroll Bar */
-nav::-webkit-scrollbar {
-    width: 7px;
-}
-
-nav::-webkit-scrollbar-thumb {
-    background-color: transparent;
-}
-
-nav:hover::-webkit-scrollbar-thumb {
-    background-color: #4c4091;
-}
-
-</style>
