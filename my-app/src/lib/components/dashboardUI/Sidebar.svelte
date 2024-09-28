@@ -1,7 +1,7 @@
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <script>
 
-	import Settings from './../../../../node_modules/@tabler/icons-svelte/dist/icons/settings.svelte';
+	import Settings from "../../../img/settings.svg";
     import Homepage from "../../../img/home.svg";
     import person from "../../../img/person.svg";
 </script>
@@ -38,8 +38,8 @@
 
         <div class="item">
             <span class="title">MAIN</span>
-            <a href="/" class="listItem">
-                <img src={Homepage} alt="Home"> <!--Home Icon-->
+            <a href="/settings" class="listItem">
+                <img src={Settings} alt="settings"> <!--Home Icon-->
                 <span class="listItemTitle">Settings</span>
             </a>
             <a href="/" class="listItem">

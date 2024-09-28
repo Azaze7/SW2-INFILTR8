@@ -2,13 +2,14 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 </head>
+
 <script>
-    import notification from "../../../img/notifications.svg"
-    import search from "../../../img/search.svg"
-    import settings from "../../../img/settings.svg"
-    import inbox from "../../../img/inbox.svg"
-    import addFile from "../../../img/fileAdd.svg"
-    import robot from "../../../img/robot.svg"
+    import notification from "../../../img/notifications.svg";
+    import search from "../../../img/search.svg";
+    import settings from "../../../img/settings.svg";
+    import inbox from "../../../img/inbox.svg";
+    import addFile from "../../../img/fileAdd.svg";
+    import robot from "../../../img/robot.svg";
 
     // Reactive variable for the greeting
     /**
@@ -30,10 +31,9 @@
 
     // Call the function once when the component loads
     updateGreeting();
-
-
 </script>
-<div class="navbar">
+
+<nav class="navbar">
     <div class="logo">
         <img src={robot} alt="INFILTR8"> <!--Insert LOGO HERE-->
         <span>INFILTR8 Says {greeting}</span>
@@ -45,7 +45,7 @@
         <div class="notification">
             <span class="material-symbols-outlined">
                 notifications
-                </span>
+            </span>
             <img src={notification} alt="Notification"> <!--Notification Icon-->
             <span>1</span>
         </div>
@@ -55,7 +55,7 @@
         </div>
         <img src={settings} alt="Settings" class="icon"> <!--Settings Icon-->
     </div>
-</div>
+</nav>
 
 <style>
     .navbar {
@@ -64,6 +64,7 @@
         display: flex;
         justify-content: space-between;
         background-color: #333;
+        color: white;
     }
 
     .logo {
@@ -79,13 +80,13 @@
         gap: 20px;
     }
 
-    
+    .icons img {
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
 
-    .icons img{
-        &:hover {
-            cursor: pointer;
-            background-color: lightcyan;
-        }
+    .icons img:hover {
+        background-color: lightcyan;
     }
 
     .notification {
@@ -93,10 +94,12 @@
     }
 
     .notification img {
-        &:hover {
-            cursor: pointer;
-            background-color: lightcyan;
-        }
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .notification img:hover {
+        background-color: lightcyan;
     }
 
     .notification span {
@@ -125,7 +128,11 @@
         height: 26px;
         border-radius: 50%;
         object-fit: cover;
-        /*background-color: pink;*/
+    }
+
+    :global(body.light-mode) .navbar {
+        background-color: #f0f0f0;
+        color: black;
     }
 
 </style>
