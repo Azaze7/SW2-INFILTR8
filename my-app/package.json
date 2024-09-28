@@ -25,7 +25,12 @@
 	"type": "module",
 	"dependencies": {
 		"@tabler/icons-svelte": "^3.15.0",
+		"bcrypt": "^5.1.1",
 		"clsx": "^2.1.1",
+		"cors": "^2.8.5",
+		"dotenv": "^16.4.5",
+		"express": "^4.21.0",
+		"neo4j-driver": "^5.25.0",
 		"svelte-motion": "^0.12.2",
 		"tailwind-merge": "^2.5.2"
 	}

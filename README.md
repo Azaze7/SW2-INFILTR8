@@ -8,10 +8,12 @@
 
 ## 🔎 Table of Contents.
 
-1. Team Composition [The Nine-Bytes] 
-2. What Files are Enclosed Here?
-3. Tech Stack Foundation.
-4. Vieo Demonstration.
+1. Team Composition [The Nine-Bytes]
+2. Guidance Team & Customer Information [DEVCOM]
+3. What Files are Enclosed Here?
+4. Tech Stack Foundation.
+5. Install Instructions
+6. Vieo Demonstration.
 
 ## 🎏 Team Composition [The Nine-Bytes]
 
@@ -43,6 +45,36 @@
 Special Thanks to All of those who contributed! We could not do it without you!
 </p>
 
+## 🎖️ Guidance Team & Customer Information [DEVCOM] 
+
+**The following individuals are the guidance team for the development of INFILTR8. They are:**
+
+* Dr. Salamah Salamah - Manager
+
+* Scott R. Ledford - TA
+
+* Consuelo Ramirez – TA
+
+**This Project is being worked on at the behest of the U.S. Army Combat Capabilities Development Command, also known as DEVCOM.**
+
+**Our official customer list includes:**
+
+* Sebastian Quinones  
+
+* Diana Ramirez  
+
+* Timothy Hannan  
+
+* Lucia Rodriguez-Melgoza  
+
+* Thomas Tenorio  
+
+* Miriam Olague 	
+
+<p align="center">
+Team #6 extends its sincere gratitude to all of our customers and our guidance team! Thank you for believing in us!
+</p>
+
 ## 🗂️ What Files are Enclosed Here?
 
 | Filename | Type | Description | 
@@ -51,6 +83,8 @@ Special Thanks to All of those who contributed! We could not do it without you!
 | Initial-Dependecies-And-Resources | 🗂️ | Contains main source code, sample *broken* .nessus file, the finalized SRS, and some diagrams. These files will help kickstart development. |
 | my-app | 🗂️ | Contains files necessary to build and run INFILTR8, including its backend and GUI. |
 | README | .md | All of the text that you are currently reading. |
+| install | .sh | Shell-script that installs the system for you. |
+| .DS_Store | - | Stores folder customization options (MacOS Only). |
 
 ## 🖥️ Tech Stack Foundation
 
@@ -64,8 +98,46 @@ Special Thanks to All of those who contributed! We could not do it without you!
 | Python | Langauge | High-level, interpreted programming language known for its readability and versatility. [Used for Code].|
 | Tailwind | Library | Utility-first CSS framework for rapidly building custom user interfaces. [Used for Frontend].|
 
+## 💾 Install Instructions
+1. After pulling GitHub code (via your preferred method), open the terminal.
+
+2. `cd` into the folder called "my-app":
+    ```bash
+    cd my-app
+    ```
+
+3. Install dependencies:
+    ```bash
+    npm i
+    ```
+
+4. Build INFILTR8:
+    ```bash
+    npm run build
+    ```
+
+5. Start INFILTR8:
+    ```bash
+    npm run dev
+    ```
+
+You can also use the install script if you’ve downloaded the source code from GitHub as a ZIP file.
+
+1. Run Install Script:
+    ```bash
+    ./install.sh
+    ```
+
 ## 🎞️ Video Demonstration.
 
-* Video's demonstrating the various vertical slices for INFILTR8 have been recorded for archive purposes.
-* DEMO #1 - Non-Functional GUI
+Short video archives demonstrating the various vertical slices for INFILTR8 have been recorded to show the software design process.
+
+  
+* DEMO #1 - Non-Functional GUI, Data Storage, GitHub Configuration, & Project Dashboard.
+* Due: [9/16/24]
+  * https://youtu.be/wsV8tB8XbOw
+
+  
+* DEMO #2 - GUI Update, Improved GitHub & Database, Processing Recon Data, Allowed/Off-limit IPs, Entry Point Selection, & Start of Logs.
+* Due: [9/30/24]
   * https://www.youtube.com/watch?v=jpO2zd9zbng
