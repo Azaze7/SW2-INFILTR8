@@ -10,7 +10,6 @@
     </aside>
     <main class="main-content">
         <!-- Your main content goes here -->
-         <TestNavbar></TestNavbar>
         <h1>Main Content</h1>
         <p>This is the center of the page.</p>
     </main>
@@ -51,7 +50,7 @@
     /* Sidebar Styling */
     .sidebar {
         grid-area: sidebar;
-        background-color: var(--bg);
+        background-color: f1f1f1;
         color: white;
         padding: 20px;
         display: flex;
@@ -63,8 +62,8 @@
         grid-area: main;
         padding: 20px;
         overflow-y: auto;
-        /*background-color: #f1f1f1;*/
-        background-color: var(--bg);
+        background-color: #f1f1f1;
+        /*background-color: var(--bg);*/
     }
     .main-content h1, p {
         margin-left: 3rem;
