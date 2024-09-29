@@ -31,8 +31,8 @@
             <img src={Homepage} alt="Home"> <!--Home Icon-->
             <span class="listItemTitle">Charts</span>
         </a>
-        <a href="/" class="listItem">
-            <img src={person} alt="Profile"> <!--Home Icon-->
+        <a href="/dashboard/logs" class="listItem">
+            <img src={Homepage} alt="Profile"> <!--Home Icon-->
             <span class="listItemTitle">Logs</span>
         </a>
 
