@@ -236,7 +236,7 @@
             background-color: #4c4091;
         }
         
-        </style>
+    </style>
 
 
 </head>
@@ -441,9 +441,9 @@
                 </a>
             </div>
         </div>
-        <div class="main">
+        <!----<div class="main">
             <h1>Content</h1>
-        </div>
+        </div>-->
     </div>
 
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
