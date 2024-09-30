@@ -2,6 +2,18 @@
     import TestNavbar from "$lib/components/dashboardUI/TestNavbar.svelte";
     import TestSidebar from "$lib/components/dashboardUI/TestSidebar.svelte";
     import TestTopRight from "$lib/components/dashboardUI/TestTopRight.svelte";
+
+    let greeting = "";
+    let currentHour = new Date().getHours();
+
+    // Determine the greeting based on the time of day
+    if (currentHour < 12) {
+        greeting = "Good morning!";
+    } else if (currentHour < 18) {
+        greeting = "Good afternoon!";
+    } else {
+        greeting = "Good evening!";
+    }
 </script>
 
 
@@ -12,7 +24,7 @@
     <main class="main-content">
         <!-- Your main content goes here -->
         <div class="logo"><a href="#"><span>Dash</span>board</a></div>
-        <p>This is the center of the page.</p>
+        <p>{greeting}</p>
     </main>
     <section class="right-side">
         <!-- Right side content -->
