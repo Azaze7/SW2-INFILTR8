@@ -65,8 +65,8 @@
         background-color: #f1f1f1;
         /*background-color: var(--bg);*/
     }
-    .main-content h1, p {
-        margin-left: 3rem;
+    .main-content h1{
+        margin-left: 1rem;
     }
 
     /* Right Side Section Styling */
