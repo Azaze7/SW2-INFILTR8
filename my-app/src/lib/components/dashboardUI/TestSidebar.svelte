@@ -426,7 +426,7 @@
                         </li>
                         <li>
                             <!-- svelte-ignore a11y-invalid-attribute -->
-                            <a href="Settings.svelte">
+                            <a href="/settings">
                                 <ion-icon name="information-circle-outline"></ion-icon>
                                 <span>Help & Settings</span>
                             </a>
