@@ -123,7 +123,7 @@ Team #6 extends its sincere gratitude to all of our customers and our guidance t
 
 You must also ensure the database is running so login onto the site is possible.
 
-1. Start Database:
+1. Start Database (In Split Terminal):
     ```bash
     node .\server\auth.js 
     ```
