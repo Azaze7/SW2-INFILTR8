@@ -98,8 +98,6 @@
                         <!-- svelte-ignore a11y-invalid-attribute -->
                         <li class="right-li"><a href="#"><ion-icon name="hammer-outline"></ion-icon></a></li>
                         <!-- svelte-ignore a11y-invalid-attribute -->
-                        <li class="right-li"><a href="#"><ion-icon name="hammer-outline"></ion-icon></a></li>
-                        <!-- svelte-ignore a11y-invalid-attribute -->
                         <li class="is-menu"><a href="#"><ion-icon name="chevron-down-outline"></ion-icon></a></li>
                         <!-- svelte-ignore a11y-invalid-attribute -->
                         <li class="is-menu"><a href="#"><ion-icon name="person-outline"></ion-icon></a></li>

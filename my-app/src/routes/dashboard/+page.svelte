@@ -11,13 +11,14 @@
     </aside>
     <main class="main-content">
         <!-- Your main content goes here -->
-        <h1>Main Content</h1>
+        <div class="logo"><a href="#"><span>Dash</span>board</a></div>
         <p>This is the center of the page.</p>
     </main>
     <section class="right-side">
         <!-- Right side content -->
         <!--<h2>Right Sidebar</h2>
         <p>Additional info or widgets can go here.</p>-->
+        <div class="logo"><a href="#"><span>INFI</span>LTR8</a></div>
         <TestTopRight/>
     </section>
 </div>
@@ -66,9 +67,6 @@
         overflow-y: auto;
         /*background-color: #f1f1f1;*/
         background-color: var(--bg);
-    }
-    .main-content h1{
-        margin-left: 1rem;
     }
 
     /* Right Side Section Styling */
