@@ -148,4 +148,4 @@ Short video archives demonstrating the various vertical slices for INFILTR8 have
   
 * DEMO #2 - GUI Update, Improved GitHub & Database, Processing Recon Data, Allowed/Off-limit IPs, Entry Point Selection, & Start of Logs.
 * Due: [9/30/24]
-  * Test Build #1 - Real Login, Settings Screen (Font Resize & Dark Mode) - https://www.youtube.com/watch?v=jpO2zd9zbng
+  * Test Build #1 - Real Login, Settings Screen (Font Resize & Dark Mode) - https://youtu.be/GIlSGcYOIUc
