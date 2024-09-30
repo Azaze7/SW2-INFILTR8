@@ -44,7 +44,7 @@
         display: grid;
         grid-template-areas:
             "sidebar main right";
-        grid-template-columns: 250px 1fr 250px; /* Sidebar, main content, right-side width */
+        grid-template-columns: 250px 1fr 350px; /* Sidebar, main content, right-side width */
         height: 100vh;
         font-family: Arial, sans-serif;
     }
@@ -62,10 +62,10 @@
     /* Main Content Styling */
     .main-content {
         grid-area: main;
-        padding: 20px;
+        padding: 30px;
         overflow-y: auto;
-        background-color: #f1f1f1;
-        /*background-color: var(--bg);*/
+        /*background-color: #f1f1f1;*/
+        background-color: var(--bg);
     }
     .main-content h1{
         margin-left: 1rem;
@@ -74,7 +74,8 @@
     /* Right Side Section Styling */
     .right-side {
         grid-area: right;
-        background-color: #f8f9fa;
+        /*background-color: #f8f9fa;*/
+        background-color: var(--bg);
         padding: 20px;
         box-shadow: -2px 0 4px rgba(0, 0, 0, 0.1);
     }

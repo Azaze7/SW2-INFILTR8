@@ -30,7 +30,8 @@
             font-family: 'Poppins', sans-serif;
             font-size: 14px;
             font-weight: 400;
-            line-height: 1.5;
+            line-height: 1.8;
+            background: var(--bg);
         }
         
         a {
@@ -39,41 +40,44 @@
             color: var(--color-second);
         }
 
-        .right {
-            margin-top: .5rem;
+        ul {
+            list-style: none;
         }
 
-        .right .top {
-            display: flex;
-            justify-content: end;
-            gap: 1rem;
+        strong {
+            font-weight: 600;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 2rem;
         }
         
-        .right .top button a {
-            display: none;
-        }
-
-        .right .theme-toggler {
+        .right-nav .right-ul {
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
-            height: 1.4rem;
-            width: 4rem;
-            cursor: pointer;
         }
 
-        .right .top .profile {
+        .right-nav .right-ul .right-li {
             display: flex;
-            gap: 2rem;
-            text-align: right;
+            align-items: center;
+            margin-left: .5rem;
+            width: 40px;
+            height: 40px;
         }
 
-        .right .top. .profile .profile-photo {
-            color: red;
+        .right-nav .right-ul .right-li a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            padding: 10px;
+            border-radius: 50%;
+            transition: var(--transition);
         }
-        
-        
-        
         
         
     </style>
@@ -85,9 +89,21 @@
     <div id="page" class="site">
         <header>
             <div class="container">
-                <nav>
+                <nav class="right-nav">
                     <!-- svelte-ignore a11y-invalid-attribute -->
-                    <div class="logo"><a href="#"><span>INFI</span>LTR8</a></div>
+                    <!--<div class="logo"><a href="#"><span>INFI</span>LTR8</a></div>-->
+                    <ul class="right-ul">
+                        <!-- svelte-ignore a11y-invalid-attribute -->
+                        <li class="right-li"><a href="#"><ion-icon name="hammer-outline"></ion-icon></a></li>
+                        <!-- svelte-ignore a11y-invalid-attribute -->
+                        <li class="right-li"><a href="#"><ion-icon name="hammer-outline"></ion-icon></a></li>
+                        <!-- svelte-ignore a11y-invalid-attribute -->
+                        <li class="right-li"><a href="#"><ion-icon name="hammer-outline"></ion-icon></a></li>
+                        <!-- svelte-ignore a11y-invalid-attribute -->
+                        <li class="is-menu"><a href="#"><ion-icon name="chevron-down-outline"></ion-icon></a></li>
+                        <!-- svelte-ignore a11y-invalid-attribute -->
+                        <li class="is-menu"><a href="#"><ion-icon name="person-outline"></ion-icon></a></li>
+                    </ul>
                 </nav>
             </div>
         </header>
