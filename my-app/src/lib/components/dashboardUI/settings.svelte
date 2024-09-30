@@ -84,7 +84,7 @@
 <!-- We import the sidebar here for the left, then will do the actual settings screen. -->
 <div class="main-container">
     <div class="sidebar-container">
-        <TestSidebar/>
+        <Sidebar/>
     </div>
     
     <!-- Custom Settings Screen UI -->
