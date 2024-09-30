@@ -1,6 +1,7 @@
 <script>
     import TestNavbar from "$lib/components/dashboardUI/TestNavbar.svelte";
     import TestSidebar from "$lib/components/dashboardUI/TestSidebar.svelte";
+    import TestTopRight from "$lib/components/dashboardUI/TestTopRight.svelte";
 </script>
 
 
@@ -15,8 +16,9 @@
     </main>
     <section class="right-side">
         <!-- Right side content -->
-        <h2>Right Sidebar</h2>
-        <p>Additional info or widgets can go here.</p>
+        <!--<h2>Right Sidebar</h2>
+        <p>Additional info or widgets can go here.</p>-->
+        <TestTopRight/>
     </section>
 </div>
 
