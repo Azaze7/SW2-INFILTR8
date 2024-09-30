@@ -1,108 +1,52 @@
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <script>
-    import Homepage from "../../../img/home.svg"
-    import person from "../../../img/person.svg"
 
+	import Settings from "../../../img/settings.svg";
+    import Homepage from "../../../img/home.svg";
+    import person from "../../../img/person.svg";
 </script>
+
 <div class="sidebar">
     <div class="item">
-        <span class="title">MAIN</span>
-        <a href="/" class="listItem">
-            <img src={Homepage} alt="Home"> <!--Home Icon-->
-            <span class="listItemTitle">Home</span>
-        </a>
-        <a href="/" class="listItem">
-            <img src={person} alt="Profile"> <!--Home Icon-->
-            <span class="listItemTitle">Profile</span>
-        </a>
-    </div>
-    <div class="item">
         <span class="title">List</span>
-        <a href="/" class="listItem">
+        <a href="/dashboard/" class="listItem">
             <img src={Homepage} alt="Home"> <!--Home Icon-->
-            <span class="listItemTitle">Home</span>
+            <span class="listItemTitle">Dashboard</span>
         </a>
+        <a href="/dashboard/project" class="listItem">
+            <img src={Homepage} alt="Project Manager">
+            <span class="listItemTitle">Project Manager</span>
+        </a>
+        
         <a href="/" class="listItem">
             <img src={Homepage} alt="Profile"> <!--Home Icon-->
-            <span class="listItemTitle">Profile</span>
+            <span class="listItemTitle">Analysis</span>
         </a>
-        <a href="/" class="listItem">
+        <a href="/dashboard/reports" class="listItem">
             <img src={Homepage} alt="Profile"> <!--Home Icon-->
-            <span class="listItemTitle">Profile</span>
-        </a>
-        <a href="/" class="listItem">
-            <img src={Homepage} alt="Profile"> <!--Home Icon-->
-            <span class="listItemTitle">Profile</span>
-        </a>
-    </div>
-    <div class="item">
-        <span class="title">General</span>
-        <a href="/" class="listItem">
-            <img src={Homepage} alt="Home"> <!--Home Icon-->
-            <span class="listItemTitle">Home</span>
-        </a>
-        <a href="/" class="listItem">
-            <img src={Homepage} alt="Profile"> <!--Home Icon-->
-            <span class="listItemTitle">Profile</span>
-        </a>
-        <a href="/" class="listItem">
-            <img src={Homepage} alt="Profile"> <!--Home Icon-->
-            <span class="listItemTitle">Profile</span>
-        </a>
-        <a href="/" class="listItem">
-            <img src={Homepage} alt="Profile"> <!--Home Icon-->
-            <span class="listItemTitle">Profile</span>
-        </a>
-    </div>
-    <div class="item">
-        <span class="title">Maintence</span>
-        <a href="/" class="listItem">
-            <img src={Homepage} alt="Home"> <!--Home Icon-->
-            <span class="listItemTitle">Home</span>
-        </a>
-        <a href="/" class="listItem">
-            <img src={person} alt="Profile"> <!--Home Icon-->
-            <span class="listItemTitle">Profile</span>
+            <span class="listItemTitle">Reports</span>
         </a>
 
         <a href="/" class="listItem">
             <img src={Homepage} alt="Home"> <!--Home Icon-->
             <span class="listItemTitle">Charts</span>
         </a>
-        <a href="/" class="listItem">
-            <img src={person} alt="Profile"> <!--Home Icon-->
-            <span class="listItemTitle">Logs</span>
-        </a>
-    </div>
-    <div class="item">
-        <span class="title">Analytics</span>
-        <a href="/" class="listItem">
-            <img src={Homepage} alt="Home"> <!--Home Icon-->
-            <span class="listItemTitle">Charts</span>
-        </a>
-        <a href="/" class="listItem">
-            <img src={person} alt="Profile"> <!--Home Icon-->
+        <a href="/dashboard/logs" class="listItem">
+            <img src={Homepage} alt="Profile"> <!--Home Icon-->
             <span class="listItemTitle">Logs</span>
         </a>
 
-
-        <a href="/" class="listItem">
-            <img src={Homepage} alt="Home"> <!--Home Icon-->
-            <span class="listItemTitle">Charts</span>
-        </a>
-        <a href="/" class="listItem">
-            <img src={person} alt="Profile"> <!--Home Icon-->
-            <span class="listItemTitle">Logs</span>
-        </a>
-
-        <a href="/" class="listItem">
-            <img src={Homepage} alt="Home"> <!--Home Icon-->
-            <span class="listItemTitle">Charts</span>
-        </a>
-        <a href="/" class="listItem">
-            <img src={person} alt="Profile"> <!--Home Icon-->
-            <span class="listItemTitle">Logs</span>
-        </a>
+        <div class="item">
+            <span class="title">MAIN</span>
+            <a href="/settings" class="listItem">
+                <img src={Settings} alt="settings"> <!--Home Icon-->
+                <span class="listItemTitle">Settings</span>
+            </a>
+            <a href="/" class="listItem">
+                <img src={person} alt="Profile"> <!--Home Icon-->
+                <span class="listItemTitle">Support</span>
+            </a>
+        </div>
 
     </div>
 </div>
@@ -124,25 +68,27 @@
         font-size: 12px;
         font-weight: 200;
         color: lightgray;
-        
+  
     }
 
-    .listItem{
+    .listItem {
+
         display: flex;
         align-items: center;
         gap: 10px;
         padding: 10px;
         border-radius: 5px;
 
-        &:hover {
-            background-color: blanchedalmond;
-        }
+    }
+
+    .listItem:hover {
+        background-color: blanchedalmond;
+
     }
 
     .item a span {
         font-weight: bold;
         font-size: small;
-        
         color: white;
     }
 
@@ -154,8 +100,5 @@
         text-decoration: none; /* Ensure it doesn't appear on hover */
     }
 
-    
 </style>
-
-
 
