@@ -1,5 +1,4 @@
 <script>
-    import BarChartBox from "./BarChartBox.svelte";
     import BottomBox from "./BottomBox.svelte";
     import ChartBox from "./ChartBox.svelte";
     import PieChartBox from "./PieChartBox.svelte";
@@ -45,8 +44,8 @@
         grid-row: span 3;
     }
 
-    .box7 {
+    /*.box7 {
         grid-column: span 2;
         grid-row: span 2;
-    }
+    }*/
 </style>

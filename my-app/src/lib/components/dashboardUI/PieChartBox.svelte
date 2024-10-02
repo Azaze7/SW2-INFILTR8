@@ -140,7 +140,7 @@
         font-weight: bold;
         cursor: pointer;
     }
-
+/*
     .buttons {
         display: flex;
         gap: 20px;
@@ -178,5 +178,5 @@
         padding: 20px;
         border-radius: 10px;
         z-index: 1000;
-    }
+    }*/
 </style>
