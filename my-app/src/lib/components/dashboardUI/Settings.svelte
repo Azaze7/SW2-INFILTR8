@@ -10,9 +10,7 @@
     //Import the sidebar and top navbar made by other teammates.
         //Kept to ensure consistency accross the the site.
     import Navbar from "$lib/components/dashboardUI/Navbar.svelte";
-    //***DISABLE OLD SIDEBAR AND LOAD NEW ONE***/
-    //import Sidebar from "$lib/components/dashboardUI/Sidebar.svelte";
-    import TestSidebar from "$lib/components/dashboardUI/TestSidebar.svelte";
+    import Sidebar from "$lib/components/dashboardUI/Sidebar.svelte";
     //Import onMount, which allows for functions to be run when the user clicks buttons on the settings menu.
         //This includes enabling darkmode, changing font size, etc.
     import { onMount } from 'svelte';

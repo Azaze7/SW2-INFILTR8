@@ -108,7 +108,7 @@
         width: 16px;
         height: 16px;
         border-radius: 50%;
-        position: absolute;
+        position: relative;
         top: -10px;
         right: -10px;
         display: flex;

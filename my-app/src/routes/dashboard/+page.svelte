@@ -1,22 +1,17 @@
 <script>
-    import Footer from "$lib/components/dashboardUI/Footer.svelte";
-    import Navbar from "$lib/components/dashboardUI/Navbar.svelte";
-    import Sidebar from "$lib/components/dashboardUI/Sidebar.svelte";
-    import Grids from "$lib/components/dashboardUI/Grids.svelte"
+// @ts-nocheck
 
-    let showCreateProjectModal = false;
-    /**
-     * @type {any[]}
-     */
-    let selectedFiles = [];
-    let notifications = [
-        { id: 1, text: "New vulnerability detected", unread: true },
-        { id: 2, text: "Analysis completed", unread: true },
-    ];
 
+import { onMount } from 'svelte';   
+    
+    // @ts-ignore
+    import TestNavbar from "$lib/components/dashboardUI/TestNavbar.svelte";
+    import TestSidebar from "$lib/components/dashboardUI/TestSidebar.svelte";
+    import TestTopRight from "$lib/components/dashboardUI/TestTopRight.svelte";
+    
     let greeting = "";
     let currentHour = new Date().getHours();
-
+    
     // Determine the greeting based on the time of day
     if (currentHour < 12) {
         greeting = "Good morning!";
@@ -26,265 +21,309 @@
         greeting = "Good evening!";
     }
 
-    function openCreateProjectWindow() {
-        showCreateProjectModal = true;
-    }
-
-    function closeCreateProjectWindow() {
-        showCreateProjectModal = false;
-    }
-
-    function openFileExplorer() {
-        // @ts-ignore
-        document.getElementById('file-input').click();
-    }
-
-    function discardAllFiles() {
-        selectedFiles = [];
-        console.log("All files discarded");
-    }
-
+    // File Drop Logic
     /**
-     * @param {{ id?: number; text: any; unread: any; }} notification
+     * @type {any[]}
      */
-    function openNotification(notification) {
-        notification.unread = false;
-        alert(notification.text);
+    let files = [];
+    let isDragOver = false;
+
+    // Reference to the hidden file input
+    /**
+     * @type {{ click: () => void; }}
+     */
+    let fileInput;
+
+    // Handle files added via drop or input
+    /**
+     * @param {any} selectedFiles
+     */
+    function handleFiles(selectedFiles) {
+        for (let file of selectedFiles) {
+            files = [...files, file];
+        }
     }
 
+    // Event handlers for drag & drop
     /**
-     * @param {{ target: { files: Iterable<any> | ArrayLike<any>; }; }} event
+     * @param {{ preventDefault: () => void; }} event
      */
-    function handleFileSelection(event) {
-        selectedFiles = Array.from(event.target.files);
+    function handleDragOver(event) {
+        event.preventDefault();
+        isDragOver = true;
     }
 
-    /**
-     * @param {number} index
-     */
+    function handleDragLeave(event) {
+        event.preventDefault();
+        isDragOver = false;
+    }
+
+    function handleDrop(event) {
+        event.preventDefault();
+        isDragOver = false;
+        if (event.dataTransfer.files && event.dataTransfer.files.length > 0) {
+            handleFiles(event.dataTransfer.files);
+            event.dataTransfer.clearData();
+        }
+    }
+
+    // Handle click on drop area to trigger file input
+    function handleDropAreaClick() {
+        fileInput.click();
+    }
+
+    // Handle file input change
+    function handleFileInputChange(event) {
+        if (event.target.files && event.target.files.length > 0) {
+            handleFiles(event.target.files);
+        }
+    }
+
+    // Optionally, you can handle file removal
     function removeFile(index) {
-        selectedFiles.splice(index, 1);
+        files = files.filter((_, i) => i !== index);
     }
+
+
+
+
 
 </script>
 
-<Navbar/>
-<div class="main-container">
-    <div class="sidebar-container">
-        <Sidebar/>
-    </div>
-    <div class="content">
-        <Grids/>
 
-        <!-- Greeting the analyst -->
-        <h1>{greeting}</h1>
 
-        <!-- Notifications Section -->
-        <section class="notifications">
-            <h2>Notifications</h2>
-            <ul>
-                {#each notifications as notification}
-                    <li on:click={() => openNotification(notification)} class:unread={notification.unread}>
-                        {notification.text} {notification.unread ? "(Unread)" : ""}
-                    </li>
-                {/each}
-            </ul>
-        </section>
 
-        <!-- Create New Project Section -->
-        <section class="create-project">
-            <h2>Create New Project</h2>
-            <div class="file-upload-area">
-                <div class="file-upload-box">
-                    <p>Select a file or drag and drop here</p>
-                    <input type="file" id="file-input" multiple on:change={handleFileSelection} style="display: none;" />
-                    <button on:click={openFileExplorer}>Select Files</button>
-                </div>
+
+
+<div class="grid-container">
+    <aside class="sidebar">
+        <TestSidebar />
+    </aside>
+    <main class="main-content">
+        <!-- Your main content goes here -->
+        <!-- svelte-ignore a11y-invalid-attribute -->
+        <div class="logo"><a href="#"><span>Dash</span>board</a></div>
+        <p>{greeting}</p>
+
+        <button>Create Project</button>
+        <button>Sync Project</button>
+        <button>Delete Projects</button>
+
+        <div class="dropdown">
+            <button class="dropbtn">Export Project</button>
+            <div class="dropdown-content">
+                <!-- svelte-ignore a11y-invalid-attribute -->
+                <a href="#">Export as PDF</a>
+                <!-- svelte-ignore a11y-invalid-attribute -->
+                <a href="#">Export as CSV</a>
+                <!-- svelte-ignore a11y-invalid-attribute -->
+                <a href="#">Export as Excel</a>
             </div>
-        </section>
-
-        <!-- Selected Files List -->
-        <section class="file-list">
-            <h3>Files</h3>
-            {#if selectedFiles.length > 0}
-                <ul>
-                    {#each selectedFiles as file, index}
-                        <li>
-                            <span>{file.name}</span>
-                            <button on:click={() => removeFile(index)}>x</button>
-                        </li>
-                    {/each}
-                </ul>
-            {/if}
-        </section>
-
-        <!-- Buttons for creating a project and discarding files -->
-        <div class="buttons">
-            <button class="create-btn" on:click={openCreateProjectWindow}>Create Project</button>
-            <button class="discard-btn" on:click={discardAllFiles}>Discard all</button>
+        </div>
+        
+        <div class="file-drop-area">
+            <span class="file-message">Drag & Drop files here or click to upload</span>
+            <input type="file" id="fileInput" multiple>
         </div>
 
-        <!-- Modal for Create New Project -->
-        {#if showCreateProjectModal}
-            <div class="modal">
-                <h2>Create New Project</h2>
-                <!-- Add Create Project form here -->
-                <button on:click={closeCreateProjectWindow}>Close</button>
-            </div>
-        {/if}
-    </div>
-</div>
+        
+        <div id="fileList">
+            <h2>Files</h2>
+        </div>
+        
+        
 
-<div class="bottom-container">
-    <Footer/>
+    </main>
+    <section class="right-side">
+        <!-- Right side content -->
+        <!--<h2>Right Sidebar</h2>
+        <p>Additional info or widgets can go here.</p>-->
+        <!-- svelte-ignore a11y-invalid-attribute -->
+        <div class="logo"><a href="#"><span>INFI</span>LTR8</a></div>
+        <TestTopRight/>
+    </section>
 </div>
 
 <style>
-    /* Main container to organize sidebar and content */
-    .main-container {
-        display: flex;
 
-        min-height: 100vh;
-
+    :root {
+        --bg: #1d1b28;
+        --color-main: #4628e9;
+        --color-main-dark: #191528;
+        --color-second: #aaa7b9;
+        --transition: all .3s ease-out;
     }
 
-    /* Sidebar-specific styles */
-    .sidebar-container {
-        width: 150px;
-        position: sticky;
-        top: 0;
-        margin-top: -.5rem;
+    /* Reset some default styles for consistency */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    /* Grid Container Setup */
+    .grid-container {
+        display: grid;
+        grid-template-areas:
+            "sidebar main right";
+        grid-template-columns: 250px 1fr 350px; /* Sidebar, main content, right-side width */
         height: 100vh;
+        font-family: Arial, sans-serif;
+    }
 
+    /* Sidebar Styling */
+    .sidebar {
+        grid-area: sidebar;
+        background-color: f1f1f1;
+        color: white;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* Main Content Styling */
+    .main-content {
+        grid-area: main;
+        padding: 30px;
         overflow-y: auto;
-        background-color: #333;
+        /*background-color: #f1f1f1;*/
+        background-color: var(--bg);
     }
 
-    .content {
-        flex-grow: 1;
+    /* Right Side Section Styling */
+    .right-side {
+        grid-area: right;
+        /*background-color: #f8f9fa;*/
+        background-color: var(--bg);
         padding: 20px;
-        background-color: #333;
-        color: white;
-
+        box-shadow: -2px 0 4px rgba(0, 0, 0, 0.1);
     }
 
-    .bottom-container {
-        bottom: 20px;
+    /* Responsive Adjustments */
+    @media (max-width: 1024px) {
+        .grid-container {
+            grid-template-areas:
+                "sidebar main";
+            grid-template-columns: 250px 1fr;
+        }
+
+        .right-side {
+            display: none; /* Hide right side on small screens */
+        }
     }
 
-    h1 {
-        font-size: 36px;
-        margin-bottom: 30px;
+    @media (max-width: 768px) {
+        .grid-container {
+            grid-template-areas:
+                "main";
+            grid-template-columns: 1fr;
+        }
+
+        .sidebar {
+            display: none; /* Hide sidebar on smaller screens */
+        }
     }
 
-    /* Notifications */
-    .notifications {
-        margin-bottom: 40px;
-    }
+    /* Style for all buttons */
+button {
+    background-color: #4CAF50; /* Green background */
+    color: white;
+    padding: 10px 20px;
+    margin: 10px 5px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
 
-    .notifications h2 {
-        font-size: 24px;
-        margin-bottom: 10px;
-    }
+/* Hover effect for all buttons */
+button:hover {
+    background-color: #3e8e41; /* Darker green */
+}
 
-    .notifications ul {
-        list-style: none;
-        padding: 0;
-    }
 
-    .notifications li {
-        background-color: #f5f5f5;
-        padding: 10px;
-        margin-bottom: 10px;
-        border-radius: 5px;
-        cursor: pointer;
-    }
 
-    .notifications li.unread {
-        background-color: #ffebee;
-        font-weight: bold;
-    }
+    /* Style the dropdown container */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
 
-    /* Create Project Section */
-    .create-project {
-        margin-bottom: 40px;
-    }
+/* Style the dropdown button */
+.dropbtn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+}
 
-    .file-upload-area {
-        border: 2px dashed #ccc;
-        padding: 40px;
-        text-align: center;
-        border-radius: 10px;
-        background-color: #fafafa;
-    }
+/* Style the dropdown content (hidden by default) */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
 
-    .file-upload-box p {
-        margin-bottom: 20px;
-    }
+/* Style the links in the dropdown */
+.dropdown-content a {
+    color: black;
+    padding: 10px 20px;
+    text-decoration: none;
+    display: block;
+}
 
-    .file-list {
-        margin-bottom: 40px;
-    }
+/* Change color of links on hover */
+.dropdown-content a:hover {
+    background-color: #f1f1f1;
+}
 
-    .file-list ul {
-        list-style: none;
-        padding: 0;
-    }
+/* Show the dropdown content on hover */
+.dropdown:hover .dropdown-content {
+    display: block;
+}
 
-    .file-list li {
-        display: flex;
-        justify-content: space-between;
-        background-color: #e3f2fd;
-        padding: 10px;
-        margin-bottom: 10px;
-        border-radius: 5px;
-    }
+/* Change the button background color on hover */
+.dropdown:hover .dropbtn {
+    background-color: #3e8e41;
+}
 
-    .file-list button {
-        background: none;
-        border: none;
-        color: red;
-        font-weight: bold;
-        cursor: pointer;
-    }
 
-    .buttons {
-        display: flex;
-        gap: 20px;
-    }
+/* Style the file drop area */
+.file-drop-area {
+    margin-top: 10rem;
+    border: 2px dashed #4CAF50;
+    padding: 40px;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    border-radius: 10px;
+    color: #333;
+}
 
-    .create-btn {
-        background-color: #26a69a;
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 5px;
-        cursor: pointer;
-    }
+.file-drop-area:hover {
+    background-color: #f9f9f9;
+}
 
-    .discard-btn {
-        background-color: #ef5350;
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 5px;
-        cursor: pointer;
-    }
+.file-message {
+    display: block;
+    font-size: 16px;
+    color: #666;
+}
 
-    .create-btn:hover, .discard-btn:hover {
-        opacity: 0.9;
-    }
+/* Hide the actual file input */
+input[type="file"] {
+    display: none;
+}
 
-    .modal {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background-color: white;
-        color: black;
-        padding: 20px;
-        border-radius: 10px;
-        z-index: 1000;
-    }
+#fileList {
+    margin-top: 20px;
+    font-size: 14px;
+}
+
 
 </style>

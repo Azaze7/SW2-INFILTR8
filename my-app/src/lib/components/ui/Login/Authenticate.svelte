@@ -68,6 +68,9 @@
       window.location.href = "/dashboard";
     }
   
+    /**
+     * @param {{ preventDefault: () => void; }} event
+     */
     function handleSubmit(event) {
       event.preventDefault(); // Prevent the default form submission
       handleAuthentication(); // Call the API

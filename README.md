@@ -8,11 +8,11 @@
 
 ## 🔎 Table of Contents.
 
-1. Team Composition [The Nine-Bytes]
-2. Guidance Team & Customer Information [DEVCOM]
+1. Team Composition. [The Nine-Bytes]
+2. Guidance Team & Customer Information. [DEVCOM]
 3. What Files are Enclosed Here?
 4. Tech Stack Foundation.
-5. Install Instructions
+5. Install Instructions.
 6. Vieo Demonstration.
 
 ## 🎏 Team Composition [The Nine-Bytes]
@@ -121,12 +121,20 @@ Team #6 extends its sincere gratitude to all of our customers and our guidance t
     npm run dev
     ```
 
+You must also ensure the database is running so login onto the site is possible.
+
+1. Start Database (In Split Terminal):
+    ```bash
+    node .\server\auth.js 
+    ```
+
 You can also use the install script if you’ve downloaded the source code from GitHub as a ZIP file.
 
 1. Run Install Script:
     ```bash
     ./install.sh
     ```
+
 
 ## 🎞️ Video Demonstration.
 
@@ -140,4 +148,4 @@ Short video archives demonstrating the various vertical slices for INFILTR8 have
   
 * DEMO #2 - GUI Update, Improved GitHub & Database, Processing Recon Data, Allowed/Off-limit IPs, Entry Point Selection, & Start of Logs.
 * Due: [9/30/24]
-  * https://www.youtube.com/watch?v=jpO2zd9zbng
+  * Test Build #1 - Real Login, Settings Screen (Font Resize & Dark Mode) - https://youtu.be/GIlSGcYOIUc
