@@ -93,6 +93,13 @@ elif [ "$os_name" == "Linux" ]; then
     # Navigate to the application directory
     cd "$APP_DIR" || { echo "Directory not found: $APP_DIR"; exit 1; }
 
+    # Check if .env file exists
+    if [ ! -f ".env" ]; then
+        echo ".env file not found in $APP_DIR"
+        echo "Please create a .env file to configure your environment"
+        echo "To connect to the database server, execute the following command: node my-app/server/auth.js"
+    fi
+
     # Install dependencies
     npm install >/dev/null 2>&1
 
