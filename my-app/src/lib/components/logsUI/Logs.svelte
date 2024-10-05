@@ -1,10 +1,22 @@
-<!-- COPY THIS LAYOUT FOR YOUR COMPONENT -->
-<!-- WE WILL FIND A BETTER WAY LATER -->
-
 <script>
-   
     import TestSidebar from "$lib/components/dashboardUI/TestSidebar.svelte"
     import TestTopRight from "$lib/components/dashboardUI/TestTopRight.svelte"
+
+    let logs = [
+    { type: "Warning",     time: "09/29/24 10:12", message: "Failed login attempt for user 'analyst1' - incorrect password"},
+    { type: "Information", time: "09/29/24 10:13", message: "User 'analyst1' logged in successfully"},
+    { type: "Information", time: "09/29/24 10:14", message: "User 'analyst1' accessed the reports page to view exploits"},
+    { type: "Information", time: "09/29/24 10:20", message: "User 'analyst1' logged out"}
+  ];
+
+  let defaultOption = "None"; // Default option
+  let logType = ["None", "Information", "Warning", "Error"];
+  let filteredLogs = logs;
+
+  function filterLogsBy() {
+    console.log("Filtering logs by:", defaultOption);
+    filteredLogs = (defaultOption === "None") ? logs : logs.filter(log => log.type === defaultOption);
+  }
 </script>
 
 <div class="grid-container">
@@ -12,13 +24,43 @@
         <TestSidebar />
     </aside>
     <main class="main-content">
-        <!-- Your main content goes here -->
         <!-- svelte-ignore a11y-invalid-attribute -->
         <div class="logo"><a href="#"><span>Lo</span>gs</a></div>
-        <h2>Jose Luis, Jannelle CONTENT</h2>
-        
 
+        <!-- Filtering of logs -->
+        <div class="filter-section">
+            <label for="filter-by">Filter logs by</label>
+            <select id="filter-by" bind:value={defaultOption}>
+              {#each logType as type}
+                <option>{type}</option>
+              {/each}
+            </select>
+            <button class="filter-btn" on:click={filterLogsBy}>Filter</button>
+        </div>
+
+        <!-- Table Section: Logs -->
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Type</th>
+                <th>Time</th>
+                <th>Message</th>
+              </tr>
+            </thead>
+            <tbody>
+              {#each filteredLogs as log}
+                <tr>
+                  <td>{log.type}</td>
+                  <td>{log.time}</td>
+                  <td>{log.message}</td>
+                </tr>
+              {/each}
+            </tbody>
+          </table>
+        </div>
     </main>
+
     <section class="right-side">
         <!-- Right side content -->
         <!-- svelte-ignore a11y-invalid-attribute -->
@@ -105,6 +147,60 @@
             display: none; /* Hide sidebar on smaller screens */
         }
     }
+
+  .table-container {
+    margin-bottom: 20px;
+    overflow-x: auto;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: rgb(56, 49, 49);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+  }
+
+  table th, table td {
+    text-align: left;
+    padding: 12px;
+    border-bottom: 1px solid #220606;
+  }
+
+  table thead {
+    background-color: #333;
+    font-weight: bold;
+  }
+
+  table tr:nth-child(even) {
+    background-color: #333;
+  }
+
+  .filter-section {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  label {
+    font-weight: bold;
+  }
+
+  select {
+    padding: 10px;
+    font-size: 16px;
+  }
+
+  .filter-btn {
+    background-color: #1abc9c;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+
+  .filter-btn:hover {
+    background-color: #16a085;
+  }
 </style>
-
-
