@@ -419,6 +419,13 @@
                         </li>
                         <li>
                             <!-- svelte-ignore a11y-invalid-attribute -->
+                            <a href="/logs">
+                                <ion-icon name="information-circle-outline"></ion-icon>
+                                <span>Logs</span>
+                            </a>
+                        </li>
+                        <li>
+                            <!-- svelte-ignore a11y-invalid-attribute -->
                             <a href="#">
                                 <ion-icon name="settings-outline"></ion-icon>
                                 <span>Configurations</span>
