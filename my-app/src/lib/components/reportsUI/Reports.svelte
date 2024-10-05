@@ -16,7 +16,8 @@
         <!-- svelte-ignore a11y-invalid-attribute -->
         <div class="logo"><a href="#"><span>Lo</span>gs</a></div>
         <h2>LOGS CONTENT</h2>
-        
+        <h1>Welcome to the Reports Page, Luis D. Sanchez and Albert Villegas</h1> 
+        <p>This is a simple example to see if I was able to figure this out lol.</p>
         
 
     </main>
