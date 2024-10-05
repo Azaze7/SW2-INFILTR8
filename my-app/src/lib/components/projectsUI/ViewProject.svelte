@@ -172,7 +172,7 @@
         /*background-color: #f1f1f1;*/
         background-color: var(--bg);
     }
-    //styling for myprojects page
+    /*styling for myprojects page*/
     /* Right Side Section Styling */
     .right-side {
         grid-area: right;
