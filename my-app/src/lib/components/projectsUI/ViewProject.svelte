@@ -6,12 +6,12 @@
     import TestSidebar from "$lib/components/dashboardUI/TestSidebar.svelte"
     import TestTopRight from "$lib/components/dashboardUI/TestTopRight.svelte"
 
-    //reactive arrays for IPS and test
+    //just example ips for now
     let ipList: string[] = ['192.168.1.1', '192.168.1.2', '192.168.1.3'];
     let tests: string[] = ['Test 1', 'Test 2', 'Test 3'];
 
     //function to move item up on list
-    
+    //couldn't get the arrows to actually move the ip and tests up and down but will tomorrow
     function moveUp(index: number, listType: 'ip' | 'test'): void {
         if (listType === 'ip') {
             if (index > 0) {
@@ -172,7 +172,7 @@
         /*background-color: #f1f1f1;*/
         background-color: var(--bg);
     }
-
+    //styling for myprojects page
     /* Right Side Section Styling */
     .right-side {
         grid-area: right;
