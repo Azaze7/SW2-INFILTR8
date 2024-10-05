@@ -224,6 +224,6 @@
     /* Optional: Customize hover or active states */
     .ip-item:hover {
         background-color: rgba(255, 255, 255, 0.1); /* Add a hover effect */
-        border: 1px solid rgb(222, 222, 222);
+        border: 1px solid rgb(222, 222, 222); /* Change the border color when hovering */
     }
 </style>
