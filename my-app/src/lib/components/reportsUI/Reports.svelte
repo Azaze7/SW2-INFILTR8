@@ -3,7 +3,7 @@
 
 <script>
     let folder = {
-        name: "Example",
+        name: "Current Folder",
         items: 63,
         size: "621 MB"
     };
@@ -14,7 +14,13 @@
         { ip: '192.168.1.20', device: 'Device C', vulnerability: 'CVE-2024-122 {VPN TRAFFIC HIJACK}', status: 'Exploited' },
         { ip: '192.168.1.25', device: 'Device D', vulnerability: 'CVE-2016-14800 {VPN TRAFFIC HIJACK}', status: 'Not Exploited' },
     ];
-   
+    let selectedFileType = ''; 
+    const fileTypes = ['PDF', 'XML']; 
+
+    function exportData() {
+    // Logic for export
+    // To be implemented later
+    }
     import TestSidebar from "$lib/components/dashboardUI/TestSidebar.svelte";
     import TestTopRight from "$lib/components/dashboardUI/TestTopRight.svelte";
 </script>
@@ -28,22 +34,22 @@
         <!-- Your main content goes here -->
         <!-- svelte-ignore a11y-invalid-attribute -->
         <div class="logo"><a href="#"><span>Lo</span>gs</a></div>
-        <h1>Welcome to the Reports Page, Luis D. Sanchez and Albert Villegas</h1> 
-        <p>This is a simple example to see if I was able to figure this out lol.</p>
+        <p> </p>
         <h1>Reports</h1>
         
-        <!-- This section displays the currently selected project. TODO: add functionality to
-        the three dots when selected (Maybe, pending customer response) -->
-        <div class="folder-icon">
-            <!-- Luis and Albert change this image. -->
-            <img src="https://img.icons8.com/ios-filled/50/000000/folder-invoices.png" alt="Folder Icon" />
-        </div>
-        <div class="folder-details">
-            <h2>{folder.name}</h2>
-            <p>{folder.items} items | {folder.size}</p>
-        </div>
-        <div class="folder-options">
-            <span>⋮</span>
+        <!-- This section displays the currently selected project. TODO: add functionality to ...
+        ...the three dots when selected (Maybe, PENDING CUSTOMER RESPONSE) -->
+        <div class="folder-card">
+            <div class="folder-icon">
+                <img src="https://img.icons8.com/ios-filled/50/000000/folder-invoices.png" alt="Folder Icon" />
+            </div>
+            <div class="folder-details">
+                <h2>{folder.name}</h2>
+                <p>{folder.items} items | {folder.size}</p>
+            </div>
+            <div class="folder-options">
+                <span>⋮</span>
+            </div>
         </div>
 
         <h2>IP List</h2>
@@ -72,6 +78,20 @@
                     </li>
                 {/each}
             </ul>
+        </div>
+
+        <div class="file-type-selection">
+            <label for="fileType">Select file type:</label>
+            <select id="fileType" bind:value={selectedFileType}>
+                <option value="" disabled selected>Select File Type</option> 
+                {#each fileTypes as fileType}
+                    <option value={fileType}>{fileType}</option> 
+                {/each}
+            </select>
+        </div>
+      
+          <div class="button-container">
+            <button on:click={exportData} class="export-button">Export</button>
         </div>
     </main>
 
@@ -160,60 +180,70 @@
         }
     }
 
-    .folder-card {
-        display: flex;
-        align-items: center;
-        background-color: #fff;
-        border-radius: 12px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        padding: 10px;
-        width: 250px;
-        height: 80px;
-        margin: 10px;
-        cursor: pointer; /* Make it look clickable */
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
+    /* Folder card styling */
+.folder-card {
+    display: flex;
+    align-items: center;
+    background-color: #232a50;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15); /* Subtle shadow */
+    padding: 10px 20px;
+    width: 320px;
+    height: 80px;
+    margin: 10px;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
 
-    /* Add button hover effects */
-    .folder-card:hover {
-        transform: scale(1.02);
-        box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
-    }
+/* Hover effects */
+.folder-card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
 
-    /* Folder icon styling */
-    .folder-icon img {
-        width: 40px;
-        height: 40px;
-    }
+/* Folder icon styling */
+.folder-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50px;
+    height: 50px;
+}
 
-    /* Folder details styling */
-    .folder-details {
-        flex-grow: 1;
-        margin-left: 10px;
-    }
+/* Folder details styling */
+.folder-details {
+    flex-grow: 1;
+    margin-left: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
 
-    .folder-details h2 {
-        font-size: 16px;
-        margin: 0;
-        font-weight: bold;
-    }
+.folder-details h2 {
+    font-size: 16px;
+    margin: 0;
+    font-weight: bold;
+    color: #000;
+}
 
-    .folder-details p {
-        font-size: 12px;
-        margin: 5px 0 0;
-        color: #666;
-    }
+.folder-details p {
+    font-size: 12px;
+    margin: 5px 0 0;
+    color: #888;
+}
 
-    /* Options menu (three dots) <--- Pending customer response. */
-    .folder-options {
-        cursor: pointer;
-        font-size: 20px;
-    }
+/* Options menu;three dots (this is pending customer response)*/
+.folder-options {
+    display: flex;
+    align-items: center;
+    font-size: 20px;
+    color: #888;
+}
     
 /* Style the header row */
 .ip-header {
     display: grid;
-    grid-template-columns: 0.1fr 1fr 1fr 2fr 1fr; /* Add column for the checkbox */
+    grid-template-columns: 0.1fr 1fr 1fr 2fr 1fr; /* Add column for the checkbox and so it looks nice*/
     padding: 10px 0;
     font-weight: bold;
     font-size: 16px;
@@ -259,4 +289,25 @@
     background-color: rgba(255, 255, 255, 0.1);
     border: 1px solid rgb(222, 222, 222);
 }
+
+.button-container {
+    display: flex;
+    justify-content: flex-end; /* Align the button to the right */
+    margin-top: 20px;
+}
+
+.export-button {
+    padding: 10px 20px;
+    background-color: var(--color-main);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.export-button:hover {
+    background-color: var(--color-main-dark); /* Hover effect */
+}
+
 </style>
