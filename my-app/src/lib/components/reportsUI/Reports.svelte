@@ -31,7 +31,7 @@
     </aside>
         
     <main class="main-content">
-        <!-- Your main content goes here -->
+        <!-- Your main content goes here --> 
         <!-- svelte-ignore a11y-invalid-attribute -->
         <div class="logo"><a href="#"><span>Lo</span>gs</a></div>
         <p> </p>
