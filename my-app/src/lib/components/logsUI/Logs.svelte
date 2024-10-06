@@ -6,7 +6,7 @@
   // Change username when we find a way to store the username when the user logs in
 
   // Change this to your username
-  const username = 'jbguzman@miners.utep.edu';
+  const username = 'username';
   
   // Uncomment this to delete all logs that are linked to you
   // deleteLogsForUser(username);
