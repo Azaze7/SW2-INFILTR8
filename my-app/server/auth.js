@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import neo4j from 'neo4j-driver';
 import bcrypt from 'bcrypt';
+import logEndPoints from './logendpoints.js';
 
 // Load environment variables from .env
 dotenv.config({ path: '.env' });
@@ -66,6 +67,9 @@ app.post('/login', async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+
+// Use the user fetch router
+app.use('/', logEndPoints);
 
 // Start the server
 app.listen(3000, () => console.log('Auth server running on http://localhost:3000')); 
