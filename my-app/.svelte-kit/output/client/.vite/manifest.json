@@ -1,0 +1,175 @@
+{
+  ".svelte-kit/generated/client-optimized/app.js": {
+    "file": "_app/immutable/entry/app.CwDUkqbt.js",
+    "name": "entry/app",
+    "src": ".svelte-kit/generated/client-optimized/app.js",
+    "isEntry": true,
+    "imports": [
+      "_scheduler.DHNv_ntZ.js",
+      "_index.NMdoImha.js"
+    ],
+    "dynamicImports": [
+      ".svelte-kit/generated/client-optimized/nodes/0.js",
+      ".svelte-kit/generated/client-optimized/nodes/1.js",
+      ".svelte-kit/generated/client-optimized/nodes/2.js",
+      ".svelte-kit/generated/client-optimized/nodes/3.js",
+      ".svelte-kit/generated/client-optimized/nodes/4.js",
+      ".svelte-kit/generated/client-optimized/nodes/5.js",
+      ".svelte-kit/generated/client-optimized/nodes/6.js"
+    ]
+  },
+  ".svelte-kit/generated/client-optimized/nodes/0.js": {
+    "file": "_app/immutable/nodes/0.Xq-sI1tH.js",
+    "name": "nodes/0",
+    "src": ".svelte-kit/generated/client-optimized/nodes/0.js",
+    "isEntry": true,
+    "isDynamicEntry": true,
+    "imports": [
+      "_scheduler.DHNv_ntZ.js",
+      "_index.NMdoImha.js"
+    ],
+    "css": [
+      "_app/immutable/assets/0.zRTRPsWR.css"
+    ]
+  },
+  ".svelte-kit/generated/client-optimized/nodes/1.js": {
+    "file": "_app/immutable/nodes/1.B1bHxEjQ.js",
+    "name": "nodes/1",
+    "src": ".svelte-kit/generated/client-optimized/nodes/1.js",
+    "isEntry": true,
+    "isDynamicEntry": true,
+    "imports": [
+      "_scheduler.DHNv_ntZ.js",
+      "_index.NMdoImha.js",
+      "_entry.BmbyiWwz.js"
+    ]
+  },
+  ".svelte-kit/generated/client-optimized/nodes/2.js": {
+    "file": "_app/immutable/nodes/2.DHhrG0ZU.js",
+    "name": "nodes/2",
+    "src": ".svelte-kit/generated/client-optimized/nodes/2.js",
+    "isEntry": true,
+    "isDynamicEntry": true,
+    "imports": [
+      "_scheduler.DHNv_ntZ.js",
+      "_index.NMdoImha.js"
+    ],
+    "css": [
+      "_app/immutable/assets/2.CHx1jIvY.css"
+    ]
+  },
+  ".svelte-kit/generated/client-optimized/nodes/3.js": {
+    "file": "_app/immutable/nodes/3.uY_LWrQ5.js",
+    "name": "nodes/3",
+    "src": ".svelte-kit/generated/client-optimized/nodes/3.js",
+    "isEntry": true,
+    "isDynamicEntry": true,
+    "imports": [
+      "_scheduler.DHNv_ntZ.js",
+      "_index.NMdoImha.js",
+      "_each.D6YF6ztN.js",
+      "_Sidebar.eD2Jgeob.js"
+    ],
+    "css": [
+      "_app/immutable/assets/3.CbAPgtw5.css",
+      "_app/immutable/assets/ProjectScreen.CkCFoFBI.css"
+    ]
+  },
+  ".svelte-kit/generated/client-optimized/nodes/4.js": {
+    "file": "_app/immutable/nodes/4.Byco6ms1.js",
+    "name": "nodes/4",
+    "src": ".svelte-kit/generated/client-optimized/nodes/4.js",
+    "isEntry": true,
+    "isDynamicEntry": true,
+    "imports": [
+      "_scheduler.DHNv_ntZ.js",
+      "_index.NMdoImha.js",
+      "_each.D6YF6ztN.js",
+      "_Sidebar.eD2Jgeob.js"
+    ],
+    "css": [
+      "_app/immutable/assets/ProjectScreen.CkCFoFBI.css"
+    ]
+  },
+  ".svelte-kit/generated/client-optimized/nodes/5.js": {
+    "file": "_app/immutable/nodes/5.BLArEn_N.js",
+    "name": "nodes/5",
+    "src": ".svelte-kit/generated/client-optimized/nodes/5.js",
+    "isEntry": true,
+    "isDynamicEntry": true,
+    "imports": [
+      "_scheduler.DHNv_ntZ.js",
+      "_index.NMdoImha.js",
+      "_each.D6YF6ztN.js",
+      "_Sidebar.eD2Jgeob.js"
+    ],
+    "css": [
+      "_app/immutable/assets/5.Bj-6qjb-.css"
+    ]
+  },
+  ".svelte-kit/generated/client-optimized/nodes/6.js": {
+    "file": "_app/immutable/nodes/6.BiSwO3LB.js",
+    "name": "nodes/6",
+    "src": ".svelte-kit/generated/client-optimized/nodes/6.js",
+    "isEntry": true,
+    "isDynamicEntry": true,
+    "imports": [
+      "_scheduler.DHNv_ntZ.js",
+      "_index.NMdoImha.js",
+      "_each.D6YF6ztN.js"
+    ],
+    "css": [
+      "_app/immutable/assets/6.D_MuJrtp.css"
+    ]
+  },
+  "_ProjectScreen.svelte_svelte_type_style_lang.!~{00a}~.js": {
+    "file": "_app/immutable/assets/ProjectScreen.CkCFoFBI.css",
+    "src": "_ProjectScreen.svelte_svelte_type_style_lang.!~{00a}~.js"
+  },
+  "_Sidebar.!~{00f}~.js": {
+    "file": "_app/immutable/assets/Sidebar.BR6K__ZP.css",
+    "src": "_Sidebar.!~{00f}~.js"
+  },
+  "_Sidebar.eD2Jgeob.js": {
+    "file": "_app/immutable/chunks/Sidebar.eD2Jgeob.js",
+    "name": "Sidebar",
+    "imports": [
+      "_scheduler.DHNv_ntZ.js",
+      "_index.NMdoImha.js"
+    ],
+    "css": [
+      "_app/immutable/assets/Sidebar.BR6K__ZP.css"
+    ]
+  },
+  "_each.D6YF6ztN.js": {
+    "file": "_app/immutable/chunks/each.D6YF6ztN.js",
+    "name": "each"
+  },
+  "_entry.BmbyiWwz.js": {
+    "file": "_app/immutable/chunks/entry.BmbyiWwz.js",
+    "name": "entry",
+    "imports": [
+      "_scheduler.DHNv_ntZ.js"
+    ]
+  },
+  "_index.NMdoImha.js": {
+    "file": "_app/immutable/chunks/index.NMdoImha.js",
+    "name": "index",
+    "imports": [
+      "_scheduler.DHNv_ntZ.js"
+    ]
+  },
+  "_scheduler.DHNv_ntZ.js": {
+    "file": "_app/immutable/chunks/scheduler.DHNv_ntZ.js",
+    "name": "scheduler"
+  },
+  "node_modules/@sveltejs/kit/src/runtime/client/entry.js": {
+    "file": "_app/immutable/entry/start.C4tkaIYL.js",
+    "name": "entry/start",
+    "src": "node_modules/@sveltejs/kit/src/runtime/client/entry.js",
+    "isEntry": true,
+    "imports": [
+      "_entry.BmbyiWwz.js"
+    ]
+  }
+}

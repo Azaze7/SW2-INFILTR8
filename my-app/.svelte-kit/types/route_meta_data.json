@@ -1,0 +1,13 @@
+{
+	"/": [
+		"src/routes/+page.ts"
+	],
+	"/dashboard": [],
+	"/dashboard/project": [],
+	"/dashboard/reports": [],
+	"/dashboard/testing": [],
+	"/logs": [],
+	"/projects": [],
+	"/reports": [],
+	"/settings": []
+}
