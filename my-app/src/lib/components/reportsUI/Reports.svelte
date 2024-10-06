@@ -48,14 +48,31 @@
 
         <h2>IP List</h2>
         <!-- Render the IP list with checkboxes (UI only) -->
-         <ul class="ip-list">
-            {#each ipList as ip}
-                <li class="ip-item">
-                    <input type="checkbox" disabled /> <!-- Disabled to remove functionality -->
-                    <span class="ip-text">{ip.ip} - {ip.device} - {ip.vulnerability} - {ip.status}</span>
-                </li>
-            {/each}
-        </ul>
+        <div class="ip-list-container">
+            <!-- Header Row -->
+            <div class="ip-header">
+                <span class="ip-header-item"></span> <!-- Placeholder for checkbox column -->
+                <span class="ip-header-item">IP Address</span>
+                <span class="ip-header-item">Device</span>
+                <span class="ip-header-item">Vulnerability</span>
+                <span class="ip-header-item">Status</span>
+            </div>
+        
+            <!-- List Items -->
+            <ul class="ip-list">
+                {#each ipList as item}
+                    <li class="ip-item">
+                        <span>
+                            <input type="checkbox">
+                        </span>
+                        <span class="ip-text">{item.ip}</span>
+                        <span class="ip-text">{item.device}</span>
+                        <span class="ip-text">{item.vulnerability}</span>
+                        <span class="ip-text">{item.status}</span>
+                    </li>
+                {/each}
+            </ul>
+        </div>
     </main>
 
     <section class="right-side">
@@ -187,43 +204,59 @@
         color: #666;
     }
 
-    /* Options menu (three dots) */
+    /* Options menu (three dots) <--- Pending customer response. */
     .folder-options {
         cursor: pointer;
         font-size: 20px;
     }
-    .ip-list {
-    list-style: none; /* Remove default bullet points */
-    padding: 0; /* Remove default padding */
-    margin: 0; /* Remove default margin */
-    background-color: #191528; /* Example background color */
-    border-radius: 10px; /* Optional: rounding the corners of the list */
-    }
-
-    /* Style each list item */
-    .ip-item {
-        display: flex; /* Align checkbox and text in one line */
-        align-items: center; /* Vertically center the content */
-        padding: 10px 0; /* Add vertical space between items */
-        font-size: 16px; /* Adjust font size */
-        color: #fff; /* Make text white */
-    }
-
-    /* Style the checkbox */
-    .ip-item input[type="checkbox"] {
-        margin-right: 7px; /* Add space between checkbox and text */
-        transform: scale(1.0); /* Enlarge the checkbox */
-    }
-
-    /* Style the text next to the checkbox */
-    .ip-text {
-        display: inline-block;
     
-    }
+/* Style the header row */
+.ip-header {
+    display: grid;
+    grid-template-columns: 0.1fr 1fr 1fr 2fr 1fr; /* Add column for the checkbox */
+    padding: 10px 0;
+    font-weight: bold;
+    font-size: 16px;
+    color: #fff;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    margin-bottom: 10px;
+    text-align: left;
+    align-items: center;
+}
 
-    /* Optional: Customize hover or active states */
-    .ip-item:hover {
-        background-color: rgba(255, 255, 255, 0.1); /* Add a hover effect */
-        border: 1px solid rgb(222, 222, 222); /* Change the border color when hovering */
-    }
+/* Ensure header text doesn't wrap */
+.ip-header-item {
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Style each list item */
+.ip-item {
+    display: grid;
+    grid-template-columns: 0.1fr 1fr 1fr 2fr 1fr; /* Match the grid structure with headers */
+    align-items: center;
+    padding: 10px 0;
+    font-size: 16px;
+    color: #fff;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.ip-item input[type="checkbox"] {
+    margin-right: 7px;
+    transform: scale(1.0);
+}
+
+.ip-text {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+/* Hover effect */
+.ip-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgb(222, 222, 222);
+}
 </style>
