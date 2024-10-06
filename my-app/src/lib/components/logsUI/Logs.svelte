@@ -1,13 +1,43 @@
 <script>
-    import TestSidebar from "$lib/components/dashboardUI/TestSidebar.svelte"
-    import TestTopRight from "$lib/components/dashboardUI/TestTopRight.svelte"
+  import TestSidebar from "$lib/components/dashboardUI/TestSidebar.svelte"
+  import TestTopRight from "$lib/components/dashboardUI/TestTopRight.svelte"
+  import { createLogEntry, deleteLogsForUser, fetchLogsForUser } from './logservice';
 
-    let logs = [
-    { type: "Warning",     time: "09/29/24 10:12", message: "Failed login attempt for user 'analyst1' - incorrect password"},
-    { type: "Information", time: "09/29/24 10:13", message: "User 'analyst1' logged in successfully"},
-    { type: "Information", time: "09/29/24 10:14", message: "User 'analyst1' accessed the reports page to view exploits"},
-    { type: "Information", time: "09/29/24 10:20", message: "User 'analyst1' logged out"}
-  ];
+  // Change username when we find a way to store the username when the user logs in
+
+  // Change this to your username
+  const username = 'jbguzman@miners.utep.edu';
+  
+  // Uncomment this to delete all logs that are linked to you
+  // deleteLogsForUser(username);
+
+  createLogEntry({
+    username: username,
+    type: 'Information',
+    message: 'testing log creation'
+  });
+  
+  let logs = [];
+  fetchLogsForUser(username).then(fetchedLogs => {
+    if (fetchedLogs) {
+      logs = fetchedLogs.map(log => ({
+        type: log.type,
+        time: log.date,
+        message: log.message
+      }));
+
+      console.log(logs);
+    } else {
+      console.log('No logs found for this user.');
+    }
+  });
+  
+  // logs = [
+    // { type: "Warning",     time: "09/29/24 10:12", message: "Failed login attempt for user 'analyst1' - incorrect password"},
+    // { type: "Information", time: "09/29/24 10:13", message: "User 'analyst1' logged in successfully"},
+    // { type: "Information", time: "09/29/24 10:14", message: "User 'analyst1' accessed the reports page to view exploits"},
+    // { type: "Information", time: "09/29/24 10:20", message: "User 'analyst1' logged out"}
+  // ];
 
   let defaultOption = "None"; // Default option
   let logType = ["None", "Information", "Warning", "Error"];
@@ -17,6 +47,8 @@
     console.log("Filtering logs by:", defaultOption);
     filteredLogs = (defaultOption === "None") ? logs : logs.filter(log => log.type === defaultOption);
   }
+
+  filterLogsBy();
 </script>
 
 <div class="grid-container">
