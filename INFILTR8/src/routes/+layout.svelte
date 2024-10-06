@@ -14,7 +14,10 @@
 	import javascript from 'highlight.js/lib/languages/javascript';
 	import typescript from 'highlight.js/lib/languages/typescript';
 
+	// Christian R Imports
 	import { TabGroup, Tab, TabAnchor } from '@skeletonlabs/skeleton';
+	import { popup } from '@skeletonlabs/skeleton';
+	import type { PopupSettings } from '@skeletonlabs/skeleton';
 
 	hljs.registerLanguage('xml', xml); // for HTML
 	hljs.registerLanguage('css', css);
@@ -40,6 +43,20 @@
     } else {
         greeting = "Good evening!";
     }
+
+
+
+
+	const AccountPopUp: PopupSettings = {
+		// Represents the type of event that opens/closed the popup
+		event: 'click',
+		// Matches the data-popup value on your popup element
+		target: 'AccountPopUp',
+		// Defines which side of your trigger the popup will appear
+		placement: 'bottom',
+	};
+					
+
 </script>
 
 <!-- App Shell -->
@@ -61,15 +78,23 @@
 					target="_blank"
 					rel="noreferrer"
 				>
-					Discord
+					Notifications
 				</a>
+
+				<button class="btn btn-sm variant-ghost-surface" use:popup={AccountPopUp}>Account</button>
+				<div class="card p-4 w-72 shadow-xl" data-popup="AccountPopUp">
+					<div><p>Account Details Here</p></div>
+					<div class="arrow bg-surface-100-800-token" />
+				</div>
+					
+				
 				<a
 					class="btn btn-sm variant-ghost-surface"
 					href="https://twitter.com/SkeletonUI"
 					target="_blank"
 					rel="noreferrer"
 				>
-					Twitter
+					Account
 				</a>
 				<a
 					class="btn btn-sm variant-ghost-surface"
@@ -77,7 +102,7 @@
 					target="_blank"
 					rel="noreferrer"
 				>
-					GitHub
+					Sign Out
 				</a>
 			</svelte:fragment>
 		</AppBar>
