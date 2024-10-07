@@ -1,27 +1,41 @@
 <script lang="ts">
     import { FileDropzone, LightSwitch } from "@skeletonlabs/skeleton";
     import { onMount } from 'svelte';
-  
+    import CreateProject from "$lib/components/dashboardUI/CreateProject.svelte"; // Import the CreateProject component
+
     let button: HTMLButtonElement | null = null;
     let dropdownMenu: HTMLDivElement | null = null;
-  
+    let isProjectFormOpen = false; // Boolean to toggle CreateProject modal visibility
+
+    // Function to open the modal
+    const openProjectForm = () => {   
+        console.log("Clicked Create Project")
+        isProjectFormOpen = true;
+    };
+
+    // Function to close the modal
+    const closeProjectForm = () => {
+        console.log("Closing Create Project")
+        isProjectFormOpen = false;
+    };
+
     onMount(() => {
-      if (button && dropdownMenu) {
-        button.addEventListener('click', () => {
-          dropdownMenu?.classList.toggle('hidden');
-        });
-  
-        document.addEventListener('click', (e) => {
-          const target = e.target as Node;
-  
-          if (button && dropdownMenu && !button.contains(target) && !dropdownMenu.contains(target)) {
-            dropdownMenu.classList.add('hidden');
-          }
-        });
-      }
+        if (button && dropdownMenu) {
+            button.addEventListener('click', () => {
+                dropdownMenu?.classList.toggle('hidden');
+            });
+
+            document.addEventListener('click', (e) => {
+                const target = e.target as Node;
+
+                if (button && dropdownMenu && !button.contains(target) && !dropdownMenu.contains(target)) {
+                    dropdownMenu.classList.add('hidden');
+                }
+            });
+        }
     });
 </script>
-  
+
 <div class="container h-full mx-auto flex justify-center items-center">
   <div class="space-y-10 text-center flex flex-col items-center">
     <h2 class="h2">Welcome to INFILTR8.</h2>
@@ -34,24 +48,14 @@
         <section class="p-4">
           <FileDropzone name="files" />
         </section>
-        <footer class="card-footer">(footer)</footer>
+        <footer class="card-footer">(Current File Here)</footer>
       </div>
-      <div class="card">
-        <header class="card-header">
-          <h1 class="card-title">File Upload</h1>
-          <p class="card-subtitle">Dark Mode</p>
-        </header>
-        <section class="p-4">
-          <LightSwitch />
-        </section>
-        <footer class="card-footer">(footer)</footer>
-      </div>
-      <section class="img-bg" />
     </figure>
     
     <!-- Buttons for Create, Sync, Delete, and Export -->
     <div class="flex space-x-4 justify-center">
-      <button class="btn variant-filled">Create Project</button>
+      <!-- Create Project Button -->
+      <button class="btn variant-filled" on:click={openProjectForm}>Create Project</button>
       <button class="btn variant-filled">Sync Project</button>
       <button class="btn variant-filled">Delete Project</button>
 
@@ -70,3 +74,8 @@
     </div>
   </div>
 </div>
+
+<!-- Render the CreateProject component conditionally -->
+{#if isProjectFormOpen}
+  <CreateProject on:close={closeProjectForm} /> <!-- Pass closeProjectForm to handle closing -->
+{/if}

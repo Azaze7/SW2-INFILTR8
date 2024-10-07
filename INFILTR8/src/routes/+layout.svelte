@@ -55,6 +55,15 @@
 		// Defines which side of your trigger the popup will appear
 		placement: 'bottom',
 	};
+
+	const NotificationPopUp: PopupSettings = {
+		// Represents the type of event that opens/closed the popup
+		event: 'click',
+		// Matches the data-popup value on your popup element
+		target: 'NotificationPopUp',
+		// Defines which side of your trigger the popup will appear
+		placement: 'bottom',
+	};
 					
 
 </script>
@@ -72,14 +81,11 @@
 				<section class="p-4">
 					<LightSwitch />
 				</section>
-				<a
-					class="btn btn-sm variant-ghost-surface"
-					href="https://discord.gg/EXqV7W8MtY"
-					target="_blank"
-					rel="noreferrer"
-				>
-					Notifications
-				</a>
+				<button class="btn btn-sm variant-ghost-surface" use:popup={NotificationPopUp}>Notifications</button>
+				<div class="card p-4 w-72 shadow-xl" data-popup="NotificationPopUp">
+					<div><p>Notification Details Here</p></div>
+					<div class="arrow bg-surface-100-800-token" />
+				</div>
 
 				<button class="btn btn-sm variant-ghost-surface" use:popup={AccountPopUp}>Account</button>
 				<div class="card p-4 w-72 shadow-xl" data-popup="AccountPopUp">
@@ -90,7 +96,7 @@
 		
 				<a
 					class="btn btn-sm variant-ghost-surface"
-					href="https://github.com/skeletonlabs/skeleton"
+					href="/"
 					target="_blank"
 					rel="noreferrer"
 				>
@@ -104,7 +110,8 @@
 			<svelte:fragment slot="sidebarLeft">
 				<AppRail>
 					<svelte:fragment slot="lead">
-						<AppRailAnchor href="/" >(icon)</AppRailAnchor>
+						<AppRailAnchor href="/analysis" >(icon)</AppRailAnchor>
+						<span>Analyze</span>
 					</svelte:fragment>
 					<!-- --- -->
 					<AppRailTile bind:group={currentTile} name="tile-1" value={0} title="tile-1">
