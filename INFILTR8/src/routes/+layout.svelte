@@ -87,15 +87,7 @@
 					<div class="arrow bg-surface-100-800-token" />
 				</div>
 					
-				
-				<a
-					class="btn btn-sm variant-ghost-surface"
-					href="https://twitter.com/SkeletonUI"
-					target="_blank"
-					rel="noreferrer"
-				>
-					Account
-				</a>
+		
 				<a
 					class="btn btn-sm variant-ghost-surface"
 					href="https://github.com/skeletonlabs/skeleton"
@@ -117,10 +109,12 @@
 					<!-- --- -->
 					<AppRailTile bind:group={currentTile} name="tile-1" value={0} title="tile-1">
 						<svelte:fragment slot="lead">(icon)</svelte:fragment>
+						<AppRailAnchor href="/dashboard" ></AppRailAnchor>
 						<span>Dashboard</span>
 					</AppRailTile>
 					<AppRailTile bind:group={currentTile} name="tile-2" value={1} title="tile-2">
 						<svelte:fragment slot="lead">(icon)</svelte:fragment>
+						<AppRailAnchor href="/projects" ></AppRailAnchor>
 						<span>Projects</span>
 					</AppRailTile>
 					<AppRailTile bind:group={currentTile} name="tile-3" value={2} title="tile-3">
