@@ -1,286 +1,283 @@
-<script>
-    let email = "";
-    let password = "";
-    let confirmPass = "";
+<script lang="ts">
+    import { writable } from 'svelte/store';
+    import { goto } from '$app/navigation'; // Import goto for redirection
+    import { user } from './userStore'; // Import the user store from the userStore.ts file
+
+    const SERVER_URL = 'http://localhost:3000'; // Replace with your server URL
+
+    let username = '';
+    let password = '';
+    let confirmPass = '';
     let error = false;
     let register = false;
-    let errorMessage = "";
+    let errorMessage = '';
     let loading = false;
-  
-    async function handleAuthentication() {
-      error = false;
-      loading = true;
-      errorMessage = "";
-  
-      if (!email || !password || (register && !confirmPass)) {
-        errorMessage = "All fields are required.";
-        error = true;
-        loading = false;
-        return;
-      }
-  
-      if (register && password !== confirmPass) {
-        errorMessage = "Passwords do not match.";
-        error = true;
-        loading = false;
-        return;
-      }
-  
-      const endpoint = register
-        ? "http://localhost:3000/register"
-        : "http://localhost:3000/login";
-      const payload = {
-        username: email,
-        password: password,
-      };
-  
-      try {
-        const response = await fetch(endpoint, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(payload),
-        });
-  
-        const result = await response.json();
-  
-        console.log("Response:", response);
-        console.log("Result:", result);
-  
-        if (!response.ok) {
-          errorMessage = result.message || result.error || "Authentication failed";
-          error = true;
-        } else {
-          handleSuccess();
+
+    const login = async (): Promise<void> => {
+        loading = true;
+        try {
+            const response = await fetch(`${SERVER_URL}/login`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, password }),
+                credentials: 'include' // Ensures cookies are included in the request
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                localStorage.setItem('user', JSON.stringify(data.user));
+                user.set(data.user);
+                
+                // Redirect to dashboard after successful login
+                goto('/dashboard');
+            } else {
+                throw new Error(await response.text());
+            }
+        } catch (err) {
+            console.error('Error during login:', err);
+            errorMessage = typeof err === 'string' ? err : 'An error occurred during login';
+            error = true;
+        } finally {
+            loading = false;
         }
-      } catch (e) {
-        console.error("Error during authentication:", e);
-        errorMessage = "An error occurred during the request.";
-        error = true;
-      }
-  
-      loading = false;
-    }
-  
-    function handleSuccess() {
-      // Redirect to dashboard after successful login/registration
-      window.location.href = "/dashboard";
-    }
-  
-    /**
-     * @param {{ preventDefault: () => void; }} event
-     */
-    function handleSubmit(event) {
-      event.preventDefault(); // Prevent the default form submission
-      handleAuthentication(); // Call the API
-    }
-  
-    function handleRegister() {
-      register = !register;
-      error = false;
-      errorMessage = "";
-      password = "";
-      confirmPass = "";
-    }
-  </script>
-  
-  <div class="authContainer">
-    <form on:submit|preventDefault={handleSubmit}>
-      <h1>{register ? "Register" : "Login"}</h1>
-      {#if error}
-        <p class="error">{errorMessage}</p>
-      {/if}
-      <label>
-        <p class={email ? "above" : "center"}>Email</p>
-        <input bind:value={email} type="email" placeholder="Email" required />
-      </label>
-      <label>
-        <p class={password ? "above" : "center"}>Password</p>
-        <input
-          bind:value={password}
-          type="password"
-          placeholder="Password"
-          required
-        />
-      </label>
-      {#if register}
-        <label>
-          <p class={confirmPass ? "above" : "center"}>Confirm Password</p>
-          <input
-            bind:value={confirmPass}
-            type="password"
-            placeholder="Confirm Password"
-            required
-          />
-        </label>
-      {/if}
-      <button type="submit" disabled={loading}>
-        {loading ? "Processing..." : "Submit"}
-      </button>
-    </form>
-  
-    <div class="options">
-      <p>Or</p>
-      {#if register}
-        <div>
-          <p>Already have an account?</p>
-          <button type="button" on:click={handleRegister}>Login</button>
-        </div>
-      {:else}
-        <div>
-          <p>Don't have an account?</p>
-          <button type="button" on:click={handleRegister}>Register</button>
-        </div>
-      {/if}
+    };
+
+    const registerUser = async (): Promise<void> => {
+        loading = true;
+        try {
+            const response = await fetch(`${SERVER_URL}/register`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, password }),
+                credentials: 'include'
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                localStorage.setItem('user', JSON.stringify(data.user));
+                user.set(data.user);
+
+                // Redirect to dashboard after successful registration
+                goto('/dashboard');
+            } else {
+                throw new Error(await response.text());
+            }
+        } catch (err) {
+            console.error('Error during registration:', err);
+            errorMessage = typeof err === 'string' ? err : 'An error occurred during registration';
+            error = true;
+        } finally {
+            loading = false;
+        }
+    };
+
+    const handleAuthentication = async (): Promise<void> => {
+        error = false;
+        loading = true;
+        errorMessage = '';
+
+        if (!username || !password || (register && !confirmPass)) {
+            errorMessage = 'All fields are required.';
+            error = true;
+            loading = false;
+            return;
+        }
+
+        if (register && password !== confirmPass) {
+            errorMessage = 'Passwords do not match.';
+            error = true;
+            loading = false;
+            return;
+        }
+
+        if (register) {
+            await registerUser();
+        } else {
+            await login();
+        }
+    };
+
+    const handleRegister = (): void => {
+        register = !register;
+        error = false;
+        errorMessage = '';
+        password = '';
+        confirmPass = '';
+    };
+
+    const logout = async (): Promise<void> => {
+        try {
+            await fetch(`${SERVER_URL}/logout`, {
+                method: 'POST',
+                credentials: 'include'
+            });
+            localStorage.removeItem('user');
+            user.set(null);
+            username = '';
+            password = '';
+            confirmPass = '';
+        } catch (err) {
+            console.error('Logout error:', err);
+        }
+    };
+</script>
+
+{#if $user}
+    <div class="welcome">
+        <h3>Welcome, {$user.username}!</h3>
+        <button on:click={logout}>Logout</button>
     </div>
-  </div>
-  
-  <style>
+{:else}
+    <div class="authContainer">
+        <form on:submit|preventDefault={handleAuthentication}>
+            <h1>{register ? "Register" : "Login"}</h1>
+            {#if error}
+                <p class="error">{errorMessage}</p>
+            {/if}
+            <label>
+                <p class={username ? "above" : "center"}>Username</p>
+                <input bind:value={username} type="text" placeholder="Username" required autocomplete="username" />
+            </label>
+            <label>
+                <p class={password ? "above" : "center"}>Password</p>
+                <input bind:value={password} type="password" placeholder="Password" required autocomplete="current-password" />
+            </label>
+            {#if register}
+                <label>
+                    <p class={confirmPass ? "above" : "center"}>Confirm Password</p>
+                    <input bind:value={confirmPass} type="password" placeholder="Confirm Password" required autocomplete="new-password" />
+                </label>
+            {/if}
+            <button type="submit" disabled={loading}>
+                {loading ? "Processing..." : "Submit"}
+            </button>
+        </form>
+
+        <div class="options">
+            <p>Or</p>
+            {#if register}
+                <div>
+                    <p>Already have an account?</p>
+                    <button type="button" on:click={handleRegister}>Login</button>
+                </div>
+            {:else}
+                <div>
+                    <p>Don't have an account?</p>
+                    <button type="button" on:click={handleRegister}>Register</button>
+                </div>
+            {/if}
+        </div>
+    </div>
+{/if}
+
+<style>
     .authContainer {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      flex: 1;
-      padding: 24px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 20px;
+        box-sizing: border-box;
+        background: linear-gradient(135deg, #1e3c72, #2a5298);
     }
-  
+
     form {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        max-width: 400px;
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
-  
-    form,
-    .options {
-      width: 400px;
-      max-width: 100%;
-      margin: 0 auto;
+
+    label {
+        width: 100%;
+        margin-bottom: 15px;
+        position: relative;
     }
-  
-    form input {
-      width: 100%;
+
+    label p {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        transform: translateY(-50%);
+        transition: all 0.2s ease-in-out;
+        background: white;
+        padding: 0 5px;
+        font-size: 0.9rem;
+        color: #555;
+        pointer-events: none;
     }
-  
-    h1 {
-      text-align: center;
-      font-size: 3rem;
+
+    input {
+        width: 100%;
+        padding: 15px 10px;
+        font-size: 1rem;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        outline: none;
+        color: #333; /* Ensures that the text color is visible */
+        background-color: white; /* Ensures the input background is white for contrast */
     }
-  
-    form label {
-      position: relative;
-      border: 1px solid navy;
-      border-radius: 5px;
+
+    input:focus {
+        border: 1px solid #007bff;
     }
-  
-    form label:focus-within {
-      border-color: blue;
+
+    input:focus + p,
+    input:not(:placeholder-shown) + p {
+        top: -10px;
+        left: 15px;
+        font-size: 0.8rem;
+        color: #007bff; /* Color change to indicate focus */
     }
-  
-    form input {
-      border: none;
-      background: transparent;
-      color: white;
-      padding: 14px;
+
+    button {
+        padding: 10px 20px;
+        font-size: 1rem;
+        color: white;
+        background-color: #007bff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease-in-out;
     }
-  
-    form input:focus {
-      border: none;
-      outline: none;
+
+    button:hover {
+        background-color: #0056b3;
     }
-  
-    form button {
-      background: navy;
-      color: white;
-      border: none;
-      padding: 14px;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 1.1rem;
-    }
-  
-    form button:hover {
-      background: blue;
-    }
-  
-    .above,
-    .center {
-      position: absolute;
-      transform: translateY(-50%);
-      pointer-events: none;
-      color: white;
-      border-radius: 4px;
-      padding: 0 6px;
-      font-size: 0.8rem;
-    }
-  
-    .above {
-      top: 0;
-      left: 24px;
-      background: navy;
-      border: 1px solid blue;
-      font-size: 0.7rem;
-    }
-  
-    .center {
-      top: 50%;
-      left: 6px;
-      border: 1px solid transparent;
-      opacity: 0;
-    }
-  
+
     .error {
-      color: coral;
-      font-size: 0.9rem;
+        color: red;
+        font-size: 0.9rem;
+        margin-bottom: 15px;
     }
-  
+
     .options {
-      padding: 14px 0;
-      overflow: hidden;
-      font-size: 0.9rem;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
+        margin-top: 20px;
+        text-align: center;
     }
-  
-    .options > p {
-      position: relative;
-      text-align: center;
-      width: fit-content;
-      margin: 0 auto;
-      padding: 0 8px;
+
+    .options p {
+        margin: 0 0 10px 0;
     }
-  
-    .options > p::after,
-    .options > p::before {
-      position: absolute;
-      content: '';
-      top: 50%;
-      transform: translateY(-50%);
-      width: 100vw;
-      height: 1.5px;
-      background: white;
+
+    .options button {
+        background: transparent;
+        color: #007bff;
+        border: none;
+        cursor: pointer;
     }
-  
-    .options > p::after {
-      right: 100%;
+
+    .options button:hover {
+        text-decoration: underline;
     }
-  
-    .options > p::before {
-      left: 100%;
-    }
-  
-    .options div {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      justify-content: center;
-    }
-  
-    .options div p:last-of-type {
-      color: cyan;
-      cursor: pointer;
-    }
-  </style>
-  
+</style>
