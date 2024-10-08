@@ -232,8 +232,8 @@
         border: 1px solid #007bff;
     }
 
-    input:focus + p,
-    input:not(:placeholder-shown) + p {
+ 
+    input:not(:placeholder-shown)  {
         top: -10px;
         left: 15px;
         font-size: 0.8rem;

@@ -53,5 +53,10 @@
     "redis": "^4.7.0",
     "set-value": "^4.1.0",
     "vinyl-fs": "^4.0.0"
-  }
+  },
+  "description": "Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/main/packages/create-svelte).",
+  "main": "svelte.config.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }

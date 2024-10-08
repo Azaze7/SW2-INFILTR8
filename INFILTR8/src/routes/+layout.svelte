@@ -27,7 +27,7 @@
     <AppShell>
         <!-- Render the main application layout when authenticated -->
         <slot />
-        <svelte:fragment slot="pageFooter">Page Footer</svelte:fragment>
+
     </AppShell>
 {:else}
     <!-- Render the login UI when not authenticated -->
