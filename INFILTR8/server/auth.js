@@ -1,3 +1,5 @@
+// auth.js
+
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
@@ -9,14 +11,16 @@ import csv from 'csv-parser';
 import multer from 'multer';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import session from 'express-session'; // Use only express-session
 
-// Define __dirname manually
+// Define __dirname manually for ES module
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Load environment variables from .env
 dotenv.config({ path: '../.env' });
 
+// Create an Express application
 const app = express();
 app.use(express.json());
 
@@ -26,18 +30,25 @@ app.use(cors({
     credentials: true  // Allow credentials (cookies, authorization headers, etc.)
 }));
 
-console.log('Modules imported successfully');
-
 // Create a Neo4j driver instance using credentials from environment variables
 const driver = neo4j.driver(
     process.env.NEO4J_URI,
     neo4j.auth.basic(process.env.NEO4J_USERNAME, process.env.NEO4J_PASSWORD)
 );
 
-const session = driver.session();
+// Create a Neo4j session
+const neo4jSession = driver.session();
 
 // Set up multer for file uploads
-const upload = multer({ dest: 'data/' }); // Save uploaded files to 'my-app/data'
+const upload = multer({ dest: 'data/' }); // Save uploaded files to 'data/'
+
+// Initialize express-session middleware using in-memory storage
+app.use(session({
+    secret: process.env.SESSION_SECRET || 'your_secret_key', // Use a strong secret in production
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: false } // Set to true if using HTTPS
+}));
 
 // Endpoint to handle .nessus file upload
 app.post('/upload-nessus', upload.single('nessusFile'), (req, res) => {
@@ -46,7 +57,7 @@ app.post('/upload-nessus', upload.single('nessusFile'), (req, res) => {
     }
 
     const filePath = path.resolve(req.file.path);
-    const scriptPath = path.resolve(__dirname, '../scripts/maing.py'); // Corrected script path
+    const scriptPath = path.resolve(__dirname, '../scripts/maing.py'); // Correct script path
 
     // Execute the Python script to process the file and generate CSV
     exec(`python ${scriptPath} ${filePath}`, (error, stdout, stderr) => {
@@ -84,7 +95,7 @@ app.post('/upload-csv', async (req, res) => {
                     .on('data', async (row) => {
                         // Insert row into Neo4j
                         try {
-                            await session.run(
+                            await neo4jSession.run(
                                 `CREATE (v:Vulnerability {name: $name, ip: $ip, port: $port, viable_exploit: $viable_exploit, archetype: $archetype}) RETURN v`,
                                 {
                                     name: row.name || '',
@@ -112,12 +123,102 @@ app.post('/upload-csv', async (req, res) => {
 // Endpoint to fetch vulnerabilities from Neo4j
 app.get('/vulnerabilities', async (req, res) => {
     try {
-        const result = await session.run(`MATCH (v:Vulnerability) RETURN v`);
+        const result = await neo4jSession.run(`MATCH (v:Vulnerability) RETURN v`);
         const vulnerabilities = result.records.map(record => record.get('v').properties);
         res.json(vulnerabilities);
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: err.message });
+    }
+});
+
+// User Registration Endpoint
+app.post('/register', async (req, res) => {
+    const { username, password } = req.body;
+
+    try {
+        // Check if the user already exists
+        const userResult = await neo4jSession.run(
+            'MATCH (u:User {username: $username}) RETURN u',
+            { username }
+        );
+
+        if (userResult.records.length > 0) {
+            return res.status(400).send('User already exists');
+        }
+
+        // Hash the password
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // Create a new user node
+        await neo4jSession.run(
+            'CREATE (u:User {username: $username, password: $password}) RETURN u',
+            { username, password: hashedPassword }
+        );
+
+        // Set session user
+        req.session.user = { username };
+
+        res.json({ user: { username } });
+    } catch (err) {
+        console.error('Registration error:', err);
+        res.status(500).send('An error occurred during registration');
+    }
+});
+
+// User Login Endpoint
+app.post('/login', async (req, res) => {
+    const { username, password } = req.body;
+
+    try {
+        // Find the user
+        const userResult = await neo4jSession.run(
+            'MATCH (u:User {username: $username}) RETURN u',
+            { username }
+        );
+
+        if (userResult.records.length === 0) {
+            return res.status(400).send('Invalid username or password');
+        }
+
+        const userNode = userResult.records[0].get('u').properties;
+        const hashedPassword = userNode.password;
+
+        // Compare passwords
+        const passwordMatch = await bcrypt.compare(password, hashedPassword);
+
+        if (!passwordMatch) {
+            return res.status(400).send('Invalid username or password');
+        }
+
+        // Set session user
+        req.session.user = { username };
+
+        res.json({ user: { username } });
+    } catch (err) {
+        console.error('Login error:', err);
+        res.status(500).send('An error occurred during login');
+    }
+});
+
+// User Logout Endpoint
+app.post('/logout', (req, res) => {
+    req.session.destroy(err => {
+        if (err) {
+            console.error('Logout error:', err);
+            return res.status(500).send('Could not log out');
+        } else {
+            res.send('Logged out');
+        }
+    });
+});
+
+// Get Current User Endpoint
+app.get('/current-user', (req, res) => {
+    if (req.session.user) {
+        res.json({ user: req.session.user });
+    } else {
+        res.status(401).send('Unauthorized');
     }
 });
 
