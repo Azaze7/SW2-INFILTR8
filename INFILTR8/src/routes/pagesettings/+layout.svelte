@@ -5,6 +5,9 @@
     import { AppRail, AppRailTile, AppRailAnchor } from '@skeletonlabs/skeleton';
     import { page } from '$app/stores';
     import { user } from "$lib/components/loginUI/userStore"; // Correctly import the user store from the separate store file  
+    import { writable } from 'svelte/store'; // Import writable store for upload progress
+    import SvgSpinnersBlocksWave from "$lib/components/icons/SvgSpinnersBlocksWave.svelte"; 
+
     let currentTile: number = 0;
 
     // Reactive store value
@@ -44,20 +47,60 @@
 
     // Function to navigate to analysis page
     const navigateToAnalysis = () => {
-        console.log("Navigating to /analysis"); // Debugging log to check if it's getting triggered
+        console.log("Navigating to /analysis");
         goto('/analysis');
     };
+
     let username = '';
+
+    // File upload logic
+    let files: File[] = [];
+    let uploadProgress = writable(0); // Store to track the upload progress percentage
+
+    // Function to handle file uploads
+    async function uploadFiles() {
+        if (files.length === 0) {
+            console.error("No files selected for upload");
+            return;
+        }
+
+        const formData = new FormData();
+        files.forEach(file => formData.append('files[]', file));
+
+        try {
+            const response = await fetch('/upload', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Accept': 'application/json',
+                },
+                onUploadProgress: (event) => {
+                    const percentCompleted = Math.round((event.loaded * 100) / event.total);
+                    uploadProgress.set(percentCompleted);
+                }
+            });
+
+            if (response.ok) {
+                console.log('Files uploaded successfully');
+                uploadProgress.set(100); 
+            } else {
+                console.error('Upload failed');
+            }
+        } catch (error) {
+            console.error('Error uploading files:', error);
+        }
+    }
 </script>
 
 <!-- App Shell -->
-<AppShell slotSidebarLeft="bg-surface-500/5 w-56 p-4">
+<AppShell slotSidebarLeft="bg-surface-500/5 w-60 p-4">
     <!-- Header -->
     <svelte:fragment slot="header">
-        <!-- App Bar -->
         <AppBar>
             <svelte:fragment slot="lead">
-                <strong class="text-xl uppercase"><p>{greeting}{" "}{$user?.username}</p></strong>
+                <strong class="text-xl uppercase">
+                    <p>{greeting}{" "}{$user?.username}</p>
+                </strong>
             </svelte:fragment>
             <svelte:fragment slot="trail">
                 <a class="btn btn-sm variant-ghost-surface" href="https://discord.gg/EXqV7W8MtY" target="_blank" rel="noreferrer">
@@ -77,16 +120,52 @@
     <svelte:fragment slot="sidebarLeft">
         <AppRail>
             <svelte:fragment slot="lead">
-                <AppRailAnchor href="/" selected={currentPath === '/'}>(icon) Home</AppRailAnchor>
+                <AppRailAnchor href="/dashboard" selected={currentPath === '/dashboard'}>
+                    <div class="icon-container">
+                        <SvgSpinnersBlocksWave/>
+                    </div>
+                    Dashboard
+                </AppRailAnchor>
             </svelte:fragment>
-            <AppRailAnchor href="/analysis" selected={currentPath === '/analysis'}>(icon) Analysis</AppRailAnchor>
-            <AppRailAnchor href="/pagesettings" selected={currentPath === '/settings'}>(icon) Settings</AppRailAnchor>
+            <!-- Analysis -->
+            <AppRailAnchor href="/analysis" selected={currentPath === '/analysis'}>
+                (icon)
+                Analysis
+            </AppRailAnchor>
+            <!-- Project Manager -->
+            <AppRailAnchor href="/ProjectManager" selected={currentPath === '/ProjectManager'}>
+                (icon)
+                ProjectManager
+            </AppRailAnchor>
+            <!-- Testing -->
+            <AppRailAnchor href="/Testing" selected={currentPath === '/Testing'}>
+                (icon)
+                Testing
+            </AppRailAnchor>
             <svelte:fragment slot="trail">
+                <!-- Page Settings -->
+                <AppRailAnchor href="/pagesettings" selected={currentPath === '/pagesettings'}>
+                    (icon) Settings</AppRailAnchor>
+                <!-- Support -->
                 <AppRailAnchor href="/" target="_blank" title="Account">(icon)</AppRailAnchor>
             </svelte:fragment>
         </AppRail>
     </svelte:fragment>
 
+    <!-- Page Header -->
+
+
     <!-- Page Route Content -->
     <slot />
 </AppShell>
+
+<style>
+    .icon-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100px;
+        width: 100px;
+        margin: 0 auto;
+    }
+</style>

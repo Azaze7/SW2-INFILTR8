@@ -5,7 +5,10 @@ import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
-import multer from 'multer';  // Import multer for file uploads
+import multer from 'multer';  // For handling file uploads
+import { exec } from 'child_process';
+import csv from 'csv-parser';  // For reading CSV files
+import neo4j from 'neo4j-driver';  // Import Neo4j driver
 import authRoutes from './auth.js';  // Import authentication routes
 
 const app = express();
@@ -26,6 +29,17 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
+// Setup Neo4j connection
+const neo4jDriver = neo4j.driver(
+    process.env.NEO4J_URI,  // Ensure these environment variables are correct
+    neo4j.auth.basic(process.env.NEO4J_USERNAME, process.env.NEO4J_PASSWORD)
+);
+
+const neo4jSession = neo4jDriver.session();
+neo4jSession.run('RETURN 1')
+    .then(() => console.log('Connected to Neo4j successfully'))
+    .catch(err => console.error('Failed to connect to Neo4j:', err));
+
 // Define multer storage destination
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -34,12 +48,16 @@ const storage = multer.diskStorage({
 
         // Ensure the project directory exists
         if (!fs.existsSync(projectDir)) {
+            console.log(`Creating project directory: ${projectDir}`);
             fs.mkdirSync(projectDir, { recursive: true });
         }
 
+        console.log(`Saving file to directory: ${projectDir}`);
         cb(null, projectDir);  // Save the file to the project folder
     },
     filename: function (req, file, cb) {
+        // Do not rename the .nessus file, keep the original name
+        console.log(`Saving file with original name: ${file.originalname}`);
         cb(null, file.originalname);  // Keep the original file name
     }
 });
@@ -54,6 +72,7 @@ app.post('/create-project', (req, res) => {
     const { projectName } = req.body;
 
     if (!projectName) {
+        console.log('Project name is required');
         return res.status(400).send('Project name is required');
     }
 
@@ -66,6 +85,7 @@ app.post('/create-project', (req, res) => {
             return res.status(500).send('Failed to create project folder');
         }
 
+        console.log(`Project folder ${projectDir} created successfully`);
         res.status(200).send('Project folder created successfully');
     });
 });
@@ -83,33 +103,109 @@ app.get('/projects', (req, res) => {
         // Filter to return only directories (i.e., project folders)
         const projectFolders = files.filter(file => fs.statSync(path.join(dataDir, file)).isDirectory());
 
+        console.log('Project folders retrieved:', projectFolders);
         res.json(projectFolders);
     });
 });
 
-// Route to handle .nessus file upload and processing
-app.post('/upload-nessus', upload.single('nessusFile'), (req, res) => {
-    const nessusFilePath = req.file.path;  // File path of the uploaded Nessus file
+// Route to fetch project data (including IPs and analysis types) from Neo4j
+app.get('/api/project-data', async (req, res) => {
+    try {
+        // Fetch project folders, IP addresses, and analysis types from Neo4j
+        const projectFoldersQuery = `MATCH (p:Project) RETURN p.name AS projectName`;
+        const ipListQuery = `MATCH (ip:IPAddress) RETURN ip.address AS ip`;
+        const analysisTypesQuery = `MATCH (a:Analysis) RETURN a.type AS analysisType`;
+
+        const projectFoldersResult = await neo4jSession.run(projectFoldersQuery);
+        const ipListResult = await neo4jSession.run(ipListQuery);
+        const analysisTypesResult = await neo4jSession.run(analysisTypesQuery);
+
+        const projectFolders = projectFoldersResult.records.map(record => record.get('projectName'));
+        const ipList = ipListResult.records.map(record => record.get('ip'));
+        const analysisTypes = analysisTypesResult.records.map(record => record.get('analysisType'));
+
+        res.json({ projectFolders, ipList, analysisTypes });
+    } catch (error) {
+        console.error('Error fetching project data from Neo4j:', error);
+        res.status(500).send('Failed to fetch project data');
+    }
+});
+
+// Route to handle CSV processing and uploading data to Neo4j AuraDB
+app.post('/process-csv', (req, res) => {
     const projectName = req.body.projectName;
     const projectDir = path.join(__dirname, 'data', projectName);
 
     if (!projectName) {
+        console.log('Project name is required');
         return res.status(400).send('Project name is required');
     }
 
-    const scriptPath = path.resolve(__dirname, '../scripts/maing.py');  // Correct script path
+    const csvFiles = [
+        'data_with_exploits.csv',
+        'ranked_entry_points.csv',
+        'entrypoint_most_info.csv',
+        'port_0_entries.csv'
+    ];
 
-    // Execute the Python script to process the file and generate CSVs
-    const { exec } = require('child_process');
-    exec(`python ${scriptPath} ${nessusFilePath} ${projectDir}`, (error, stdout, stderr) => {
-        if (error) {
-            console.error(`Execution error: ${error}`);
-            return res.status(500).send('Error processing Nessus file');
+    const processCSV = async (csvFilePath, query) => {
+        return new Promise((resolve, reject) => {
+            const fileStream = fs.createReadStream(csvFilePath);
+            const csvData = [];
+
+            fileStream
+                .pipe(csv())
+                .on('data', (row) => {
+                    csvData.push(row);
+                })
+                .on('end', async () => {
+                    for (const row of csvData) {
+                        try {
+                            await neo4jSession.run(query, row);
+                            console.log(`Data inserted into Neo4j: ${JSON.stringify(row)}`);
+                        } catch (err) {
+                            console.error(`Error inserting row into Neo4j: ${err.message}`);
+                            reject(err);
+                        }
+                    }
+                    resolve();
+                })
+                .on('error', reject);
+        });
+    };
+
+    const queries = {
+        'data_with_exploits.csv': `
+            CREATE (v:Vulnerability {name: $name, ip: $ip, port: $port, viable_exploit: $viable_exploit, archetype: $archetype}) RETURN v`,
+        'ranked_entry_points.csv': `
+            CREATE (r:RankedEntryPoint {ip: $ip, port: $port, combined_score: $combined_score}) RETURN r`,
+        'entrypoint_most_info.csv': `
+            CREATE (e:EntryPoint {ip: $ip, port: $port, vulnerability_count: $vulnerability_count}) RETURN e`,
+        'port_0_entries.csv': `
+            CREATE (p:Port0Entry {name: $name, ip: $ip}) RETURN p`
+    };
+
+    const processCSVs = async () => {
+        try {
+            for (const file of csvFiles) {
+                const filePath = path.join(projectDir, file);
+                const query = queries[file];
+
+                if (fs.existsSync(filePath)) {
+                    console.log(`Processing CSV file: ${filePath}`);
+                    await processCSV(filePath, query);
+                } else {
+                    console.warn(`CSV file ${filePath} does not exist`);
+                }
+            }
+            res.status(200).send('CSV data processed and uploaded to Neo4j successfully');
+        } catch (err) {
+            console.error('Error processing CSV data:', err);
+            res.status(500).send('Error processing CSV data');
         }
-        console.log(`stdout: ${stdout}`);
-        console.error(`stderr: ${stderr}`);
-        res.send('Nessus file processed successfully');
-    });
+    };
+
+    processCSVs();
 });
 
 // Route to handle project folder deletion
@@ -117,6 +213,7 @@ app.delete('/delete-project', (req, res) => {
     const { projectName } = req.body;
 
     if (!projectName) {
+        console.log('Project name is required for deletion');
         return res.status(400).send('Project name is required');
     }
 
@@ -124,6 +221,7 @@ app.delete('/delete-project', (req, res) => {
 
     // Check if the folder exists
     if (!fs.existsSync(projectDir)) {
+        console.log(`Project folder ${projectDir} not found`);
         return res.status(404).send('Project folder not found');
     }
 
@@ -134,11 +232,80 @@ app.delete('/delete-project', (req, res) => {
             return res.status(500).send('Failed to delete project folder');
         }
 
+        console.log(`Project folder ${projectDir} deleted successfully`);
         res.status(200).send('Project folder deleted successfully');
     });
 });
+//Vulnerability Endpoint
+app.get('/api/vulnerabilities', async (req, res) => {
+  try {
+      const result = await neo4jSession.run(`
+          MATCH (v:Vulnerability)
+          RETURN v
+      `);
+      const vulnerabilities = result.records.map(record => record.get('v').properties);
+      res.json(vulnerabilities);
+  } catch (error) {
+      console.error('Error fetching vulnerabilities:', error);
+      res.status(500).send('Failed to fetch vulnerabilities');
+  }
+});
+
+
+
+//RankedEntryPoint Endpoint
+app.get('/api/ranked-entry-points', async (req, res) => {
+  try {
+      const session = neo4jDriver.session();
+      const result = await session.run(`
+          MATCH (r:RankedEntryPoint) 
+          RETURN r LIMIT 100
+      `);
+      const data = result.records.map(record => record.get('r').properties);
+      session.close();
+      res.json(data);
+  } catch (err) {
+      console.error('Error fetching RankedEntryPoints:', err);
+      res.status(500).send('Failed to fetch ranked entry points');
+  }
+});
+
+//Port0Entry Endpoint
+app.get('/api/port0-entries', async (req, res) => {
+  try {
+      const session = neo4jDriver.session();
+      const result = await session.run(`
+          MATCH (p:Port0Entry) 
+          RETURN p LIMIT 100
+      `);
+      const data = result.records.map(record => record.get('p').properties);
+      session.close();
+      res.json(data);
+  } catch (err) {
+      console.error('Error fetching Port0Entries:', err);
+      res.status(500).send('Failed to fetch port 0 entries');
+  }
+});
+
+//PortZeroEntry Endpoint
+app.get('/api/port-zero-entries', async (req, res) => {
+  try {
+      const result = await neo4jSession.run(`
+          MATCH (p:PortZeroEntry)
+          RETURN p
+      `);
+      const portZeroEntries = result.records.map(record => record.get('p').properties);
+      res.json(portZeroEntries);
+  } catch (error) {
+      console.error('Error fetching port zero entries:', error);
+      res.status(500).send('Failed to fetch port zero entries');
+  }
+});
+
+
 
 // Start the server
 app.listen(port, () => {
     console.log(`Server running on http://localhost:${port}`);
 });
+

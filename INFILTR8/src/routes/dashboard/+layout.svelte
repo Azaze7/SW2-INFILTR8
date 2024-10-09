@@ -120,7 +120,7 @@
     <svelte:fragment slot="sidebarLeft">
         <AppRail>
             <svelte:fragment slot="lead">
-                <AppRailAnchor href="/" selected={currentPath === '/'}>
+                <AppRailAnchor href="/dashboard" selected={currentPath === '/dashboard'}>
                     <div class="icon-container">
                         <SvgSpinnersBlocksWave/>
                     </div>

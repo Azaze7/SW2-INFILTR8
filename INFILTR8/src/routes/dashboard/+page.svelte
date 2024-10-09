@@ -15,6 +15,8 @@
   let files: FileList | undefined; // Fix: use undefined instead of null
   let uploadProgress = writable<number>(0); // Store to track upload progress
 
+  let isDragOver = false; // State for drag-over detection
+
   // Fetch project folders on mount
   async function fetchProjectFolders() {
     try {
@@ -29,12 +31,37 @@
     }
   }
 
+  // Function to trigger CSV upload to Neo4j
+  async function uploadToNeo4j() {
+    if (!selectedProject) {
+      alert('Please select a project to upload CSVs to Neo4j.');
+      return;
+    }
+
+    try {
+      const response = await fetch('http://localhost:3000/process-csv', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ projectName: selectedProject }),
+      });
+
+      if (response.ok) {
+        console.log('CSV data uploaded to Neo4j successfully');
+        uploadProgress.set(100); // Set progress to 100% after successful upload
+      } else {
+        console.error('Failed to upload CSV data to Neo4j');
+      }
+    } catch (error) {
+      console.error('Error uploading CSV data to Neo4j:', error);
+    }
+  }
+
   onMount(() => {
     fetchProjectFolders();
   });
 
   async function uploadFile() {
-    if (!files || files.length === 0) {  // Fix: Check if files is undefined or empty
+    if (!files || files.length === 0) {
         console.error("No file selected");
         return;
     }
@@ -114,6 +141,20 @@
       console.error('Error deleting project folder:', error);
     }
   }
+
+  function handleDragOver(event: DragEvent) { 
+    event.preventDefault();
+    isDragOver = true;
+  }
+
+  function handleDragLeave(event: DragEvent) { 
+    isDragOver = false;
+  }
+
+  function handleDrop(event: DragEvent) {
+    event.preventDefault();
+    isDragOver = false;
+  }
 </script>
 
 <div class="container h-full mx-auto flex justify-center items-center">
@@ -138,24 +179,26 @@
 
       <!-- File Upload Section -->
       <figure>
-          <!-- File Dropzone Component -->
           <FileDropzone bind:files={files} name="files">
               <svelte:fragment slot="lead">(icon)</svelte:fragment>
               <svelte:fragment slot="message">Drag & Drop files here or click to upload</svelte:fragment>
               <svelte:fragment slot="meta">(meta information)</svelte:fragment>
           </FileDropzone>
 
-          <!-- Alternative File Button Component -->
           <FileButton bind:files={files} name="files" button="btn variant-soft-primary">Upload</FileButton>
 
-          <!-- Display Selected Files and Progress -->
           <footer class="card-footer">
-              {#if files?.length > 0}
-                <button on:click={uploadFile} class="btn variant-filled">Upload Selected File</button>
+              {#if files && files.length > 0}
+                  <button on:click={uploadFile} class="btn variant-filled">Upload Selected File</button>
               {/if}
               <ProgressRadial value={$uploadProgress} stroke={100} meter="stroke-primary-500" track="stroke-primary-500/30" />
           </footer>
       </figure>
+
+      <!-- Button to trigger CSV Upload to Neo4j -->
+      <div>
+          <button class="btn variant-filled" on:click={uploadToNeo4j}>Upload CSV to Neo4j</button>
+      </div>
 
       <!-- Export and Delete Project -->
       <div class="flex space-x-4 justify-center">
@@ -165,7 +208,7 @@
           <div class="relative flex">
               <button class="btn variant-filled" bind:this={button}>Export Options</button>
               {#if isDropdownVisible}
-                  <div class="absolute mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg dropdown-menu" bind:this={dropdownMenu}>
+                  <div class="absolute mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg dropdown-menu" bind:this={dropdownMenu} role="menu" aria-label="Export Options">
                       <button class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Export Project</button>
                       <button class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Export as PDF</button>
                       <button class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Export as Excel</button>
@@ -177,17 +220,5 @@
 </div>
 
 <style>
-  .file-drop-area {
-    border: 2px dashed #4CAF50;
-    padding: 40px;
-    text-align: center;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    border-radius: 10px;
-    color: #333;
-  }
 
-  .file-drop-area.is-drag-over {
-    background-color: #f9f9f9;
-  }
 </style>
