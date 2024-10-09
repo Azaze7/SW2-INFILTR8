@@ -12,6 +12,7 @@
     "format": "prettier --write ."
   },
   "devDependencies": {
+    "@iconify-json/svg-spinners": "^1.2.1",
     "@skeletonlabs/skeleton": "2.10.2",
     "@skeletonlabs/tw-plugin": "0.4.0",
     "@sveltejs/adapter-auto": "^3.2.5",
@@ -36,16 +37,18 @@
     "@floating-ui/dom": "1.6.11",
     "@vincjo/datatables": "^1.14.10",
     "bcrypt": "^5.1.1",
+    "body-parser": "^1.20.3",
     "braces": "^3.0.3",
     "config": "^3.3.12",
     "connect-redis": "^7.1.1",
     "cors": "^2.8.5",
     "csv-parser": "^3.0.0",
     "dotenv": "^16.4.5",
-    "express": "^4.21.0",
-    "express-session": "^1.18.1",
+    "express": "^4.21.1",
+    "express-session": "^1.18.0",
     "glob-stream": "^8.0.2",
     "highlight.js": "11.10.0",
+    "iconify-icon": "^2.1.0",
     "ioredis": "^5.4.1",
     "micromatch": "^4.0.8",
     "multer": "^1.4.5-lts.1",
@@ -53,5 +56,10 @@
     "redis": "^4.7.0",
     "set-value": "^4.1.0",
     "vinyl-fs": "^4.0.0"
-  }
+  },
+  "description": "Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/main/packages/create-svelte).",
+  "main": "svelte.config.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }
