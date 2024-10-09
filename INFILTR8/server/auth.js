@@ -26,8 +26,10 @@ app.use(express.json());
 
 // Enable CORS for all routes
 app.use(cors({
-    origin: 'http://localhost:5173',  // Front-end URL
-    credentials: true  // Allow credentials (cookies, authorization headers, etc.)
+    origin: 'http://localhost:5173',  // Allow requests from your front-end URL
+    credentials: true,  // Allow cookies and authorization headers
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],  // Allowed methods
+    allowedHeaders: ['Content-Type', 'Authorization'],  // Allowed headers
 }));
 
 // Create a Neo4j driver instance using credentials from environment variables
@@ -44,7 +46,7 @@ const upload = multer({ dest: 'data/' }); // Save uploaded files to 'data/'
 
 // Initialize express-session middleware using in-memory storage
 app.use(session({
-    secret: process.env.SESSION_SECRET || 'your_secret_key', 
+    secret: process.env.SESSION_SECRET || 'your_secret_key',
     resave: false,
     saveUninitialized: false,
     cookie: { secure: false } // Set to true if using HTTPS
@@ -116,18 +118,6 @@ app.post('/upload-csv', async (req, res) => {
         res.send('CSV data uploaded to Neo4j successfully');
     } catch (err) {
         console.error(`Error processing CSV files: ${err.message}`);
-        res.status(500).json({ error: err.message });
-    }
-});
-
-// Endpoint to fetch vulnerabilities from Neo4j
-app.get('/vulnerabilities', async (req, res) => {
-    try {
-        const result = await neo4jSession.run(`MATCH (v:Vulnerability) RETURN v`);
-        const vulnerabilities = result.records.map(record => record.get('v').properties);
-        res.json(vulnerabilities);
-    } catch (err) {
-        console.error(err);
         res.status(500).json({ error: err.message });
     }
 });
@@ -222,5 +212,4 @@ app.get('/current-user', (req, res) => {
     }
 });
 
-// Start the server
-app.listen(3000, () => console.log('Auth server running on http://localhost:3000'));
+export default app;

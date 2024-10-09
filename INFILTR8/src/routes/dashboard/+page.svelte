@@ -1,19 +1,38 @@
 <script lang="ts">
   import { FileDropzone, LightSwitch, ProgressRadial } from "@skeletonlabs/skeleton";
   import { onMount, onDestroy } from 'svelte';
-  import CreateProject from "$lib/components/dashboardUI/CreateProject.svelte"; // Import the CreateProject component
   import { writable } from 'svelte/store';
 
-  let button: HTMLButtonElement | null = null;
-  let dropdownMenu: HTMLDivElement | null = null;
-  let isProjectFormOpen = false; // Boolean to toggle CreateProject modal visibility
-  let isDropdownVisible = false; // Boolean to toggle dropdown visibility
-
-  // File drop and input logic
+  let isProjectFormOpen = false;
+  let projectName = ""; // Store for project name input
   let files: File[] = [];
-  let isDragOver = false;
-  let fileInput: HTMLInputElement;
-  let uploadProgress = writable<number>(0); // Store to track upload progress
+  let uploadProgress = writable<number>(0); 
+
+  // Function to create a project folder on the server
+  async function createProjectFolder() {
+    if (!projectName) {
+      console.error("Project name is required");
+      return;
+    }
+
+    try {
+      const response = await fetch('http://localhost:3000/create-project', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ projectName }),
+      });
+
+      if (response.ok) {
+        console.log('Project folder created successfully');
+      } else {
+        console.error('Failed to create project folder:', await response.text());
+      }
+    } catch (error) {
+      console.error('Error creating project folder:', error);
+    }
+  }
 
   // Function to handle file selection
   function handleFiles(selectedFiles: FileList) {
@@ -23,28 +42,14 @@
   // Event handlers for drag & drop
   function handleDragOver(event: DragEvent) {
     event.preventDefault();
-    isDragOver = true;
-  }
-
-  function handleDragLeave(event: DragEvent) {
-    event.preventDefault();
-    isDragOver = false;
   }
 
   function handleDrop(event: DragEvent) {
     event.preventDefault();
-    isDragOver = false;
 
     if (event.dataTransfer && event.dataTransfer.files.length > 0) {
       handleFiles(event.dataTransfer.files);
       event.dataTransfer.clearData();
-    }
-  }
-
-  // Trigger file input click
-  function handleDropAreaClick() {
-    if (fileInput) {
-      fileInput.click();
     }
   }
 
@@ -101,37 +106,17 @@
   const closeProjectForm = () => {
     isProjectFormOpen = false;
   };
-
-  // Dropdown handling
-  const toggleDropdown = () => {
-    isDropdownVisible = !isDropdownVisible;
-  };
-
-  const handleClickOutside = (e: MouseEvent) => {
-    const target = e.target as Node;
-    if (button && dropdownMenu && !button.contains(target) && !dropdownMenu.contains(target)) {
-      isDropdownVisible = false;
-    }
-  };
-
-  onMount(() => {
-    if (button) {
-      button.addEventListener('click', toggleDropdown);
-    }
-    document.addEventListener('click', handleClickOutside);
-  });
-
-  onDestroy(() => {
-    if (button) {
-      button.removeEventListener('click', toggleDropdown);
-    }
-    document.removeEventListener('click', handleClickOutside);
-  });
 </script>
 
 <div class="container h-full mx-auto flex justify-center items-center">
   <div class="space-y-10 text-center flex flex-col items-center">
       <h2 class="h2">Welcome to INFILTR8.</h2>
+
+      <!-- Project Name Input and Creation -->
+      <div>
+        <input type="text" placeholder="Enter project name" bind:value={projectName} class="input input-bordered w-full max-w-xs"/>
+        <button class="btn variant-filled mt-4" on:click={createProjectFolder}>Create Project</button>
+      </div>
 
       <!-- File Upload Section -->
       <figure>
@@ -144,18 +129,10 @@
                   <!-- Drag and Drop Area -->
                   <div 
                     class="file-drop-area" 
-                    on:click={handleDropAreaClick} 
                     on:dragover={handleDragOver} 
-                    on:dragleave={handleDragLeave} 
-                    on:drop={handleDrop}
-                    class:is-drag-over={isDragOver}>
+                    on:drop={handleDrop}>
                       <span class="file-message">Drag & Drop files here or click to upload</span>
-                      <input type="file" bind:this={fileInput} on:change={handleFileInputChange} accept=".nessus" style="display: none;">
-                  </div>
-                  <!-- Visible file input as alternative -->
-                  <div>
-                      <p>Or use the button below to upload a file:</p>
-                      <input type="file" on:change={handleFileInputChange} accept=".nessus">
+                      <input type="file" on:change={handleFileInputChange} accept=".nessus" style="display: none;">
                   </div>
                   <!-- Display Selected Files and Progress -->
                   <footer class="card-footer">
@@ -178,29 +155,9 @@
           <button class="btn variant-filled" on:click={openProjectForm}>Create Project</button>
           <button class="btn variant-filled">Sync Project</button>
           <button class="btn variant-filled">Delete Project</button>
-
-          <!-- Export Button with Dropdown -->
-          <div class="relative flex">
-              <button class="btn variant-filled" bind:this={button}>Export Options</button>
-              {#if isDropdownVisible}
-                  <!-- Dropdown menu -->
-                  <div class="absolute mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg dropdown-menu" bind:this={dropdownMenu}>
-                      <a class="block px-4 py-2 text-gray-700 hover:bg-gray-100" href="https://skeleton.dev/" target="_blank" rel="noreferrer">
-                          Export Project
-                      </a>
-                      <a class="block px-4 py-2 text-gray-700 hover:bg-gray-100" href="#option2">Export as PDF</a>
-                      <a class="block px-4 py-2 text-gray-700 hover:bg-gray-100" href="#option3">Export as Excel</a>
-                  </div>
-              {/if}
-          </div>
       </div>
   </div>
 </div>
-
-<!-- Render the CreateProject component conditionally -->
-{#if isProjectFormOpen}
-  <CreateProject on:close={closeProjectForm} />
-{/if}
 
 <style>
   .file-drop-area {

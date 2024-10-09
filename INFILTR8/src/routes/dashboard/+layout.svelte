@@ -6,6 +6,7 @@
     import { page } from '$app/stores';
     import { user } from "$lib/components/loginUI/userStore"; // Correctly import the user store from the separate store file  
     import { writable } from 'svelte/store'; // Import writable store for upload progress
+    import SvgSpinnersBlocksWave from "$lib/components/icons/SvgSpinnersBlocksWave.svelte"; 
 
     let currentTile: number = 0;
 
@@ -46,7 +47,7 @@
 
     // Function to navigate to analysis page
     const navigateToAnalysis = () => {
-        console.log("Navigating to /analysis"); // Debugging log to check if it's getting triggered
+        console.log("Navigating to /analysis");
         goto('/analysis');
     };
 
@@ -75,13 +76,13 @@
                 },
                 onUploadProgress: (event) => {
                     const percentCompleted = Math.round((event.loaded * 100) / event.total);
-                    uploadProgress.set(percentCompleted); // Set upload progress in store
+                    uploadProgress.set(percentCompleted);
                 }
             });
 
             if (response.ok) {
                 console.log('Files uploaded successfully');
-                uploadProgress.set(100); // Set progress to 100% on success
+                uploadProgress.set(100); 
             } else {
                 console.error('Upload failed');
             }
@@ -95,7 +96,6 @@
 <AppShell slotSidebarLeft="bg-surface-500/5 w-60 p-4">
     <!-- Header -->
     <svelte:fragment slot="header">
-        <!-- App Bar -->
         <AppBar>
             <svelte:fragment slot="lead">
                 <strong class="text-xl uppercase">
@@ -121,7 +121,9 @@
         <AppRail>
             <svelte:fragment slot="lead">
                 <AppRailAnchor href="/" selected={currentPath === '/'}>
-                    (icon)
+                    <div class="icon-container">
+                        <SvgSpinnersBlocksWave/>
+                    </div>
                     Dashboard
                 </AppRailAnchor>
             </svelte:fragment>
@@ -164,7 +166,12 @@
 </AppShell>
 
 <style>
-    progress {
+    .icon-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100px;
         width: 100px;
+        margin: 0 auto;
     }
 </style>
