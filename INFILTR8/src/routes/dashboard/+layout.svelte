@@ -152,14 +152,7 @@
     </svelte:fragment>
 
     <!-- Page Header -->
-    <svelte:fragment slot="pageHeader">
-        <!-- Display upload progress in the header -->
-        <div class="flex items-center space-x-4">
-            <p>Uploading Files: </p>
-            <progress max="100" value={$uploadProgress}></progress>
-            <p>{$uploadProgress}%</p>
-        </div>
-    </svelte:fragment>
+
 
     <!-- Page Route Content -->
     <slot />

@@ -1,4 +1,3 @@
-# change lines 10 and 13 to match your desired paths
 import sys
 import os
 import xml.etree.ElementTree as ET
@@ -6,17 +5,17 @@ import pandas as pd
 import category_encoders as ce
 from sklearn.preprocessing import MinMaxScaler
 
-# Path to the Nessus XML file, change line 10 to match path where your NESSUS file is
+# Path to the Nessus XML file
 nessus_file = sys.argv[1]
 
-# Base directory for output CSV files, change line 13 to where you want output CSVs to go
-output_base_dir = "CSV Files"
+# Base directory for output CSV files (this will be the project folder)
+output_base_dir = sys.argv[2]
 
 # Create the output directory if it doesn't exist
 if not os.path.exists(output_base_dir):
     os.makedirs(output_base_dir)
     
-# Construct paths for output CSV files
+# Construct paths for output CSV files inside the selected project folder
 data_with_exploits_path = os.path.join(output_base_dir, 'data_with_exploits.csv')
 ranked_entry_points_path = os.path.join(output_base_dir, 'ranked_entry_points.csv')
 entrypoint_most_info_path = os.path.join(output_base_dir, 'entrypoint_most_info.csv')
