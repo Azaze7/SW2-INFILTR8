@@ -58,38 +58,42 @@
     let uploadProgress = writable(0); // Store to track the upload progress percentage
 
     // Function to handle file uploads
-    async function uploadFiles() {
-        if (files.length === 0) {
-            console.error("No files selected for upload");
-            return;
-        }
-
-        const formData = new FormData();
-        files.forEach(file => formData.append('files[]', file));
-
-        try {
-            const response = await fetch('/upload', {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'Accept': 'application/json',
-                },
-                onUploadProgress: (event) => {
-                    const percentCompleted = Math.round((event.loaded * 100) / event.total);
-                    uploadProgress.set(percentCompleted);
-                }
-            });
-
-            if (response.ok) {
-                console.log('Files uploaded successfully');
-                uploadProgress.set(100); 
-            } else {
-                console.error('Upload failed');
-            }
-        } catch (error) {
-            console.error('Error uploading files:', error);
-        }
+   // Function to handle file uploads using XMLHttpRequest to track progress
+async function uploadFiles() {
+    if (files.length === 0) {
+        console.error("No files selected for upload");
+        return;
     }
+
+    const formData = new FormData();
+    files.forEach(file => formData.append('files[]', file));
+
+    const xhr = new XMLHttpRequest();
+    
+    // Set up the progress event listener
+    xhr.upload.onprogress = (event) => {
+        if (event.lengthComputable) {
+            const percentCompleted = Math.round((event.loaded * 100) / event.total);
+            uploadProgress.set(percentCompleted);
+        }
+    };
+
+    xhr.onload = () => {
+        if (xhr.status >= 200 && xhr.status < 300) {
+            console.log('Files uploaded successfully');
+            uploadProgress.set(100); // Set to 100% on success
+        } else {
+            console.error('Upload failed');
+        }
+    };
+
+    xhr.onerror = () => {
+        console.error('Error uploading files');
+    };
+
+    xhr.open('POST', '/upload', true);
+    xhr.send(formData);
+}
 </script>
 
 <!-- App Shell -->

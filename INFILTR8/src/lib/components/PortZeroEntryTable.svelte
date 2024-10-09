@@ -8,7 +8,7 @@
   
     // Use the handler's onChange to fetch data when the state changes.
     handler.onChange(async (state: State): Promise<Row[]> => {
-      const data = await fetchPortZeroEntries(state);
+      const data = await fetchPortZeroEntries();
       if (data && Array.isArray(data)) {
         rows = data;
         return data;

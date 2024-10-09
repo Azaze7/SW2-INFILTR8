@@ -15,6 +15,8 @@
 
   let projectFolders = writable<string[]>([]); // List of project folders fetched from the server
 
+
+
   // Fetch project folders from the backend
   async function fetchProjectFolders() {
       try {
@@ -52,7 +54,7 @@
   });
 
   // Move an item up in the list
-  function moveUp(list, index) {
+  function moveUp(list: string[], index: number) {
       if (index > 0) {
           const temp = list[index];
           list[index] = list[index - 1];
@@ -61,7 +63,7 @@
   }
 
   // Move an item down in the list
-  function moveDown(list, index) {
+  function moveDown(list: string[], index: number) {
       if (index < list.length - 1) {
           const temp = list[index];
           list[index] = list[index + 1];
@@ -94,13 +96,14 @@
       }
   }
 </script>
+
 <div class="container h-full mx-auto flex flex-col space-y-4">
   <h2 class="h2">Configure Project and Analysis</h2>
 
   <!-- Current Project Folder -->
   <div>
-      <label>Current Project Folder</label>
-      <select bind:value={selectedProject}>
+      <label for="project-folder">Current Project Folder</label>
+      <select id="project-folder" bind:value={selectedProject}>
           <option value="" disabled>Select Project Folder</option>
           {#each $projectFolders as folder}
               <option value={folder}>{folder}</option>
@@ -110,8 +113,8 @@
 
   <!-- Scope IP List -->
   <div>
-      <label>Scope IP List</label>
-      <ul>
+      <label for="ip-list">Scope IP List</label>
+      <ul id="ip-list">
           {#each $ipList as ip, index}
               <li class="flex items-center">
                   <input type="checkbox" value={ip} bind:group={$selectedIps} /> {ip}
@@ -124,8 +127,8 @@
 
   <!-- Entry Points Allowed -->
   <div>
-      <label>Entry Points Allowed</label>
-      <ul>
+      <label for="analysis-types">Entry Points Allowed</label>
+      <ul id="analysis-types">
           {#each $analysisTypes as analysis, index}
               <li class="flex items-center">
                   <input type="checkbox" value={analysis} bind:group={$selectedAnalysisTypes} /> {analysis}
@@ -154,3 +157,11 @@
   <!-- Start Analysis Button -->
   <button class="btn variant-filled" on:click={startAnalysis}>Start Analysis</button>
 </div>
+
+<style>
+  .container {
+    padding: 20px;
+  }
+</style>
+
+  <!-- Start Analysis Button -->
