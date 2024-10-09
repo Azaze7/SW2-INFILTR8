@@ -144,7 +144,8 @@
             </AppRailAnchor>
             <svelte:fragment slot="trail">
                 <!-- Page Settings -->
-                <AppRailAnchor href="/pagesettings" selected={currentPath === '/pagesettings'}>(icon) Settings</AppRailAnchor>
+                <AppRailAnchor href="/pagesettings" selected={currentPath === '/pagesettings'}>
+                    (icon) Settings</AppRailAnchor>
                 <!-- Support -->
                 <AppRailAnchor href="/" target="_blank" title="Account">(icon)</AppRailAnchor>
             </svelte:fragment>
