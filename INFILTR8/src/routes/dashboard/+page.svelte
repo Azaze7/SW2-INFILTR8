@@ -6,6 +6,7 @@
   let button: HTMLButtonElement | null = null;
   let dropdownMenu: HTMLDivElement | null = null;
   let isProjectFormOpen = false; // Boolean to toggle CreateProject modal visibility
+  let isDropdownVisible = false; // Boolean to toggle dropdown visibility
 
   // Function to open the modal
   const openProjectForm = () => {
@@ -21,9 +22,7 @@
 
   // Function to toggle the dropdown visibility
   const toggleDropdown = () => {
-      if (dropdownMenu) {
-          dropdownMenu.classList.toggle('hidden');
-      }
+      isDropdownVisible = !isDropdownVisible;
   };
 
   // Event listener for closing the dropdown when clicking outside
@@ -31,7 +30,7 @@
       const target = e.target as Node;
 
       if (button && dropdownMenu && !button.contains(target) && !dropdownMenu.contains(target)) {
-          dropdownMenu.classList.add('hidden');
+          isDropdownVisible = false;
       }
   };
 
@@ -41,57 +40,59 @@
           button.addEventListener('click', toggleDropdown);
       }
       document.addEventListener('click', handleClickOutside);
+  });
 
-      // Cleanup event listeners when the component is destroyed
-      onDestroy(() => {
-          if (button) {
-              button.removeEventListener('click', toggleDropdown);
-          }
-          document.removeEventListener('click', handleClickOutside);
-      });
+  // Cleanup event listeners when the component is destroyed
+  onDestroy(() => {
+      if (button) {
+          button.removeEventListener('click', toggleDropdown);
+      }
+      document.removeEventListener('click', handleClickOutside);
   });
 </script>
 
 <div class="container h-full mx-auto flex justify-center items-center">
-<div class="space-y-10 text-center flex flex-col items-center">
-  <h2 class="h2">Welcome to INFILTR8.</h2>
-  <figure>
-    <div class="card">
-      <header class="card-header">
-        <h1 class="card-title">File Upload</h1>
-        <p class="card-subtitle">Drag and drop files here or click to select files.</p>
-      </header>
-      <section class="p-4">
-        <FileDropzone name="files" />
-      </section>
-      <footer class="card-footer">(Current File Here)</footer>
-    </div>
-  </figure>
-  
-  <!-- Buttons for Create, Sync, Delete, and Export -->
-  <div class="flex space-x-4 justify-center">
-    <!-- Create Project Button -->
-    <button class="btn variant-filled" on:click={openProjectForm}>Create Project</button>
-    <button class="btn variant-filled">Sync Project</button>
-    <button class="btn variant-filled">Delete Project</button>
+  <div class="space-y-10 text-center flex flex-col items-center">
+      <h2 class="h2">Welcome to INFILTR8.</h2>
+      <figure>
+          <div class="card">
+              <header class="card-header">
+                  <h1 class="card-title">File Upload</h1>
+                  <p class="card-subtitle">Drag and drop files here or click to select files.</p>
+              </header>
+              <section class="p-4">
+                  <FileDropzone name="files" />
+              </section>
+              <footer class="card-footer">(Current File Here)</footer>
+          </div>
+      </figure>
+    
+      <!-- Buttons for Create, Sync, Delete, and Export -->
+      <div class="flex space-x-4 justify-center">
+          <!-- Create Project Button -->
+          <button class="btn variant-filled" on:click={openProjectForm}>Create Project</button>
+          <button class="btn variant-filled">Sync Project</button>
+          <button class="btn variant-filled">Delete Project</button>
 
-    <!-- Export Button with Dropdown -->
-    <div class="relative flex">
-      <button class="btn variant-filled" bind:this={button}>Export Options</button>
-      <!-- Dropdown menu -->
-      <div class="absolute mt-2 hidden w-48 bg-white border border-gray-200 rounded-md shadow-lg dropdown-menu" bind:this={dropdownMenu}>
-        <a class="block px-4 py-2 text-gray-700 hover:bg-gray-100" href="https://skeleton.dev/" target="_blank" rel="noreferrer">
-          Export Project
-        </a>
-        <a class="block px-4 py-2 text-gray-700 hover:bg-gray-100" href="#option2">Export as PDF</a>
-        <a class="block px-4 py-2 text-gray-700 hover:bg-gray-100" href="#option3">Export as Excel</a>
+          <!-- Export Button with Dropdown -->
+          <div class="relative flex">
+              <button class="btn variant-filled" bind:this={button}>Export Options</button>
+              {#if isDropdownVisible}
+                  <!-- Dropdown menu -->
+                  <div class="absolute mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg dropdown-menu" bind:this={dropdownMenu}>
+                      <a class="block px-4 py-2 text-gray-700 hover:bg-gray-100" href="https://skeleton.dev/" target="_blank" rel="noreferrer">
+                          Export Project
+                      </a>
+                      <a class="block px-4 py-2 text-gray-700 hover:bg-gray-100" href="#option2">Export as PDF</a>
+                      <a class="block px-4 py-2 text-gray-700 hover:bg-gray-100" href="#option3">Export as Excel</a>
+                  </div>
+              {/if}
+          </div>
       </div>
-    </div>
   </div>
-</div>
 </div>
 
 <!-- Render the CreateProject component conditionally -->
 {#if isProjectFormOpen}
-<CreateProject on:close={closeProjectForm} /> <!-- Pass closeProjectForm to handle closing -->
+  <CreateProject on:close={closeProjectForm} /> <!-- Pass closeProjectForm to handle closing -->
 {/if}

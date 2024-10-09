@@ -3,9 +3,12 @@
     import { goto } from '$app/navigation'; // Import goto for programmatic navigation
     import { AppShell, AppBar } from '@skeletonlabs/skeleton';
     import { AppRail, AppRailTile, AppRailAnchor } from '@skeletonlabs/skeleton';
-
+    import { page } from '$app/stores';
 
     let currentTile: number = 0;
+
+    // Reactive store value
+    $: currentPath = $page.url.pathname;
 
     // Highlight JS imports
     import hljs from 'highlight.js/lib/core';
@@ -73,22 +76,10 @@
     <svelte:fragment slot="sidebarLeft">
         <AppRail>
             <svelte:fragment slot="lead">
-                <AppRailAnchor href="/" >(icon)</AppRailAnchor>
+                <AppRailAnchor href="/" selected={currentPath === '/'}>(icon) Home</AppRailAnchor>
             </svelte:fragment>
-            <!-- App Rail Tiles -->
-            <AppRailTile bind:group={currentTile} name="tile-1" value={0} title="tile-1">
-				<AppRailAnchor href="/analysis" >(icon)</AppRailAnchor>
-                <span>Tile 1</span>
-            </AppRailTile>
-			<AppRailTile bind:group={currentTile} name="tile-2" value={1} title="tile-2" on:click={navigateToAnalysis}>
-				<svelte:fragment slot="lead">(icon)</svelte:fragment>
-				<span>Tile 2</span>
-			</AppRailTile>
-            <AppRailTile bind:group={currentTile} name="tile-3" value={2} title="tile-3">
-                <svelte:fragment slot="lead">(icon)</svelte:fragment>
-                <span>Settings</span>
-            </AppRailTile>
-            <!-- Trail -->
+            <AppRailAnchor href="/analysis" selected={currentPath === '/analysis'}>(icon) Analysis</AppRailAnchor>
+            <AppRailAnchor href="/pagesettings" selected={currentPath === '/settings'}>(icon) Settings</AppRailAnchor>
             <svelte:fragment slot="trail">
                 <AppRailAnchor href="/" target="_blank" title="Account">(icon)</AppRailAnchor>
             </svelte:fragment>
