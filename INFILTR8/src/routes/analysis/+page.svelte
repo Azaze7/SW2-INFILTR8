@@ -2,7 +2,8 @@
   import { FileDropzone, LightSwitch, Table } from "@skeletonlabs/skeleton";
   import type { TableSource } from '@skeletonlabs/skeleton';
   import { onMount, onDestroy } from 'svelte';
-  import CreateProject from "$lib/components/dashboardUI/CreateProject.svelte";
+  
+
 
   // Define the tableMapperValues function
   function tableMapperValues(data: any[], keys: string[]): any[][] {
@@ -29,6 +30,9 @@
       // Optional: A list of footer labels.
       foot: ['Total', '', '<code class="code">5</code>']
   };
+
+
+
 </script>
 
 <!-- Render the Table component -->
