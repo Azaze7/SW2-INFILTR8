@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { onMount, onDestroy } from 'svelte';
+  import { onMount } from 'svelte';
   import { writable } from 'svelte/store';
-  import { ProgressRadial } from "@skeletonlabs/skeleton";
+  import { ProgressRadial, FileDropzone, FileButton } from "@skeletonlabs/skeleton";
 
   let button: HTMLButtonElement | null = null;
   let dropdownMenu: HTMLDivElement | null = null;
@@ -9,12 +9,10 @@
   let isDropdownVisible = false;
 
   let projectName = ''; // Name of the project (folder)
-  let projectFolders: string[] = []; // List of project folders, now typed as string[]
+  let projectFolders: string[] = []; // List of project folders
   let selectedProject = ''; // Currently selected project
 
-  let files: File[] = [];
-  let isDragOver = false;
-  let fileInput: HTMLInputElement;
+  let files: FileList | undefined; // Fix: use undefined instead of null
   let uploadProgress = writable<number>(0); // Store to track upload progress
 
   // Fetch project folders on mount
@@ -35,44 +33,8 @@
     fetchProjectFolders();
   });
 
-  function handleFiles(selectedFiles: FileList) {
-    files = [...files, ...Array.from(selectedFiles)];
-  }
-
-  function handleDragOver(event: DragEvent) {
-    event.preventDefault();
-    isDragOver = true;
-  }
-
-  function handleDragLeave(event: DragEvent) {
-    event.preventDefault();
-    isDragOver = false;
-  }
-
-  function handleDrop(event: DragEvent) {
-    event.preventDefault();
-    isDragOver = false;
-
-    if (event.dataTransfer && event.dataTransfer.files.length > 0) {
-      handleFiles(event.dataTransfer.files);
-      event.dataTransfer.clearData();
-    }
-  }
-
-  function handleDropAreaClick() {
-    if (fileInput) {
-      fileInput.click();
-    }
-  }
-
-  function handleFileInputChange(event: Event) {
-    if (event.target instanceof HTMLInputElement && event.target.files) {
-      handleFiles(event.target.files);
-    }
-  }
-
   async function uploadFile() {
-    if (files.length === 0) {
+    if (!files || files.length === 0) {  // Fix: Check if files is undefined or empty
         console.error("No file selected");
         return;
     }
@@ -94,6 +56,7 @@
 
         if (response.ok) {
             console.log('File uploaded and processed successfully');
+            uploadProgress.set(100); // Set progress to 100% after successful upload
         } else {
             const errorText = await response.text();
             console.error('Failed to upload file:', errorText);
@@ -101,8 +64,7 @@
     } catch (error) {
         console.error('Error uploading file:', error);
     }
-}
-
+  }
 
   async function createProjectFolder() {
     if (!projectName) {
@@ -119,6 +81,7 @@
 
       if (response.ok) {
         console.log('Project folder created successfully');
+        projectName = ''; // Clear input
         fetchProjectFolders(); // Refresh project list
       } else {
         console.error('Failed to create project folder');
@@ -175,25 +138,26 @@
 
       <!-- File Upload Section -->
       <figure>
-          <div role="button" tabindex="0" class="card file-drop-area" on:click={handleDropAreaClick} on:dragover={handleDragOver} on:dragleave={handleDragLeave} on:drop={handleDrop} class:is-drag-over={isDragOver}>
-              <span class="file-message">Drag & Drop files here or click to upload</span>
-              <input type="file" bind:this={fileInput} on:change={handleFileInputChange} accept=".nessus" style="display: none;">
-          </div>
+          <!-- File Dropzone Component -->
+          <FileDropzone bind:files={files} name="files">
+              <svelte:fragment slot="lead">(icon)</svelte:fragment>
+              <svelte:fragment slot="message">Drag & Drop files here or click to upload</svelte:fragment>
+              <svelte:fragment slot="meta">(meta information)</svelte:fragment>
+          </FileDropzone>
+
+          <!-- Alternative File Button Component -->
+          <FileButton bind:files={files} name="files" button="btn variant-soft-primary">Upload</FileButton>
+
           <!-- Display Selected Files and Progress -->
           <footer class="card-footer">
-              <ul>
-                {#each files as file, index}
-                  <li>{file.name} <button on:click={() => files.splice(index, 1)}>Remove</button></li>
-                {/each}
-              </ul>
-              {#if files.length > 0}
-                <button on:click={uploadFile}>Upload Selected File</button>
+              {#if files?.length > 0}
+                <button on:click={uploadFile} class="btn variant-filled">Upload Selected File</button>
               {/if}
               <ProgressRadial value={$uploadProgress} stroke={100} meter="stroke-primary-500" track="stroke-primary-500/30" />
           </footer>
       </figure>
 
-      <!-- Export and other buttons -->
+      <!-- Export and Delete Project -->
       <div class="flex space-x-4 justify-center">
           <button class="btn variant-filled" on:click={deleteProjectFolder}>Delete Project</button>
 
@@ -202,9 +166,9 @@
               <button class="btn variant-filled" bind:this={button}>Export Options</button>
               {#if isDropdownVisible}
                   <div class="absolute mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg dropdown-menu" bind:this={dropdownMenu}>
-                      <a class="block px-4 py-2 text-gray-700 hover:bg-gray-100" href="#">Export Project</a>
-                      <a class="block px-4 py-2 text-gray-700 hover:bg-gray-100" href="#">Export as PDF</a>
-                      <a class="block px-4 py-2 text-gray-700 hover:bg-gray-100" href="#">Export as Excel</a>
+                      <button class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Export Project</button>
+                      <button class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Export as PDF</button>
+                      <button class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Export as Excel</button>
                   </div>
               {/if}
           </div>

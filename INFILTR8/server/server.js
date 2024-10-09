@@ -87,7 +87,7 @@ app.get('/projects', (req, res) => {
     });
 });
 
-// Route to handle .nessus file upload
+// Route to handle .nessus file upload and processing
 app.post('/upload-nessus', upload.single('nessusFile'), (req, res) => {
     const nessusFilePath = req.file.path;  // File path of the uploaded Nessus file
     const projectName = req.body.projectName;
@@ -109,6 +109,32 @@ app.post('/upload-nessus', upload.single('nessusFile'), (req, res) => {
         console.log(`stdout: ${stdout}`);
         console.error(`stderr: ${stderr}`);
         res.send('Nessus file processed successfully');
+    });
+});
+
+// Route to handle project folder deletion
+app.delete('/delete-project', (req, res) => {
+    const { projectName } = req.body;
+
+    if (!projectName) {
+        return res.status(400).send('Project name is required');
+    }
+
+    const projectDir = path.join(__dirname, 'data', projectName);
+
+    // Check if the folder exists
+    if (!fs.existsSync(projectDir)) {
+        return res.status(404).send('Project folder not found');
+    }
+
+    // Recursively delete the project folder
+    fs.rm(projectDir, { recursive: true, force: true }, (err) => {
+        if (err) {
+            console.error('Error deleting project folder:', err);
+            return res.status(500).send('Failed to delete project folder');
+        }
+
+        res.status(200).send('Project folder deleted successfully');
     });
 });
 
