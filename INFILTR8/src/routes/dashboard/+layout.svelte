@@ -21,6 +21,9 @@
     // Floating UI for Popups
     import { computePosition, autoUpdate, flip, shift, offset, arrow } from '@floating-ui/dom';
     import { storePopup } from '@skeletonlabs/skeleton';
+	import { goto } from '$app/navigation';
+	import { writable } from 'svelte/store';
+	import SvgSpinnersBlocksWave from '$lib/components/icons/SvgSpinnersBlocksWave.svelte';
     storePopup.set({ computePosition, autoUpdate, flip, shift, offset, arrow });
 
     let greeting = "";
@@ -34,6 +37,56 @@
     } else {
         greeting = "Good evening!";
     }
+
+    // Function to navigate to analysis page
+    const navigateToAnalysis = () => {
+        console.log("Navigating to /analysis");
+        goto('/analysis');
+    };
+
+    let username = '';
+
+    // File upload logic
+    let files: File[] = [];
+    let uploadProgress = writable(0); // Store to track the upload progress percentage
+
+    // Function to handle file uploads
+// Function to handle file uploads using XMLHttpRequest to track progress
+async function uploadFiles() {
+    if (files.length === 0) {
+        console.error("No files selected for upload");
+        return;
+    }
+
+    const formData = new FormData();
+    files.forEach(file => formData.append('files[]', file));
+
+    const xhr = new XMLHttpRequest();
+    
+    // Set up the progress event listener
+    xhr.upload.onprogress = (event) => {
+        if (event.lengthComputable) {
+            const percentCompleted = Math.round((event.loaded * 100) / event.total);
+            uploadProgress.set(percentCompleted);
+        }
+    };
+
+    xhr.onload = () => {
+        if (xhr.status >= 200 && xhr.status < 300) {
+            console.log('Files uploaded successfully');
+            uploadProgress.set(100); // Set to 100% on success
+        } else {
+            console.error('Upload failed');
+        }
+    };
+
+    xhr.onerror = () => {
+        console.error('Error uploading files');
+    };
+
+    xhr.open('POST', '/upload', true);
+    xhr.send(formData);
+}
 </script>
 
 <!-- App Shell -->
@@ -74,33 +127,41 @@
 		</AppBar>
 	</svelte:fragment>
 
-		<!-- Sidebar Left -->
-			<svelte:fragment slot="sidebarLeft">
-				<AppRail>
-					<svelte:fragment slot="lead">
-						<AppRailAnchor href="/" >(icon)</AppRailAnchor>
-					</svelte:fragment>
-					<!-- --- -->
-					<AppRailTile bind:group={currentTile} name="tile-1" value={0} title="tile-1">
-						<svelte:fragment slot="lead">(icon)</svelte:fragment>
-						<span>Tile 1</span>
-					</AppRailTile>
-					<AppRailTile bind:group={currentTile} name="tile-2" value={1} title="tile-2">
-						<svelte:fragment slot="lead">(icon)</svelte:fragment>
-						<span>Tile 2</span>
-					</AppRailTile>
-					<AppRailTile bind:group={currentTile} name="tile-3" value={2} title="tile-3">
-						<svelte:fragment slot="lead">(icon)
-							<AppRailAnchor href="src/routes/pagesettings" ></AppRailAnchor>
-						</svelte:fragment>
-						<span>Settings</span>
-					</AppRailTile>
-					<!-- --- -->
-					<svelte:fragment slot="trail">
-						<AppRailAnchor href="/" target="_blank" title="Account">(icon)</AppRailAnchor>
-					</svelte:fragment>
-				</AppRail>
-			</svelte:fragment>
+    <!-- Sidebar Left -->
+    <svelte:fragment slot="sidebarLeft">
+        <AppRail>
+            <svelte:fragment slot="lead">
+                <AppRailAnchor href="/" selected={currentPath === '/'}>
+                    <div class="icon-container">
+                        <SvgSpinnersBlocksWave/>
+                    </div>
+                    Dashboard
+                </AppRailAnchor>
+            </svelte:fragment>
+            <!-- Analysis -->
+            <AppRailAnchor href="/analysis" selected={currentPath === '/analysis'}>
+                (icon)
+                Analysis
+            </AppRailAnchor>
+            <!-- Project Manager -->
+            <AppRailAnchor href="/ProjectManager" selected={currentPath === '/ProjectManager'}>
+                (icon)
+                ProjectManager
+            </AppRailAnchor>
+            <!-- Testing -->
+            <AppRailAnchor href="/Testing" selected={currentPath === '/Testing'}>
+                (icon)
+                Testing
+            </AppRailAnchor>
+            <svelte:fragment slot="trail">
+                <!-- Page Settings -->
+                <AppRailAnchor href="/pagesettings" selected={currentPath === '/pagesettings'}>
+                    (icon) Settings</AppRailAnchor>
+                <!-- Support -->
+                <AppRailAnchor href="/" target="_blank" title="Account">(icon)</AppRailAnchor>
+            </svelte:fragment>
+        </AppRail>
+    </svelte:fragment>
 
     <!-- Page Header -->
 
