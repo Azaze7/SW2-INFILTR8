@@ -73,3 +73,4 @@ app.use('/', logEndPoints);
 
 // Start the server
 app.listen(3000, () => console.log('Auth server running on http://localhost:3000')); 
+
