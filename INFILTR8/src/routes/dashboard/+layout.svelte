@@ -1,16 +1,26 @@
 <script lang="ts">
-	import '/src/app.postcss';
-	import { AppShell, AppBar } from '@skeletonlabs/skeleton';
-	import { AppRail, AppRailTile, AppRailAnchor } from '@skeletonlabs/skeleton';
-	let currentTile: number = 0;
-	// Highlight JS
-	import hljs from 'highlight.js/lib/core';
-	import 'highlight.js/styles/github-dark.css';
-	import { storeHighlightJs } from '@skeletonlabs/skeleton';
-	import xml from 'highlight.js/lib/languages/xml'; // for HTML
-	import css from 'highlight.js/lib/languages/css';
-	import javascript from 'highlight.js/lib/languages/javascript';
-	import typescript from 'highlight.js/lib/languages/typescript';
+    import '/src/app.postcss';
+    import { goto } from '$app/navigation'; // Import goto for programmatic navigation
+    import { AppShell, AppBar } from '@skeletonlabs/skeleton';
+    import { AppRail, AppRailTile, AppRailAnchor } from '@skeletonlabs/skeleton';
+    import { page } from '$app/stores';
+    import { user } from "$lib/components/loginUI/userStore"; // Correctly import the user store from the separate store file  
+    import { writable } from 'svelte/store'; // Import writable store for upload progress
+    import SvgSpinnersBlocksWave from "$lib/components/icons/SvgSpinnersBlocksWave.svelte"; 
+
+    let currentTile: number = 0;
+
+    // Reactive store value
+    $: currentPath = $page.url.pathname;
+
+    // Highlight JS imports
+    import hljs from 'highlight.js/lib/core';
+    import 'highlight.js/styles/github-dark.css';
+    import { storeHighlightJs } from '@skeletonlabs/skeleton';
+    import xml from 'highlight.js/lib/languages/xml'; // for HTML
+    import css from 'highlight.js/lib/languages/css';
+    import javascript from 'highlight.js/lib/languages/javascript';
+    import typescript from 'highlight.js/lib/languages/typescript';
 
     hljs.registerLanguage('xml', xml); // for HTML
     hljs.registerLanguage('css', css);
@@ -21,9 +31,6 @@
     // Floating UI for Popups
     import { computePosition, autoUpdate, flip, shift, offset, arrow } from '@floating-ui/dom';
     import { storePopup } from '@skeletonlabs/skeleton';
-	import { goto } from '$app/navigation';
-	import { writable } from 'svelte/store';
-	import SvgSpinnersBlocksWave from '$lib/components/icons/SvgSpinnersBlocksWave.svelte';
     storePopup.set({ computePosition, autoUpdate, flip, shift, offset, arrow });
 
     let greeting = "";
@@ -90,48 +97,34 @@ async function uploadFiles() {
 </script>
 
 <!-- App Shell -->
-<AppShell slotSidebarLeft="bg-surface-500/5 w-56 p-4">
-	<!--Header-->
-	<svelte:fragment slot="header">
-		<!-- App Bar -->
-		<AppBar>
-			<svelte:fragment slot="lead">
-				<strong class="text-xl uppercase"><p>{greeting}</p></strong>
-			</svelte:fragment>
-			<svelte:fragment slot="trail">
-				<a
-					class="btn btn-sm variant-ghost-surface"
-					href="https://discord.gg/EXqV7W8MtY"
-					target="_blank"
-					rel="noreferrer"
-				>
-					Discord
-				</a>
-				<a
-					class="btn btn-sm variant-ghost-surface"
-					href="https://twitter.com/SkeletonUI"
-					target="_blank"
-					rel="noreferrer"
-				>
-					Twitter
-				</a>
-				<a
-					class="btn btn-sm variant-ghost-surface"
-					href="https://github.com/skeletonlabs/skeleton"
-					target="_blank"
-					rel="noreferrer"
-				>
-					GitHub
-				</a>
-			</svelte:fragment>
-		</AppBar>
-	</svelte:fragment>
+<AppShell slotSidebarLeft="bg-surface-500/5 w-60 p-4">
+    <!-- Header -->
+    <svelte:fragment slot="header">
+        <AppBar>
+            <svelte:fragment slot="lead">
+                <strong class="text-xl uppercase">
+                    <p>{greeting}{" "}{$user?.username}</p>
+                </strong>
+            </svelte:fragment>
+            <svelte:fragment slot="trail">
+                <a class="btn btn-sm variant-ghost-surface" href="https://discord.gg/EXqV7W8MtY" target="_blank" rel="noreferrer">
+                    Discord
+                </a>
+                <a class="btn btn-sm variant-ghost-surface" href="https://twitter.com/SkeletonUI" target="_blank" rel="noreferrer">
+                    Twitter
+                </a>
+                <a class="btn btn-sm variant-ghost-surface" href="https://github.com/skeletonlabs/skeleton" target="_blank" rel="noreferrer">
+                    GitHub
+                </a>
+            </svelte:fragment>
+        </AppBar>
+    </svelte:fragment>
 
     <!-- Sidebar Left -->
     <svelte:fragment slot="sidebarLeft">
         <AppRail>
             <svelte:fragment slot="lead">
-                <AppRailAnchor href="/" selected={currentPath === '/'}>
+                <AppRailAnchor href="/dashboard" selected={currentPath === '/dashboard'}>
                     <div class="icon-container">
                         <SvgSpinnersBlocksWave/>
                     </div>
@@ -140,23 +133,20 @@ async function uploadFiles() {
             </svelte:fragment>
             <!-- Analysis -->
             <AppRailAnchor href="/analysis" selected={currentPath === '/analysis'}>
-                (icon)
                 Analysis
             </AppRailAnchor>
             <!-- Project Manager -->
             <AppRailAnchor href="/ProjectManager" selected={currentPath === '/ProjectManager'}>
-                (icon)
                 ProjectManager
             </AppRailAnchor>
             <!-- Testing -->
             <AppRailAnchor href="/Testing" selected={currentPath === '/Testing'}>
-                (icon)
                 Testing
             </AppRailAnchor>
             <svelte:fragment slot="trail">
                 <!-- Page Settings -->
                 <AppRailAnchor href="/pagesettings" selected={currentPath === '/pagesettings'}>
-                    (icon) Settings</AppRailAnchor>
+                    Settings</AppRailAnchor>
                 <!-- Support -->
                 <AppRailAnchor href="/" target="_blank" title="Account">(icon)</AppRailAnchor>
             </svelte:fragment>
@@ -170,3 +160,13 @@ async function uploadFiles() {
     <slot />
 </AppShell>
 
+<style>
+    .icon-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100px;
+        width: 100px;
+        margin: 0 auto;
+    }
+</style>
