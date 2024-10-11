@@ -103,13 +103,25 @@
   <!-- Current Project Folder -->
   <div>
       <label for="project-folder">Current Project Folder</label>
-      <select id="project-folder" bind:value={selectedProject}>
+      <select class="text-gray-700" id="project-folder" bind:value={selectedProject}>
           <option value="" disabled>Select Project Folder</option>
           {#each $projectFolders as folder}
               <option value={folder}>{folder}</option>
           {/each}
       </select>
   </div>
+
+  <div class="flex justify-center gap-5">
+    <button class="btn btn-sm variant-ghost-surface" >Port0</button>
+    <button class="btn btn-sm variant-ghost-surface" >Exploits</button>
+    <button class="btn btn-sm variant-ghost-surface" >Ranked Entry</button>
+    <button class="btn btn-sm variant-ghost-surface" >Info</button>
+  </div>
+  
+  
+
+  
+  
 
   <!-- Scope IP List -->
   <div>

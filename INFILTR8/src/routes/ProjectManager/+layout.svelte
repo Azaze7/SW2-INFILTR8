@@ -22,6 +22,11 @@
     import javascript from 'highlight.js/lib/languages/javascript';
     import typescript from 'highlight.js/lib/languages/typescript';
 
+    import { LightSwitch } from '@skeletonlabs/skeleton';
+    import { popup } from '@skeletonlabs/skeleton';
+    import type { PopupSettings } from '@skeletonlabs/skeleton';
+						
+
     hljs.registerLanguage('xml', xml); // for HTML
     hljs.registerLanguage('css', css);
     hljs.registerLanguage('javascript', javascript);
@@ -58,43 +63,64 @@
     let uploadProgress = writable(0); // Store to track the upload progress percentage
 
     // Function to handle file uploads
-// Function to handle file uploads using XMLHttpRequest for progress tracking
-async function uploadFiles() {
-    if (files.length === 0) {
-        console.error("No files selected for upload");
-        return;
-    }
+    // Function to handle file uploads using XMLHttpRequest to track progress
+    async function uploadFiles() {
+        if (files.length === 0) {
+            console.error("No files selected for upload");
+            return;
+        }
 
     const formData = new FormData();
     files.forEach(file => formData.append('files[]', file));
 
     const xhr = new XMLHttpRequest();
-
-    xhr.open("POST", "/upload");
-
-    xhr.upload.onprogress = function(event) {
+    
+    // Set up the progress event listener
+    xhr.upload.onprogress = (event) => {
         if (event.lengthComputable) {
             const percentCompleted = Math.round((event.loaded * 100) / event.total);
-            uploadProgress.set(percentCompleted);  // Update progress store
+            uploadProgress.set(percentCompleted);
         }
     };
 
-    xhr.onload = function() {
-        if (xhr.status === 200) {
+    xhr.onload = () => {
+        if (xhr.status >= 200 && xhr.status < 300) {
             console.log('Files uploaded successfully');
-            uploadProgress.set(100); // Set progress to 100% on completion
+            uploadProgress.set(100); // Set to 100% on success
         } else {
             console.error('Upload failed');
         }
     };
 
-    xhr.onerror = function() {
+    xhr.onerror = () => {
         console.error('Error uploading files');
     };
 
+    xhr.open('POST', '/upload', true);
     xhr.send(formData);
 }
 
+
+
+
+    const AccountPopup: PopupSettings = {
+	    // Represents the type of event that opens/closed the popup
+	    event: 'click',
+	    // Matches the data-popup value on your popup element
+	    target: 'AccountPopup',
+	    // Defines which side of your trigger the popup will appear
+	    placement: 'bottom',
+    };
+
+    const NotificationPopup: PopupSettings = {
+	    // Represents the type of event that opens/closed the popup
+	    event: 'click',
+	    // Matches the data-popup value on your popup element
+	    target: 'NotificationPopup',
+	    // Defines which side of your trigger the popup will appear
+	    placement: 'bottom',
+    };
+					
 </script>
 
 <!-- App Shell -->
@@ -108,14 +134,21 @@ async function uploadFiles() {
                 </strong>
             </svelte:fragment>
             <svelte:fragment slot="trail">
-                <a class="btn btn-sm variant-ghost-surface" href="https://discord.gg/EXqV7W8MtY" target="_blank" rel="noreferrer">
-                    Discord
-                </a>
-                <a class="btn btn-sm variant-ghost-surface" href="https://twitter.com/SkeletonUI" target="_blank" rel="noreferrer">
-                    Twitter
-                </a>
-                <a class="btn btn-sm variant-ghost-surface" href="https://github.com/skeletonlabs/skeleton" target="_blank" rel="noreferrer">
-                    GitHub
+                <LightSwitch/>
+                <button class="btn btn-sm variant-ghost-surface" use:popup={NotificationPopup}>Notification</button>
+                <div class="card p-4 w-72 shadow-xl" data-popup="NotificationPopup">
+	                <div><p>Notification Content</p></div>
+	                <div class="arrow bg-surface-100-800-token" />
+                </div>
+                
+                <button class="btn btn-sm variant-ghost-surface" use:popup={AccountPopup}>Account</button>
+                <div class="card p-4 w-72 shadow-xl" data-popup="AccountPopup">
+	                <div><p>Account Content</p></div>
+	                <div class="arrow bg-surface-100-800-token" />
+                </div>
+					
+                <a class="btn btn-sm variant-ghost-surface" href="/" target="_blank" rel="noreferrer">
+                    Sign out
                 </a>
             </svelte:fragment>
         </AppBar>
@@ -134,23 +167,20 @@ async function uploadFiles() {
             </svelte:fragment>
             <!-- Analysis -->
             <AppRailAnchor href="/analysis" selected={currentPath === '/analysis'}>
-                (icon)
                 Analysis
             </AppRailAnchor>
             <!-- Project Manager -->
             <AppRailAnchor href="/ProjectManager" selected={currentPath === '/ProjectManager'}>
-                (icon)
                 ProjectManager
             </AppRailAnchor>
             <!-- Testing -->
             <AppRailAnchor href="/Testing" selected={currentPath === '/Testing'}>
-                (icon)
                 Testing
             </AppRailAnchor>
             <svelte:fragment slot="trail">
                 <!-- Page Settings -->
                 <AppRailAnchor href="/pagesettings" selected={currentPath === '/pagesettings'}>
-                    (icon) Settings</AppRailAnchor>
+                    Settings</AppRailAnchor>
                 <!-- Support -->
                 <AppRailAnchor href="/" target="_blank" title="Account">(icon)</AppRailAnchor>
             </svelte:fragment>
