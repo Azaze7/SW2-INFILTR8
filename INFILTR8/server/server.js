@@ -21,12 +21,20 @@ const __dirname = dirname(__filename);
 // Middleware to parse JSON request bodies
 app.use(bodyParser.json());
 
-// Enable CORS for requests from the frontend (localhost:5173)
+// Enable CORS for all routes with specific origin
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: 'http://localhost:5174',  // Explicitly specify the allowed origin
+    credentials: true,  // Allow cookies and authorization headers
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],  // Allowed methods
+    allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'X-Requested-With', 'Accept'],
+}));
+
+// Handle preflight requests
+app.options('*', cors({
+    origin: 'http://localhost:5174',
     credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'X-Requested-With', 'Accept'],
 }));
 
 // Setup Neo4j connection

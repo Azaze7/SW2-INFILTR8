@@ -22,12 +22,20 @@ dotenv.config({ path: '../.env' });
 const app = express();
 app.use(express.json());
 
-// Enable CORS for all routes
+// Enable CORS for all routes with specific origin
 app.use(cors({
-    origin: 'http://localhost:5173',  // Allow requests from your front-end URL
+    origin: 'http://localhost:5174',  // Explicitly specify the allowed origin
     credentials: true,  // Allow cookies and authorization headers
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],  // Allowed methods
-    allowedHeaders: ['Content-Type', 'Authorization'],  // Allowed headers
+    allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'X-Requested-With', 'Accept'],
+}));
+
+// Handle preflight requests
+app.options('*', cors({
+    origin: 'http://localhost:5174',
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'X-Requested-With', 'Accept'],
 }));
 
 // Create a Neo4j driver instance using credentials from environment variables
