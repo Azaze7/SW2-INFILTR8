@@ -101,14 +101,19 @@ Team #6 extends its sincere gratitude to all of our customers and our guidance t
 ## 💾 Install Instructions
 1. After pulling GitHub code (via your preferred method), open the terminal.
 
-2. `cd` into the folder called "my-app":
+2. `cd` into the folder called "INFILTR8":
     ```bash
-    cd my-app
+    cd INFILTR8
     ```
 
 3. Install dependencies:
     ```bash
     npm i
+    ```
+
+4. Fund if prompted to:
+     ```bash
+    npm fund
     ```
 
 4. Build INFILTR8:
@@ -125,7 +130,7 @@ You must also ensure the database is running so login onto the site is possible.
 
 1. Start Database (In Split Terminal):
     ```bash
-    node .\server\auth.js 
+    cd INFILTR8 -> cd server -> run command “node server.js”
     ```
 
 You can also use the install script if you’ve downloaded the source code from GitHub as a ZIP file.
@@ -144,8 +149,11 @@ Short video archives demonstrating the various vertical slices for INFILTR8 have
 * DEMO #1 - Non-Functional GUI, Data Storage, GitHub Configuration, & Project Dashboard.
 * Due: [9/16/24]
   * https://youtu.be/wsV8tB8XbOw
-
   
 * DEMO #2 - GUI Update, Improved GitHub & Database, Processing Recon Data, Allowed/Off-limit IPs, Entry Point Selection, & Start of Logs.
 * Due: [9/30/24]
-  * Test Build #1 - Real Login, Settings Screen (Font Resize & Dark Mode) - https://youtu.be/GIlSGcYOIUc
+  * https://youtu.be/GIlSGcYOIUc
+ 
+* DEMO #3 - ...
+* Due: [10/18/24]
+  * https://youtu.be/GIlSGcYOIUc
