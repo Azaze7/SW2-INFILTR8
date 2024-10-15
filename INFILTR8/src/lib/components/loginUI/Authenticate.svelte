@@ -124,7 +124,7 @@
         </div>
     </div>
 {:else}
-    <div class="relative min-h-screen flex items-center justify-center overflow-hidden bg-gray-50">
+    <div class="relative min-h-screen flex items-center justify-center overflow-hidden ">
         <RetroGrid/>
         <div class="relative z-10 bg-white bg-opacity-90 p-8 rounded-lg shadow-lg max-w-md w-full">
             <form on:submit|preventDefault={handleAuthentication} class="flex flex-col">
@@ -195,11 +195,11 @@
                 </button>
             </form>
 
-            <div class="options mt-6 text-center">
+            <div class="options mt-6 text-center text-gray-700">
                 <p class="mb-4">Or</p>
                 {#if register}
                     <div>
-                        <p class="text-gray-600">Already have an account?</p>
+                        <p class="text-gray-700">Already have an account?</p>
                         <button 
                             type="button" 
                             on:click={() => (register = false)}
@@ -210,7 +210,7 @@
                     </div>
                 {:else}
                     <div>
-                        <p class="text-gray-600">Don't have an account?</p>
+                        <p class="text-gray-700">Don't have an account?</p>
                         <button 
                             type="button" 
                             on:click={() => (register = true)}
