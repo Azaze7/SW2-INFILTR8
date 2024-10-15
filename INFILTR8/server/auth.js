@@ -24,7 +24,7 @@ app.use(express.json());
 
 // Enable CORS for all routes with specific origin
 app.use(cors({
-    origin: 'http://localhost:5174',  // Explicitly specify the allowed origin
+    origin: 'http://localhost:5173',  // Explicitly specify the allowed origin
     credentials: true,  // Allow cookies and authorization headers
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],  // Allowed methods
     allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'X-Requested-With', 'Accept'],
@@ -32,7 +32,7 @@ app.use(cors({
 
 // Handle preflight requests
 app.options('*', cors({
-    origin: 'http://localhost:5174',
+    origin: 'http://localhost:5173',
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'X-Requested-With', 'Accept'],

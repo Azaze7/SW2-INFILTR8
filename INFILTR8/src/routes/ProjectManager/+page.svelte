@@ -127,13 +127,13 @@
   <div>
       <label for="ip-list">Scope IP List</label>
       <ul id="ip-list">
-          {#each $ipList as ip, index}
-              <li class="flex items-center">
-                  <input type="checkbox" value={ip} bind:group={$selectedIps} /> {ip}
-                  <button on:click={() => moveUp($ipList, index)}>⬆️</button>
-                  <button on:click={() => moveDown($ipList, index)}>⬇️</button>
-              </li>
-          {/each}
+        {#each $ipList as ip, index (ip)}
+        <li class="flex items-center">
+            <input type="checkbox" value={ip} bind:group={$selectedIps} /> {ip}
+            <button on:click={() => moveUp($ipList, index)}>⬆️</button>
+            <button on:click={() => moveDown($ipList, index)}>⬇️</button>
+        </li>
+    {/each}
       </ul>
   </div>
 
@@ -141,13 +141,13 @@
   <div>
       <label for="analysis-types">Entry Points Allowed</label>
       <ul id="analysis-types">
-          {#each $analysisTypes as analysis, index}
-              <li class="flex items-center">
-                  <input type="checkbox" value={analysis} bind:group={$selectedAnalysisTypes} /> {analysis}
-                  <button on:click={() => moveUp($analysisTypes, index)}>⬆️</button>
-                  <button on:click={() => moveDown($analysisTypes, index)}>⬇️</button>
-              </li>
-          {/each}
+        {#each $analysisTypes as analysis, index (analysis)}
+        <li class="flex items-center">
+            <input type="checkbox" value={analysis} bind:group={$selectedAnalysisTypes} /> {analysis}
+            <button on:click={() => moveUp($analysisTypes, index)}>⬆️</button>
+            <button on:click={() => moveDown($analysisTypes, index)}>⬇️</button>
+        </li>
+    {/each}
       </ul>
   </div>
 

@@ -162,8 +162,8 @@
 </script>
 
 <div class="container h-full mx-auto flex justify-center items-center py-10">
-  <div class="space-y-8 w-full max-w-md text-center flex flex-col items-center bg-gray-50 p-8 rounded-lg shadow-md">
-      <h2 class="text-2xl font-bold text-gray-800">Welcome to INFILTR8</h2>
+  <div class="space-y-8 w-full max-w-md text-center flex flex-col items-center  rounded-lg shadow-md">
+      <h2 class="text-2xl font-bold text-white-800">Welcome to INFILTR8</h2>
 
       <!-- Project Name Input -->
       <div class="flex flex-col space-y-2 w-full">
@@ -197,7 +197,7 @@
       <!-- Select Project Folder -->
       <div class="w-full">
         <select 
-        class="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 text-gray-700" 
+        class="w-full p-3 border rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 text-gray-700" 
         bind:value={selectedProject}
         >
         <option value="" disabled>Select Project Folder</option>

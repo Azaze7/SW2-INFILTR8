@@ -11,8 +11,9 @@
     try {
       const data: Row[] = await fetchRankedEntryPoints(state);  // Ensure it returns Row[]
       if (data) {
-        rows = data;
-        return data;
+        // Ensure no rows are undefined or duplicated
+        rows = data.filter((row, index, self) => row.id !== undefined && self.findIndex(r => r.id === row.id) === index);
+        return rows;
       } else {
         return [];  // Ensure that it always returns a Row[] array
       }
@@ -23,6 +24,11 @@
   });
 
   handler.invalidate();  // Trigger the first data fetching
+
+  // Log rows to debug
+  rows.forEach((row, index) => {
+    console.log(`Row ${index}: id=${row.id}, ip=${row.ip}`);
+  });
 </script>
 
 <!-- Table to display the ranked entry points -->
@@ -37,9 +43,9 @@
       </tr>
     </thead>
     <tbody>
-      {#each rows as row (row.id)}
+      {#each rows as row, index (row.id || index)}
         <tr>
-          <td>{row.id}</td>
+          <td>{row.id || index}</td>
           <td>{row.ip}</td>
           <td>{row.port}</td>
           <td>{row.combined_score}</td>
@@ -48,3 +54,4 @@
     </tbody>
   </table>
 </div>
+

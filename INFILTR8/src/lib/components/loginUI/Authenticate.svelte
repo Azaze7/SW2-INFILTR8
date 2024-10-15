@@ -1,10 +1,10 @@
 <script lang="ts">
     import { writable } from 'svelte/store';
-    import { goto } from '$app/navigation'; // Import goto for redirection
-    import { user } from './userStore'; // Import the user store from the userStore.ts file
+    import { goto } from '$app/navigation';
+    import { user } from './userStore'; 
+    import RetroGrid from '$lib/components/AceternityUI/RetroGrid/RetroGrid.svelte';
 
-    const SERVER_URL = 'http://localhost:3000'; // Replace with your server URL
-
+    const SERVER_URL = 'http://localhost:3000';
     let username = '';
     let password = '';
     let confirmPass = '';
@@ -18,25 +18,19 @@
         try {
             const response = await fetch(`${SERVER_URL}/login`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, password }),
-                credentials: 'include' // Ensures cookies are included in the request
+                credentials: 'include'
             });
-
             if (response.ok) {
                 const data = await response.json();
                 localStorage.setItem('user', JSON.stringify(data.user));
                 user.set(data.user);
-                
-                // Redirect to dashboard after successful login
                 goto('/dashboard');
             } else {
                 throw new Error(await response.text());
             }
         } catch (err) {
-            console.error('Error during login:', err);
             errorMessage = typeof err === 'string' ? err : 'An error occurred during login';
             error = true;
         } finally {
@@ -49,25 +43,19 @@
         try {
             const response = await fetch(`${SERVER_URL}/register`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, password }),
                 credentials: 'include'
             });
-
             if (response.ok) {
                 const data = await response.json();
                 localStorage.setItem('user', JSON.stringify(data.user));
                 user.set(data.user);
-
-                // Redirect to dashboard after successful registration
                 goto('/dashboard');
             } else {
                 throw new Error(await response.text());
             }
         } catch (err) {
-            console.error('Error during registration:', err);
             errorMessage = typeof err === 'string' ? err : 'An error occurred during registration';
             error = true;
         } finally {
@@ -79,21 +67,18 @@
         error = false;
         loading = true;
         errorMessage = '';
-
         if (!username || !password || (register && !confirmPass)) {
             errorMessage = 'All fields are required.';
             error = true;
             loading = false;
             return;
         }
-
         if (register && password !== confirmPass) {
             errorMessage = 'Passwords do not match.';
             error = true;
             loading = false;
             return;
         }
-
         if (register) {
             await registerUser();
         } else {
@@ -132,58 +117,81 @@
         <button on:click={logout}>Logout</button>
     </div>
 {:else}
-    <div class="authContainer">
-        <form on:submit|preventDefault={handleAuthentication}>
-            <h1>{register ? "Register" : "Login"}</h1>
-            {#if error}
-                <p class="error">{errorMessage}</p>
-            {/if}
-            <label>
-                <p class={username ? "above" : "center"}>Username</p>
-                <input bind:value={username} type="text" placeholder="Username" required autocomplete="username" />
-            </label>
-            <label>
-                <p class={password ? "above" : "center"}>Password</p>
-                <input bind:value={password} type="password" placeholder="Password" required autocomplete="current-password" />
-            </label>
-            {#if register}
+    <div class="authWrapper">
+        <RetroGrid /> <!-- Add the RetroGrid component as the background -->
+        <div class="authContainer">
+            <form on:submit|preventDefault={handleAuthentication}>
+                <h1>{register ? "Register" : "Login"}</h1>
+                {#if error}
+                    <p class="error">{errorMessage}</p>
+                {/if}
                 <label>
-                    <p class={confirmPass ? "above" : "center"}>Confirm Password</p>
-                    <input bind:value={confirmPass} type="password" placeholder="Confirm Password" required autocomplete="new-password" />
+                    <p class={username ? "above" : "center"}>Username</p>
+                    <input bind:value={username} type="text" placeholder="Username" required autocomplete="username" />
                 </label>
-            {/if}
-            <button type="submit" disabled={loading}>
-                {loading ? "Processing..." : "Submit"}
-            </button>
-        </form>
+                <label>
+                    <p class={password ? "above" : "center"}>Password</p>
+                    <input bind:value={password} type="password" placeholder="Password" required autocomplete="current-password" />
+                </label>
+                {#if register}
+                    <label>
+                        <p class={confirmPass ? "above" : "center"}>Confirm Password</p>
+                        <input bind:value={confirmPass} type="password" placeholder="Confirm Password" required autocomplete="new-password" />
+                    </label>
+                {/if}
+                <button type="submit" disabled={loading}>
+                    {loading ? "Processing..." : "Submit"}
+                </button>
+            </form>
 
-        <div class="options">
-            <p>Or</p>
-            {#if register}
-                <div>
-                    <p>Already have an account?</p>
-                    <button type="button" on:click={handleRegister}>Login</button>
-                </div>
-            {:else}
-                <div>
-                    <p>Don't have an account?</p>
-                    <button type="button" on:click={handleRegister}>Register</button>
-                </div>
-            {/if}
+            <div class="options">
+                <p>Or</p>
+                {#if register}
+                    <div>
+                        <p>Already have an account?</p>
+                        <button type="button" on:click={handleRegister}>Login</button>
+                    </div>
+                {:else}
+                    <div>
+                        <p>Don't have an account?</p>
+                        <button type="button" on:click={handleRegister}>Register</button>
+                    </div>
+                {/if}
+            </div>
         </div>
     </div>
 {/if}
 
 <style>
+    .authWrapper {
+        position: relative;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+    }
+
     .authContainer {
+        position: relative;
+        z-index: 10;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        min-height: 100vh;
         padding: 20px;
         box-sizing: border-box;
-        background: linear-gradient(135deg, #1e3c72, #2a5298);
+        background: rgba(255, 255, 255, 0.9); /* White background with transparency */
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        max-width: 400px;
     }
 
     form {
