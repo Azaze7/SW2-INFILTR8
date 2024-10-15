@@ -1,23 +1,26 @@
 <script lang="ts">
     import '/src/app.postcss';
-    import { goto } from '$app/navigation'; // Import goto for programmatic navigation
-    import { AppShell, AppBar } from '@skeletonlabs/skeleton';
-    import { AppRail, AppRailTile, AppRailAnchor } from '@skeletonlabs/skeleton';
     import { page } from '$app/stores';
-    import { user } from "$lib/components/loginUI/userStore"; // Correctly import the user store from the separate store file  
-    import { writable } from 'svelte/store'; // Import writable store for upload progress
+    import { goto } from '$app/navigation';
+    import { get, writable } from 'svelte/store';
+    import { user } from "$lib/components/loginUI/userStore";
+    import type { PopupSettings, DrawerSettings } from '@skeletonlabs/skeleton';
+    import { projectFolders } from '$lib/stores/projectFoldersStore';
     import SvgSpinnersBlocksWave from "$lib/components/icons/SvgSpinnersBlocksWave.svelte"; 
-
-    let currentTile: number = 0;
-
-    // Reactive store value
-    $: currentPath = $page.url.pathname;
-
+    import { computePosition, autoUpdate, flip, shift, offset, arrow } from '@floating-ui/dom';    
+    import { popup, storePopup, LightSwitch, storeHighlightJs, AppRail, AppRailTile, AppRailAnchor, AppShell, AppBar,  } from '@skeletonlabs/skeleton';
+    import { initializeStores, Drawer, getDrawerStore, } from '@skeletonlabs/skeleton';
+    import { ArrowLeft, Bolt, Home, Settings, UserCircle2, Squircle, FlaskConical, FolderRoot, Clipboard, BadgeHelp} from "lucide-svelte";
+    import { slide } from "svelte/transition";
+    
+    import Sidebar from '$lib/components/AceternityUI/Sidebar/Sidebar.svelte';
+    import SidebarLink from '$lib/components/AceternityUI/Sidebar/SidebarLink.svelte';
+    import { vopen } from '$lib/stores/svelteContent';
+    
     // Highlight JS imports
-    import hljs from 'highlight.js/lib/core';
     import 'highlight.js/styles/github-dark.css';
-    import { storeHighlightJs } from '@skeletonlabs/skeleton';
-    import xml from 'highlight.js/lib/languages/xml'; // for HTML
+    import hljs from 'highlight.js/lib/core';
+    import xml from 'highlight.js/lib/languages/xml'; 
     import css from 'highlight.js/lib/languages/css';
     import javascript from 'highlight.js/lib/languages/javascript';
     import typescript from 'highlight.js/lib/languages/typescript';
@@ -28,9 +31,8 @@
     hljs.registerLanguage('typescript', typescript);
     storeHighlightJs.set(hljs);
 
-    // Floating UI for Popups
-    import { computePosition, autoUpdate, flip, shift, offset, arrow } from '@floating-ui/dom';
-    import { storePopup } from '@skeletonlabs/skeleton';
+    
+
     storePopup.set({ computePosition, autoUpdate, flip, shift, offset, arrow });
 
     let greeting = "";
@@ -58,119 +60,159 @@
     let uploadProgress = writable(0); // Store to track the upload progress percentage
 
     // Function to handle file uploads
-// Function to handle file uploads using XMLHttpRequest for progress tracking
-async function uploadFiles() {
-    if (files.length === 0) {
-        console.error("No files selected for upload");
-        return;
-    }
+    // Function to handle file uploads using XMLHttpRequest to track progress
+    async function uploadFiles() {
+        if (files.length === 0) {
+            console.error("No files selected for upload");
+            return;
+        }
 
     const formData = new FormData();
     files.forEach(file => formData.append('files[]', file));
 
     const xhr = new XMLHttpRequest();
-
-    xhr.open("POST", "/upload");
-
-    xhr.upload.onprogress = function(event) {
+    
+    // Set up the progress event listener
+    xhr.upload.onprogress = (event) => {
         if (event.lengthComputable) {
             const percentCompleted = Math.round((event.loaded * 100) / event.total);
-            uploadProgress.set(percentCompleted);  // Update progress store
+            uploadProgress.set(percentCompleted);
         }
     };
 
-    xhr.onload = function() {
-        if (xhr.status === 200) {
+    xhr.onload = () => {
+        if (xhr.status >= 200 && xhr.status < 300) {
             console.log('Files uploaded successfully');
-            uploadProgress.set(100); // Set progress to 100% on completion
+            uploadProgress.set(100); // Set to 100% on success
         } else {
             console.error('Upload failed');
         }
     };
 
-    xhr.onerror = function() {
+    xhr.onerror = () => {
         console.error('Error uploading files');
     };
 
+    xhr.open('POST', '/upload', true);
     xhr.send(formData);
 }
 
+
+
+    
+    
+	
+
+        // Function to handle project selection
+        function selectProject(folder: string) {
+        console.log('Selected Project:', folder);
+    }
+
+    // Reactive value for folders
+    $: folders = $projectFolders;
+					
+    interface LinkItem {
+        label: string;
+        href: string;
+        icon: any;
+    }
+
+    const links: LinkItem[] = [
+        { label: "Dashboard", href: "/dashboard", icon: Home },
+        { label: "Project Manager", href: "/ProjectManager", icon: FolderRoot },
+        { label: "Analysis", href: "/analysis", icon: FlaskConical },
+        { label: "Reports", href: "/Report", icon: Clipboard },
+        { label: "Settings", href: "/pagesettings", icon: Settings },
+        { label: "Support", href: "/Login", icon: BadgeHelp} 
+        
+    ];
+  
+
+
+
 </script>
 
-<!-- App Shell -->
-<AppShell slotSidebarLeft="bg-surface-500/5 w-60 p-4">
-    <!-- Header -->
-    <svelte:fragment slot="header">
-        <AppBar>
-            <svelte:fragment slot="lead">
-                <strong class="text-xl uppercase">
-                    <p>{greeting}{" "}{$user?.username}</p>
-                </strong>
-            </svelte:fragment>
-            <svelte:fragment slot="trail">
-                <a class="btn btn-sm variant-ghost-surface" href="https://discord.gg/EXqV7W8MtY" target="_blank" rel="noreferrer">
-                    Discord
-                </a>
-                <a class="btn btn-sm variant-ghost-surface" href="https://twitter.com/SkeletonUI" target="_blank" rel="noreferrer">
-                    Twitter
-                </a>
-                <a class="btn btn-sm variant-ghost-surface" href="https://github.com/skeletonlabs/skeleton" target="_blank" rel="noreferrer">
-                    GitHub
-                </a>
-            </svelte:fragment>
-        </AppBar>
-    </svelte:fragment>
 
-    <!-- Sidebar Left -->
-    <svelte:fragment slot="sidebarLeft">
-        <AppRail>
-            <svelte:fragment slot="lead">
-                <AppRailAnchor href="/dashboard" selected={currentPath === '/dashboard'}>
-                    <div class="icon-container">
-                        <SvgSpinnersBlocksWave/>
-                    </div>
-                    Dashboard
-                </AppRailAnchor>
-            </svelte:fragment>
-            <!-- Analysis -->
-            <AppRailAnchor href="/analysis" selected={currentPath === '/analysis'}>
-                (icon)
-                Analysis
-            </AppRailAnchor>
-            <!-- Project Manager -->
-            <AppRailAnchor href="/ProjectManager" selected={currentPath === '/ProjectManager'}>
-                (icon)
-                ProjectManager
-            </AppRailAnchor>
-            <!-- Testing -->
-            <AppRailAnchor href="/Testing" selected={currentPath === '/Testing'}>
-                (icon)
-                Testing
-            </AppRailAnchor>
-            <svelte:fragment slot="trail">
-                <!-- Page Settings -->
-                <AppRailAnchor href="/pagesettings" selected={currentPath === '/pagesettings'}>
-                    (icon) Settings</AppRailAnchor>
-                <!-- Support -->
-                <AppRailAnchor href="/" target="_blank" title="Account">(icon)</AppRailAnchor>
-            </svelte:fragment>
-        </AppRail>
-    </svelte:fragment>
+
+
+
+<AppShell>
 
     <!-- Page Header -->
+    <svelte:fragment slot="pageHeader">
+        <h1 class="text-2xl font-bold mb-4">Select Project Folder</h1>
+        <div class="snap-x scroll-px-4 snap-mandatory scroll-smooth flex gap-4 overflow-x-auto px-4 py-2 bg-surface-200 rounded-md shadow-sm">
+            {#each $projectFolders as folder, index}
+                <button 
+                    class="snap-start shrink-0 card py-4 px-6 w-40 md:w-60 text-center cursor-pointer hover:bg-primary-100 rounded-md shadow transition duration-300"
+                    on:click={() => selectProject(folder)}
+                    on:keydown={(event) => {
+                        if (event.key === 'Enter' || event.key === ' ') {
+                            selectProject(folder);
+                        }
+                    }}
+                    aria-label={`Select project ${folder}`}
+                >
+                    {folder}
+                </button>
+            {/each}
+        </div>
+    </svelte:fragment>
+
+    <!-- Sidebar with Drawer -->
+    <svelte:fragment slot="sidebarLeft">
+        <div
+            class="rounded-md flex flex-col md:flex-row bg-[#111827] w-full flex-1 max-w-7xl mx-auto border border-[#111827] overflow-hidden h-full"
+        >
+            <Sidebar class="justify-between gap-10">
+                <div class="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
+                    {#if $vopen}
+                        <a
+                            href="/"
+                            class="font-normal flex space-x-2 items-center text-sm text-white py-1 relative z-20"
+                        >
+                            <div
+                                class="h-5 w-5 bg-white rounded-br-lg rounded-tr-sm rounded-tl-lg rounded-bl-sm flex-shrink-0"
+                            ></div>
+                            <span class="font-medium text-white whitespace-pre">
+                                <p>{greeting}{" "}{$user?.username}</p>
+                            </span>
+                        </a>
+                    {:else}
+                        <a
+                            href="/"
+                            class="font-normal flex space-x-2 items-center text-sm text-white py-1 relative z-20"
+                        >
+                            <div
+                                class="h-5 w-5 bg-white rounded-br-lg rounded-tr-sm rounded-tl-lg rounded-bl-sm flex-shrink-0"
+                            ></div>
+                        </a>
+                    {/if}
+                    <div class="mt-8 flex flex-col gap-2">
+                        {#each links as link}
+                          <SidebarLink {link} />
+                        {/each}
+                    </div>
+                </div>
+                <div>
+                    <LightSwitch />
+                    <SidebarLink
+                        link={{
+                          label: "Sign Out",
+                          href: "/Login",
+                          icon: ArrowLeft,
+                        }}
+                    />
+                </div>    
+            </Sidebar>
+        </div>
+    </svelte:fragment>
+
+
+
 
 
     <!-- Page Route Content -->
     <slot />
 </AppShell>
 
-<style>
-    .icon-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100px;
-        width: 100px;
-        margin: 0 auto;
-    }
-</style>

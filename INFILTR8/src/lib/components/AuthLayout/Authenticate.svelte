@@ -1,5 +1,6 @@
 <script lang="ts">
     import { page } from '$app/stores';
+    
     import Authenticate from '$lib/components/AuthLayout/Authenticate.svelte';
     import { AppShell } from '@skeletonlabs/skeleton';
     import { user } from '$lib/stores/user';

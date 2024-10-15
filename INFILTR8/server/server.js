@@ -5,45 +5,60 @@ import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
-import multer from 'multer';  // For handling file uploads
-import { exec } from 'child_process';
-import csv from 'csv-parser';  // For reading CSV files
-import neo4j from 'neo4j-driver';  // Import Neo4j driver
-import authRoutes from './auth.js';  // Import authentication routes
+import multer from 'multer';
+import csv from 'csv-parser';  
+import neo4j from 'neo4j-driver';  
+import authRoutes from './auth.js';  
 
 const app = express();
 const port = 3000;
 
-// Get the current file and directory name in ES modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 // Middleware to parse JSON request bodies
 app.use(bodyParser.json());
 
-// Enable CORS for requests from the frontend (localhost:5173)
+// Enable CORS for all routes with specific origin
 app.use(cors({
+    origin: 'http://localhost:5173',  
+    credentials: true,  
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],  
+    allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'X-Requested-With', 'Accept'],
+}));
+
+// Handle preflight requests
+app.options('*', cors({
     origin: 'http://localhost:5173',
     credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'X-Requested-With', 'Accept'],
 }));
 
 // Setup Neo4j connection
 const neo4jDriver = neo4j.driver(
-    process.env.NEO4J_URI,  // Ensure these environment variables are correct
+    process.env.NEO4J_URI,  
     neo4j.auth.basic(process.env.NEO4J_USERNAME, process.env.NEO4J_PASSWORD)
 );
 
-const neo4jSession = neo4jDriver.session();
-neo4jSession.run('RETURN 1')
-    .then(() => console.log('Connected to Neo4j successfully'))
-    .catch(err => console.error('Failed to connect to Neo4j:', err));
+// Function to run a query with proper session management
+async function runQuery(query, params = {}) {
+    const session = neo4jDriver.session();
+    try {
+        const result = await session.run(query, params);
+        return result.records.map(record => record.toObject());
+    } catch (error) {
+        console.error('Neo4j query error:', error);
+        throw error;
+    } finally {
+        await session.close();
+    }
+}
 
 // Define multer storage destination
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        const projectName = req.body.projectName || 'uploads';  // Default to 'uploads' if no project name
+        const projectName = req.body.projectName || 'uploads';
         const projectDir = path.join(__dirname, 'data', projectName);
 
         // Ensure the project directory exists
@@ -56,13 +71,12 @@ const storage = multer.diskStorage({
         cb(null, projectDir);  // Save the file to the project folder
     },
     filename: function (req, file, cb) {
-        // Do not rename the .nessus file, keep the original name
         console.log(`Saving file with original name: ${file.originalname}`);
         cb(null, file.originalname);  // Keep the original file name
     }
 });
 
-const upload = multer({ storage: storage });  // Define multer middleware with storage options
+const upload = multer({ storage: storage });
 
 // Mount authentication routes
 app.use(authRoutes);
@@ -76,7 +90,7 @@ app.post('/create-project', (req, res) => {
         return res.status(400).send('Project name is required');
     }
 
-    const projectDir = path.join(__dirname, 'data', projectName);  // Ensure correct folder structure
+    const projectDir = path.join(__dirname, 'data', projectName);
 
     // Create the folder if it doesn't exist
     fs.mkdir(projectDir, { recursive: true }, (err) => {
@@ -111,18 +125,13 @@ app.get('/projects', (req, res) => {
 // Route to fetch project data (including IPs and analysis types) from Neo4j
 app.get('/api/project-data', async (req, res) => {
     try {
-        // Fetch project folders, IP addresses, and analysis types from Neo4j
         const projectFoldersQuery = `MATCH (p:Project) RETURN p.name AS projectName`;
         const ipListQuery = `MATCH (ip:IPAddress) RETURN ip.address AS ip`;
         const analysisTypesQuery = `MATCH (a:Analysis) RETURN a.type AS analysisType`;
 
-        const projectFoldersResult = await neo4jSession.run(projectFoldersQuery);
-        const ipListResult = await neo4jSession.run(ipListQuery);
-        const analysisTypesResult = await neo4jSession.run(analysisTypesQuery);
-
-        const projectFolders = projectFoldersResult.records.map(record => record.get('projectName'));
-        const ipList = ipListResult.records.map(record => record.get('ip'));
-        const analysisTypes = analysisTypesResult.records.map(record => record.get('analysisType'));
+        const projectFolders = await runQuery(projectFoldersQuery);
+        const ipList = await runQuery(ipListQuery);
+        const analysisTypes = await runQuery(analysisTypesQuery);
 
         res.json({ projectFolders, ipList, analysisTypes });
     } catch (error) {
@@ -161,7 +170,7 @@ app.post('/process-csv', (req, res) => {
                 .on('end', async () => {
                     for (const row of csvData) {
                         try {
-                            await neo4jSession.run(query, row);
+                            await runQuery(query, row);
                             console.log(`Data inserted into Neo4j: ${JSON.stringify(row)}`);
                         } catch (err) {
                             console.error(`Error inserting row into Neo4j: ${err.message}`);
@@ -236,76 +245,66 @@ app.delete('/delete-project', (req, res) => {
         res.status(200).send('Project folder deleted successfully');
     });
 });
-//Vulnerability Endpoint
+
+// Vulnerability Endpoint
 app.get('/api/vulnerabilities', async (req, res) => {
-  try {
-      const result = await neo4jSession.run(`
-          MATCH (v:Vulnerability)
-          RETURN v
-      `);
-      const vulnerabilities = result.records.map(record => record.get('v').properties);
-      res.json(vulnerabilities);
-  } catch (error) {
-      console.error('Error fetching vulnerabilities:', error);
-      res.status(500).send('Failed to fetch vulnerabilities');
-  }
+    try {
+        const vulnerabilities = await runQuery(`
+            MATCH (v:Vulnerability)
+            RETURN v
+        `);
+        res.json(vulnerabilities);
+    } catch (error) {
+        console.error('Error fetching vulnerabilities:', error);
+        res.status(500).send('Failed to fetch vulnerabilities');
+    }
 });
 
-
-
-//RankedEntryPoint Endpoint
+// RankedEntryPoint Endpoint
 app.get('/api/ranked-entry-points', async (req, res) => {
-  try {
-      const session = neo4jDriver.session();
-      const result = await session.run(`
-          MATCH (r:RankedEntryPoint) 
-          RETURN r LIMIT 100
-      `);
-      const data = result.records.map(record => record.get('r').properties);
-      session.close();
-      res.json(data);
-  } catch (err) {
-      console.error('Error fetching RankedEntryPoints:', err);
-      res.status(500).send('Failed to fetch ranked entry points');
-  }
+    try {
+        const result = await runQuery(`
+            MATCH (r:RankedEntryPoint)
+            RETURN r LIMIT 100
+        `);
+        const rankedEntryPoints = result.map(record => record.r.properties);  
+        res.json(rankedEntryPoints);
+    } catch (err) {
+        console.error('Error fetching RankedEntryPoints:', err);
+        res.status(500).send('Failed to fetch ranked entry points');
+    }
 });
 
-//Port0Entry Endpoint
+// Port0Entry Endpoint
 app.get('/api/port0-entries', async (req, res) => {
-  try {
-      const session = neo4jDriver.session();
-      const result = await session.run(`
-          MATCH (p:Port0Entry) 
-          RETURN p LIMIT 100
-      `);
-      const data = result.records.map(record => record.get('p').properties);
-      session.close();
-      res.json(data);
-  } catch (err) {
-      console.error('Error fetching Port0Entries:', err);
-      res.status(500).send('Failed to fetch port 0 entries');
-  }
+    try {
+        const result = await runQuery(`
+            MATCH (p:Port0Entry)
+            RETURN p LIMIT 100
+        `);
+        const port0Entries = result.map(record => record.p.properties);  // Extract properties
+        res.json(port0Entries);
+    } catch (err) {
+        console.error('Error fetching Port0Entries:', err);
+        res.status(500).send('Failed to fetch port 0 entries');
+    }
 });
 
-//PortZeroEntry Endpoint
+// PortZeroEntry Endpoint
 app.get('/api/port-zero-entries', async (req, res) => {
-  try {
-      const result = await neo4jSession.run(`
-          MATCH (p:PortZeroEntry)
-          RETURN p
-      `);
-      const portZeroEntries = result.records.map(record => record.get('p').properties);
-      res.json(portZeroEntries);
-  } catch (error) {
-      console.error('Error fetching port zero entries:', error);
-      res.status(500).send('Failed to fetch port zero entries');
-  }
+    try {
+        const portZeroEntries = await runQuery(`
+            MATCH (p:PortZeroEntry)
+            RETURN p
+        `);
+        res.json(portZeroEntries);
+    } catch (error) {
+        console.error('Error fetching port zero entries:', error);
+        res.status(500).send('Failed to fetch port zero entries');
+    }
 });
-
-
 
 // Start the server
 app.listen(port, () => {
     console.log(`Server running on http://localhost:${port}`);
 });
-
