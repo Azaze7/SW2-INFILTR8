@@ -98,7 +98,7 @@ function selectProject(folder: string) {
         { label: "Reports", href: "/Report", icon: Clipboard },
         { label: "Logs", href: "/Logs", icon: Scroll },
         { label: "Settings", href: "/pagesettings", icon: Settings },
-        { label: "Support", href: "/Login", icon: BadgeHelp} 
+        { label: "Support", href: "/support", icon: BadgeHelp} 
         
     ];
   
