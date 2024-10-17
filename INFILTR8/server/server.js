@@ -263,10 +263,11 @@ app.get('/api/vulnerabilities', async (req, res) => {
 // RankedEntryPoint Endpoint
 app.get('/api/ranked-entry-points', async (req, res) => {
     try {
-        const rankedEntryPoints = await runQuery(`
+        const result = await runQuery(`
             MATCH (r:RankedEntryPoint)
             RETURN r LIMIT 100
         `);
+        const rankedEntryPoints = result.map(record => record.r.properties);  
         res.json(rankedEntryPoints);
     } catch (err) {
         console.error('Error fetching RankedEntryPoints:', err);
@@ -277,10 +278,11 @@ app.get('/api/ranked-entry-points', async (req, res) => {
 // Port0Entry Endpoint
 app.get('/api/port0-entries', async (req, res) => {
     try {
-        const port0Entries = await runQuery(`
+        const result = await runQuery(`
             MATCH (p:Port0Entry)
             RETURN p LIMIT 100
         `);
+        const port0Entries = result.map(record => record.p.properties);  // Extract properties
         res.json(port0Entries);
     } catch (err) {
         console.error('Error fetching Port0Entries:', err);

@@ -1,28 +1,33 @@
 <script lang="ts">
-    import { DataHandler } from '@vincjo/datatables/remote';
-    import type { Row, State } from '@vincjo/datatables/remote';
-    import { fetchPortZeroEntries } from '$lib/api';  // Ensure this is the correct API call
-  
-    let rows: Row[] = [];
-    const handler = new DataHandler<Row>([], { rowsPerPage: 10 });
-  
-    // Use the handler's onChange to fetch data when the state changes.
-    handler.onChange(async (state: State): Promise<Row[]> => {
-      const data = await fetchPortZeroEntries();
-      if (data && Array.isArray(data)) {
-        rows = data;
-        return data;
-      } else {
-        return [];  // Ensure that it always returns a Row[] array
-      }
-    });
-  
-    // Correct invalidate() usage
-    handler.invalidate();  // Call invalidate without arguments
-  </script>
-  
-  <!-- Table to display the Port Zero Entries -->
-  <div class="table-container space-y-4">
+  import { onMount } from 'svelte';
+  import { writable } from 'svelte/store';
+  import { fetchPort0Entries } from '$lib/api';
+  import type { PortZeroEntryRow } from '$lib/types';
+
+  let rows = writable<PortZeroEntryRow[]>([]);
+  let loading = writable(true);
+  let error = writable<string | null>(null);
+
+  onMount(async () => {
+    try {
+      const data: PortZeroEntryRow[] = await fetchPort0Entries();
+      rows.set(data);
+      loading.set(false);
+    } catch (err) {
+      console.error("Error fetching Port0 entries:", err);
+      error.set('Failed to load data. Please try again later.');
+      loading.set(false);
+    }
+  });
+</script>
+
+
+<div class="table-container space-y-4">
+  {#if $loading}
+    <p>Loading...</p>
+  {:else if $error}
+    <p class="text-red-500">{$error}</p>
+  {:else}
     <table class="table table-hover table-compact table-auto w-full">
       <thead>
         <tr>
@@ -32,14 +37,15 @@
         </tr>
       </thead>
       <tbody>
-        {#each rows as row}
+        
+        {#each $rows as row, index (row.id)}
           <tr>
             <td>{row.id}</td>
-            <td>{row.ip}</td>
-            <td>{row.port}</td>
+            <td>{row.ip || 'N/A'}</td>
+            <td>{row.port || 'N/A'}</td>
           </tr>
         {/each}
       </tbody>
     </table>
-  </div>
-  
+  {/if}
+</div>
