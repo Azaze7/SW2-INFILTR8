@@ -1,50 +1,51 @@
 <script lang="ts">
-  import { DataHandler } from '@vincjo/datatables/remote';
-  import type { Row, State } from '@vincjo/datatables/remote';
-  import { fetchRankedEntryPoints } from '$lib/api';  // Assuming this is your API function
+  import { onMount } from 'svelte';
+  import { writable } from 'svelte/store';
+  import { fetchRankedEntryPoints } from '$lib/api';
+  import type { RankedEntryPointRow } from '$lib/types'; 
 
-  let rows: Row[] = [];
-  const handler = new DataHandler<Row>([], { rowsPerPage: 10 });
+  let rows = writable<RankedEntryPointRow[]>([]);
+  let loading = writable(true);
+  let error = writable<string | null>(null);
 
-  // Use the handler's onChange to fetch data when the state changes.
-  handler.onChange(async (state: State): Promise<Row[]> => {
+  
+  onMount(async () => {
     try {
-      const data: Row[] = await fetchRankedEntryPoints(state);  // Ensure it returns Row[]
-      if (data) {
-        rows = data;
-        return data;
-      } else {
-        return [];  // Ensure that it always returns a Row[] array
-      }
-    } catch (error) {
-      console.error('Failed to fetch data:', error);
-      return [];  // Return an empty array in case of an error
+      const data: RankedEntryPointRow[] = await fetchRankedEntryPoints();
+      rows.set(data); 
+      loading.set(false);
+    } catch (err) {
+      console.error("Error fetching ranked entry points:", err);
+      error.set('Failed to load data. Please try again later.');
+      loading.set(false);
     }
   });
-
-  handler.invalidate();  // Trigger the first data fetching
 </script>
 
-<!-- Table to display the ranked entry points -->
+<!-- HTML Section to render the data table -->
 <div class="table-container space-y-4">
-  <table class="table table-hover table-compact table-auto w-full">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>IP</th>
-        <th>Port</th>
-        <th>Score</th>
-      </tr>
-    </thead>
-    <tbody>
-      {#each rows as row (row.id)}
+  {#if $loading}
+    <p>Loading...</p>
+  {:else if $error}
+    <p class="text-red-500">{$error}</p>
+  {:else}
+    <table class="table table-hover table-compact table-auto w-full">
+      <thead>
         <tr>
-          <td>{row.id}</td>
-          <td>{row.ip}</td>
-          <td>{row.port}</td>
-          <td>{row.combined_score}</td>
+          <th>IP</th>
+          <th>Port</th>
+          <th>Combined Score</th>
         </tr>
-      {/each}
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        {#each $rows as row, index (row.ip + '-' + row.port + '-' + index)}
+          <tr>
+            <td>{row.ip || 'N/A'}</td>
+            <td>{row.port || 'N/A'}</td>
+            <td>{row.combined_score ?? 'N/A'}</td>
+          </tr>
+        {/each}
+      </tbody>
+    </table>
+  {/if}
 </div>
