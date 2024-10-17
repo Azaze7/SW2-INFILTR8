@@ -1,5 +1,6 @@
 <script lang="ts">
-    import Papa, { ParseResult } from 'papaparse';
+    import Papa from 'papaparse';
+    import type { ParseResult } from 'papaparse';
     import { onMount } from 'svelte';
     import { writable } from 'svelte/store';
   
