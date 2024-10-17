@@ -9,6 +9,7 @@ import multer from 'multer';
 import csv from 'csv-parser';  
 import neo4j from 'neo4j-driver';  
 import authRoutes from './auth.js';  
+import logEndPoints from './logendpoints.js';
 
 const app = express();
 const port = 3000;
@@ -80,6 +81,9 @@ const upload = multer({ storage: storage });
 
 // Mount authentication routes
 app.use(authRoutes);
+
+// Mount logs endpoints routes
+app.use(logEndPoints);
 
 // Route to handle project folder creation
 app.post('/create-project', (req, res) => {
