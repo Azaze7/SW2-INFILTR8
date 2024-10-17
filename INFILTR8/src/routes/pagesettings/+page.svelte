@@ -108,7 +108,7 @@
     
                     <div class="mt-4 flex items-center gap-4">
                         <span class="text-gray-400">Help/Manual:</span>
-                        <button class="bg-indigo-500 text-white px-2 py-1 rounded" on:click={toggleHelp}>?</button>
+                        <button class="bg-indigo-500 text-white px-2 py-1 rounded" on:click={toggleHelp}>Manual</button>
                     </div>
     
                     <div class="mt-4 flex items-center gap-2 ">
@@ -126,8 +126,8 @@
                             {texts[currentIndexValue]}
                         </p>
                         <div class="flex justify-between mt-4">
-                            <button class="text-white text-2xl" on:click={prevText}>←</button>
-                            <button class="text-white text-2xl" on:click={nextText}>→</button>
+                            <button class="px-4 py-2 bg-gray-700 rounded hover:bg-gray-600" on:click={prevText}>←</button>
+                            <button class="px-4 py-2 bg-gray-700 rounded hover:bg-gray-600" on:click={nextText}>→</button>
                         </div>
                     </div>
                 </div>
