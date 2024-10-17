@@ -85,7 +85,7 @@
         }
     });
 </script>
-
+<h1 class="flex justify-center text-lg items-center">Hi! You can also message our team via GitHub if you'd like.</h1>
 <div class="container h-full mx-auto flex justify-center items-center">
     <div class="space-y-10 text-center flex flex-col items-center">
         <h2 class="text-3xl font-bold">Source Code & Contact</h2>
@@ -121,4 +121,4 @@
     </div>
 </div>
 
-<h1 class="flex justify-center mt-10 text-lg">Hi! You can also message our team via GitHub if you'd like.</h1>
+
