@@ -105,31 +105,8 @@ function selectProject(folder: string) {
 
 <!-- App Shell -->
 <AppShell>
-    <!-- Header -->
-    <svelte:fragment slot="header">
-        <AppBar>
-            <svelte:fragment slot="lead">
-                <!-- You can add content here if needed -->
-            </svelte:fragment>
-            <svelte:fragment slot="trail">
-                <button class="btn btn-sm variant-ghost-surface" use:popup={NotificationPopup}>Notification</button>
-                <div class="card p-4 w-72 shadow-xl" data-popup="NotificationPopup">
-                    <div><p>Notification Content</p></div>
-                    <div class="arrow bg-surface-100-800-token" />
-                </div>
-                
-                <button class="btn btn-sm variant-ghost-surface" use:popup={AccountPopup}>Account</button>
-                <div class="card p-4 w-72 shadow-xl" data-popup="AccountPopup">
-                    <div><p>Account Content</p></div>
-                    <div class="arrow bg-surface-100-800-token" />
-                </div>
-                    
-                <a class="btn btn-sm variant-ghost-surface" href="/Login" target="_blank" rel="noreferrer">
-                    Sign out
-                </a>
-            </svelte:fragment>
-        </AppBar>
-    </svelte:fragment>
+ 
+
 
     <!-- Page Header -->
     <svelte:fragment slot="pageHeader">
