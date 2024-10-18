@@ -4,6 +4,7 @@
   import { ProgressRadial, FileDropzone, FileButton, popup } from "@skeletonlabs/skeleton";
   import type { PopupSettings } from "@skeletonlabs/skeleton";
   import { projectFolders } from '$lib/stores/projectFoldersStore'; // Correct import
+  import { createLogEntry } from '../../routes/Logs/logservice';
 
   let button: HTMLButtonElement | null = null;
   let dropdownMenu: HTMLDivElement | null = null;
@@ -45,6 +46,10 @@
   async function uploadToNeo4j() {
     if (!selectedProject) {
       alert('Please select a project to upload CSVs to Neo4j.');
+      await createLogEntry({
+        type: 'Warning',
+        message: `No project folder specified while attempting to upload files to the database`
+      });
       return;
     }
     try {
@@ -67,11 +72,19 @@
   async function uploadFile() {
     if (!files || files.length === 0) {
       console.error("No file selected");
+      await createLogEntry({
+        type: 'Warning',
+        message: `No files selected for upload to INFILTR8`
+      });
       return;
     }
 
     if (!selectedProject) {
       alert("Please select a project folder.");
+      await createLogEntry({
+        type: 'Warning',
+        message: `No project folder specified while attempting to upload files to INFILTR8`
+      });
       return;
     }
 
@@ -88,9 +101,17 @@
       if (response.ok) {
         console.log('File uploaded and processed successfully');
         uploadProgress.set(100); // Set progress to 100% after successful upload
+        await createLogEntry({
+          type: 'Information',
+          message: `File uploaded and processed successfully for project: ${selectedProject}`
+        });
       } else {
         const errorText = await response.text();
         console.error('Failed to upload file:', errorText);
+        await createLogEntry({
+          type: 'Error',
+          message: `Failed to upload file for project: ${selectedProject}`
+        });
       }
     } catch (error) {
       console.error('Error uploading file:', error);
@@ -100,6 +121,10 @@
   async function createProjectFolder() {
     if (!projectName) {
       alert("Please enter a project name.");
+      await createLogEntry({
+        type: 'Warning',
+        message: `No project folder name specified while attempting to create a new folder`
+      });
       return;
     }
 
@@ -112,9 +137,21 @@
 
       if (response.ok) {
         console.log('Project folder created successfully');
+        
+        await createLogEntry({
+          type: 'Information',
+          message: `Project folder: ${projectName} was created`
+        });
+
         projectName = ''; // Clear input
         fetchProjectFolders(); // Refresh project list
       } else {
+
+        await createLogEntry({
+          type: 'Error',
+          message: `Project folder: ${projectName} could not be created}`
+        });
+
         console.error('Failed to create project folder');
       }
     } catch (error) {
@@ -125,6 +162,10 @@
   async function deleteProjectFolder() {
     if (!selectedProject) {
       alert("Please select a project to delete.");
+      await createLogEntry({
+        type: 'Warning',
+        message: `No project folder was selected for deletion`
+      });
       return;
     }
 
@@ -137,9 +178,17 @@
 
       if (response.ok) {
         console.log('Project folder deleted successfully');
+        await createLogEntry({
+          type: 'Information',
+          message: `Project folder: ${selectedProject} was deleted`
+        });
         fetchProjectFolders(); // Refresh project list
       } else {
         console.error('Failed to delete project folder');
+        await createLogEntry({
+          type: 'Error',
+          message: `Failed to delete project folder: ${selectedProject}`
+        });
       }
     } catch (error) {
       console.error('Error deleting project folder:', error);

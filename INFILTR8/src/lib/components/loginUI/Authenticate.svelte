@@ -74,7 +74,6 @@
                 localStorage.setItem('user', JSON.stringify(data.user));
                 user.set(data.user);
                 
-                // Create a log entry for login
                 await createLogEntry({
                     type: 'Information',
                     message: `${username} logged in`
@@ -82,11 +81,20 @@
 
                 goto('/dashboard');
             } else {
+                await createLogEntry({
+                    type: 'Warning',
+                    message: `Failed login attempt using username: ${username}`
+                });
+
                 throw new Error(await response.text());
             }
         } catch (err) {
             errorMessage = typeof err === 'string' ? err : 'An error occurred during login';
             error = true;
+            await createLogEntry({
+                type: 'Error',
+                message: `Failed to login using username: ${username}`
+            });
         } finally {
             loading = false;
         }
@@ -106,7 +114,6 @@
                 localStorage.setItem('user', JSON.stringify(data.user));
                 user.set(data.user);
 
-                // Create a log entry for register user
                 await createLogEntry({
                     type: 'Information',
                     message: `${username} registered successfully`
@@ -114,6 +121,10 @@
 
                 goto('/dashboard');
             } else {
+                await createLogEntry({
+                    type: 'Warning',
+                    message: `Error registering the user: ${username}`
+                });
                 throw new Error(await response.text());
             }
         } catch (err) {

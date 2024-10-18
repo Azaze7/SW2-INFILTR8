@@ -91,10 +91,8 @@ router.post('/createlog', async (req, res) => {
   }
 });
 
-// Fetch the logs from a user
+// Fetch all logs
 router.post('/fetchlogs', async (req, res) => {
-  const { username } = req.body;
-
   try {
     // Check if the log file exists
     if (!fs.existsSync(logFilePath)) {
@@ -107,26 +105,21 @@ router.post('/fetchlogs', async (req, res) => {
     // Split log data into individual lines
     const logEntries = logData.trim().split('\n');
 
-    // Filter logs by username
-    const userLogs = logEntries
-      .filter(log => log.includes(`[User: ${username}]`))  // Filter logs that contain the username
-      .map(log => {
-        // Parse each log entry to extract its parts
-        const logParts = log.match(/\[(.*?)\]/g).map(part => part.replace(/\[|\]/g, ''));
-        return {
-          date: logParts[0],     // e.g. "10/18/24 10:18:54"
-          type: logParts[1],     // e.g. "Information"
-          username: logParts[2].replace('User: ', ''), // Extract username, e.g. "username"
-          id: logParts[3].replace('Log ID: ', ''),     // Extract log ID, e.g. "9182024_79956"
-          message: logParts[4]   // Extract message, e.g. "username logged in"
-        };
-      });
+    // Parse all log entries
+    const allLogs = logEntries.map(log => {
+      // Parse each log entry to extract its parts
+      const logParts = log.match(/\[(.*?)\]/g).map(part => part.replace(/\[|\]/g, ''));
+      return {
+        date: logParts[0],     // e.g. "10/18/24 10:18:54"
+        type: logParts[1],     // e.g. "Information"
+        username: logParts[2].replace('User: ', ''), // Extract username
+        id: logParts[3].replace('Log ID: ', ''),     // Extract log ID
+        message: logParts[4]   // Extract message
+      };
+    });
 
-    if (userLogs.length > 0) {
-      res.json({ logs: userLogs });
-    } else {
-      res.status(404).json({ message: 'No logs found for the user' });
-    }
+    // Respond with all logs
+    res.json({ logs: allLogs });
   } catch (err) {
     console.error('Error fetching logs:', err);
     res.status(500).json({ error: err.message });
