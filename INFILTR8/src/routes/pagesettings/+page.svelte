@@ -11,15 +11,16 @@
     let showHelp = writable(false);
     let helpText = writable("INFILTR8 is designed to help Analyst's find and rank any security vulnerabilities found on the PC that it is currently running on.<br><br>This version of the software was created by Team #6 [The Nine Bytes] for the U.S. Army Combat Capabilities Development Command. [DEVCOM]");
     let currentTextIndex = writable(0);
-    
+
     const texts = [
-        "INFILTR8 is designed to help Analyst's find and rank any security vulnerabilities found on the PC that it is currently running on.\nThis version of the software was created by Team #6 [The Nine Bytes] for the U.S. Army Combat Capabilities Development Command. [DEVCOM]",
-        "To get started, navigate to the dashboard.You can use the 'Go Back to Dashboard' button here on the Settings page, or use the sidebar on the left-side when on the site itself to get there.The dashboard displays current information about a project, allows for the creation of new projects, syncing of projects, or the exporting of projects into appropriate file formats.",
-        "The two sidebars are here to help you.The left-side can be used to navigate around the site, whereas the right-side is used to assist in project creation and modification.",
-        "Messages will show Analysts notifications about the system.If a project finishes, or has elements of alarm, you can check them in Messages.",
-        "Account will show information about the Analyst currently logged in.This will ensure that the right person is currently using the INFILTR8 Software.",
-        "Logs are created whenever something of substance happens while running INFILTR8. This includes logging in, logging off, processsing a file, creating a project, and more.Logs can also be exported by the Analyst, if you'd like to.",
-        "Additional assistance can be found on Team 6's GitHub Page."
+        "INFILTR8 is designed to help Analyst's find and rank any security vulnerabilities found on the PC that it is currently running on.<br><br>This version of the software was created by Team #6 [The Nine Bytes] for the U.S. Army Combat Capabilities Development Command. [DEVCOM]",
+        "To get started, navigate to the dashboard.<br><br>Simply hover over the sidebar on the left-side when on the site itself to get there.<br><br>The dashboard displays current information about a project, allows for the creation/deletion of projects, syncing of projects, or the exporting of projects into appropriate file formats.",
+        "The sidebar is here to help you navigate the INFILTR8 System.<br><br>The left-side has various helpful links to other areas of the site, such as the Project Manager, Logs, Reports, and Settings page. As previously mentioned, it can also be used to get back to the dashboard.",
+        "Messages will show Analysts notifications about the system.<br><br>If a project finishes, or has elements of alarm, you can check them in Messages.",
+        "You can check who is currently logged in by hovering over the sidebar. It will show you the time of day, and the name of the account currently logged in.",
+        "Logs are created whenever something of substance happens while running INFILTR8. This includes logging in, logging off, processsing a file, creating a project, and more.<br><br>Logs can also be exported by the Analyst, if you'd like to.",
+        "Accessability and font settings can be found in the Settings tab.<br><br> They enable you to turn on colorblind settings, or to change the fonts of the entire system.",
+        "Additional assistance can be found on Team 6's GitHub Page.<br><br>Simply click the appropriate button when out of the manual."
     ];
     
     let currentIndexValue = 0; // To keep track of the current text index
@@ -106,10 +107,6 @@
                         <button class="bg-indigo-500 text-white px-2 py-1 rounded" on:click={() => applyFilter('url(#tritanopia)')}>Blue</button>
                     </div>
     
-                    <div class="mt-4 flex items-center gap-4">
-                        <span class="text-gray-400">Help/Manual:</span>
-                        <button class="bg-indigo-500 text-white px-2 py-1 rounded" on:click={toggleHelp}>?</button>
-                    </div>
     
                     <div class="mt-4 flex items-center gap-2 ">
                         <span class="mr-2 text-gray-400">Lightmode / Darkmode:</span>

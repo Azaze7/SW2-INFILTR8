@@ -141,7 +141,7 @@
 
     <!-- Page Header -->
     <svelte:fragment slot="pageHeader">
-        <h1 class="text-2xl font-bold mb-4">Logs</h1>
+        <h1 class="text-2xl font-bold mb-4">Support</h1>
     </svelte:fragment>
 
     <!-- Sidebar with Drawer -->
