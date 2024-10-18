@@ -11,6 +11,7 @@
     import { Key, Lock, LockKeyholeOpen } from "lucide-svelte";
 	import EncryptButton from '../Buttons/EncryptButton.svelte';
 	import ShimmerButton from '../Buttons/ShimmerButton.svelte';
+    import { createLogEntry } from '../../../routes/Logs/logservice';
 
     let intervalRef: string | number | NodeJS.Timeout | undefined;
     let text = "Framework ?";
@@ -72,6 +73,13 @@
                 const data = await response.json();
                 localStorage.setItem('user', JSON.stringify(data.user));
                 user.set(data.user);
+                
+                // Create a log entry for login
+                await createLogEntry({
+                    type: 'Information',
+                    message: `${username} logged in`
+                });
+
                 goto('/dashboard');
             } else {
                 throw new Error(await response.text());
@@ -97,6 +105,13 @@
                 const data = await response.json();
                 localStorage.setItem('user', JSON.stringify(data.user));
                 user.set(data.user);
+
+                // Create a log entry for register user
+                await createLogEntry({
+                    type: 'Information',
+                    message: `${username} registered successfully`
+                });
+
                 goto('/dashboard');
             } else {
                 throw new Error(await response.text());

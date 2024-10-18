@@ -1,4 +1,6 @@
 <script lang="ts">
+    import Papa from 'papaparse';
+    import type { ParseResult } from 'papaparse';
     import { onMount } from 'svelte';
     import { writable } from 'svelte/store';
   
@@ -6,16 +8,62 @@
     import RankedEntryPointTable from '$lib/components/RankedEntryPointTable.svelte';
     import Port0EntryTable from '$lib/components/Port0EntryTable.svelte';
     import PortZeroEntryTable from '$lib/components/PortZeroEntryTable.svelte';
+	import { fetchPort0Entries, fetchVulnerabilities } from '$lib/api';
+	import type { Vulnerability, PortZeroEntryRow } from '$lib/types';
   
+    let vulnerabilities = writable<Vulnerability[]>([]);
+    let port0Entries = writable<PortZeroEntryRow[]>([]);
+    let portZeroEntries = writable<PortZeroEntryRow[]>([]);
+
     let selectedProject = ''; // Selected project folder
     let ipList = writable<string[]>([]); // List of IP addresses from Neo4j
     let selectedIps = writable<string[]>([]); // List of selected scope IPs
     let analysisTypes = writable<string[]>([]); // Available analysis types
     let selectedAnalysisTypes = writable<string[]>([]); // Selected analyses
-  
     let projectFolders = writable<string[]>([]); // List of project folders fetched from the server
-  
-    // Fetch project folders from the backend
+
+    //Fetch csv files and parse them
+    async function fetchCsvData(){
+        try{
+            //fetch vulnerability CSV
+            const vulnerabilityRes = await fetch('/server/data/z/data_with_exploits.csv');
+            const vulnerabilityText = await vulnerabilityRes.text();
+            Papa.parse<Vulnerability>(vulnerabilityText, {
+                header: true,
+                complete: function(results: ParseResult<Vulnerability>){
+                    vulnerabilities.set(results.data); //setting vulnerability data
+                }
+            });
+
+            //fetch port 0 entries csv
+            const port0Res = await fetch('/server/data/z/port_0_entries.csv');
+            const port0Text = await port0Res.text();
+            Papa.parse<PortZeroEntryRow>(port0Text,{
+                header: true,
+                complete: function(results: ParseResult<PortZeroEntryRow>){
+                    port0Entries.set(results.data);
+                }
+            })
+
+            //fetch port 0 entries csv
+            const portZeroRes = await fetch('/server/data/z/entrypoint_most_info.csv');
+            const portZeroText = await portZeroRes.text();
+            Papa.parse<PortZeroEntryRow>(portZeroText, {
+                header: true,
+                complete: function(results: ParseResult<PortZeroEntryRow>) {
+                    portZeroEntries.set(results.data); //set port zero entries data
+                }
+            });
+        }catch(error){
+            console.error('Error fetching or pasing CSV:', error);
+        }
+    }
+    onMount(() => {
+    fetchCsvData(); //Fetch CSV data on mount
+    fetchProjectFolders(); //Fetch project folders on mount
+    fetchProjectData();    //Fetch other project-related data on mount
+    }); 
+    //Fetch project folders from the backend
     async function fetchProjectFolders() {
         try {
             const response = await fetch('http://localhost:3000/projects');
