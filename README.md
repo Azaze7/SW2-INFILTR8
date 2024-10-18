@@ -19,23 +19,23 @@
 
 **This Project was completed through the cooperation of *nine* team members!**
 
-[Gilbert I. Guzman](https://github.com/Azaze7 "Gilbert's Github") - *Team Lead/Analyst/Repo Master*: Created GitHub Repo, Communicated with Staff, Bugfixed code, ...
+[Gilbert I. Guzman](https://github.com/Azaze7 "Gilbert's Github") - *Team Lead/Analyst/Repo Master*: Created GitHub Repo, Communicated with Staff, Bugfixed code, Programmmed Colorblind Filters, Programmed Universal Fonts, Wrote Manual, Programmed Settings Page, Programmed Support Page.
 
-[Alberto Villegas](https://github.com/bertvillegas "Alberto's Github") - *Quality Manager/Programmer*: Assisted In Creation of all UX, Bugfixed code, ...
+[Alberto Villegas](https://github.com/bertvillegas "Alberto's Github") - *Quality Manager/Programmer*: Assisted In Creation of all UX, Bugfixed code, Collaborated on Reports UI.
 
-[Brian Mata](https://github.com/donburgers "Brian's Github") - *Dataflow & Business Manager/Programmer*: Assisted In Creation of all UX, Bugfixed code, ...
+[Brian Mata](https://github.com/donburgers "Brian's Github") - *Dataflow & Business Manager/Programmer*: Assisted In Creation of all UX, Bugfixed code, Created Database, Programmed Darkmode, Programmed Backend for login, Programmed Pulling/Pusing of data to database.
 
-[Christian Garcia](https://github.com/chris-garcia01 "Christian G.'s Github") - *Quality Manager/V&V*: Assisted In ...
+[Christian Garcia](https://github.com/chris-garcia01 "Christian G.'s Github") - *Quality Manager/V&V*: Assisted In Creation of all UX, Bugfixed code, Readme Assistance and Commentation, Assisted in settings UI.
 
-[Christian Revilla ](https://github.com/carevilla "Christian R.'s Github") - *Analysis Manager/Programmer*: Assisted In Creation of all UX, Bugfixed code, ...
+[Christian Revilla ](https://github.com/carevilla "Christian R.'s Github") - *Analysis Manager/Programmer*: Assisted In Creation of all UX, Bugfixed code, Programmed Frontend for login, Programmed Routing of svelte pages, Taught teammates tailwind.
 
-[Janelle Guzman](https://github.com/jbguzman "Janelle's Github") - *Customer Interface Manager/Designer*: Assisted In ...
+[Janelle Guzman](https://github.com/jbguzman "Janelle's Github") - *Customer Interface Manager/Designer*: Assisted In Creation of all UX, Bugfixed code, Assisted in backend logs, assisted with website design aethetics.
 
-[Jose Luis Rojas](https://github.com/joseluisrojas21 "Jose's Github") - *Bahavioral Model Manager/Designer*: Assisted In ...
+[Jose Luis Rojas](https://github.com/joseluisrojas21 "Jose's Github") - *Bahavioral Model Manager/Designer*: Assisted In Creation of UX, Bugfixed code, Assisted in frontend logs, assisted with initial database prototyping.
 
-[Kimberly Kocian](https://github.com/kkocian7 "Kimberly's Github") - *Support Manager/V&V*: Assisted In ...
+[Kimberly Kocian](https://github.com/kkocian7 "Kimberly's Github") - *Support Manager/V&V*: Assisted In Creation of all UX, Bugfixed code, Assisted with Project Manager frontend, assisted with svelte routing. 
 
-[Luis Sanchez](https://github.com/ldsanchez3 "Luis's Github") - *Planning Manager/Analyst*: Assisted In ...
+[Luis Sanchez](https://github.com/ldsanchez3 "Luis's Github") - *Planning Manager/Analyst*: Assisted In Creation of all UX, Bugfixed code, Assisted with Project Manager Backend, general formatting. 
 
 <p align="center">
 <img src="https://github.com/Azaze7/SW2-INFILTR8/blob/main/Initial-Dependencies-And-Resources/The%20Nine-Bytes-Logo.png" height="200px"> 
@@ -154,6 +154,6 @@ Short video archives demonstrating the various vertical slices for INFILTR8 have
 * Due: [9/30/24]
   * https://youtu.be/GIlSGcYOIUc
  
-* DEMO #3 - ...
+* DEMO #3 - GUI Update, 
 * Due: [10/18/24]
   * https://youtu.be/GIlSGcYOIUc
