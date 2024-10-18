@@ -1,4 +1,4 @@
-<h1 class="flex justify-center">Albert & Luis</h1>
+<h1 class="flex justify-center"></h1>
 
 <script>
     let folder = {

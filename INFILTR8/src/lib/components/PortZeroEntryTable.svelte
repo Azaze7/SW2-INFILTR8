@@ -1,51 +1,52 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
-  import { writable } from 'svelte/store';
-  import { fetchPort0Entries } from '$lib/api';
-  import type { PortZeroEntryRow } from '$lib/types';
-
-  let rows = writable<PortZeroEntryRow[]>([]);
-  let loading = writable(true);
-  let error = writable<string | null>(null);
-
-  onMount(async () => {
-    try {
-      const data: PortZeroEntryRow[] = await fetchPort0Entries();
-      rows.set(data);
-      loading.set(false);
-    } catch (err) {
-      console.error("Error fetching Port0 entries:", err);
-      error.set('Failed to load data. Please try again later.');
-      loading.set(false);
-    }
-  });
+  export let entries: Array<{
+      file: string;
+      name: string;
+      ip: string;
+      port: number;
+      viable_exploit: string;
+      archetype: string;
+      svc_name: string;
+      protocol: string;
+      severity: number;
+      pluginID: number;
+      pluginName: string;
+      pluginFamily: string;
+  }> = [];
 </script>
-
-
-<div class="table-container space-y-4">
-  {#if $loading}
-    <p>Loading...</p>
-  {:else if $error}
-    <p class="text-red-500">{$error}</p>
-  {:else}
-    <table class="table table-hover table-compact table-auto w-full">
-      <thead>
-        <tr>
-          <th>ID</th>
+<table>
+  <thead>
+      <tr>
+          <th>File</th>
+          <th>Name</th>
           <th>IP</th>
           <th>Port</th>
-        </tr>
-      </thead>
-      <tbody>
-        
-        {#each $rows as row, index (row.id)}
+          <th>Viable Exploit</th>
+          <th>Archetype</th>
+          <th>Service Name</th>
+          <th>Protocol</th>
+          <th>Severity</th>
+          <th>Plugin ID</th>
+          <th>Plugin Name</th>
+          <th>Plugin Family</th>
+      </tr>
+  </thead>
+  <tbody>
+      {#each entries as entry}
           <tr>
-            <td>{row.id}</td>
-            <td>{row.ip || 'N/A'}</td>
-            <td>{row.port || 'N/A'}</td>
+              <td>{entry.file}</td>
+              <td>{entry.name}</td>
+              <td>{entry.ip}</td>
+              <td>{entry.port}</td>
+              <td>{entry.viable_exploit}</td>
+              <td>{entry.archetype}</td>
+              <td>{entry.svc_name}</td>
+              <td>{entry.protocol}</td>
+              <td>{entry.severity}</td>
+              <td>{entry.pluginID}</td>
+              <td>{entry.pluginName}</td>
+              <td>{entry.pluginFamily}</td>
           </tr>
-        {/each}
-      </tbody>
-    </table>
-  {/if}
-</div>
+      {/each}
+  </tbody>
+</table>

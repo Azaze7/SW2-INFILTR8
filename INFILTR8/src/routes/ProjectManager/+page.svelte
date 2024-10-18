@@ -1,219 +1,182 @@
 <script lang="ts">
-    import Papa from 'papaparse';
-    import type { ParseResult } from 'papaparse';
+    import { writable, type Writable } from 'svelte/store';
     import { onMount } from 'svelte';
-    import { writable } from 'svelte/store';
-  
-    import VulnerabilityTable from '$lib/components/VulnerabilityTable.svelte';
+    import Papa from 'papaparse';
+
+    import DataWithExploits from '$lib/components/DataWithExploits.svelte';
+    import EntrypointMostInfo from '$lib/components/entrypoint_most_info.svelte';
     import RankedEntryPointTable from '$lib/components/RankedEntryPointTable.svelte';
-    import Port0EntryTable from '$lib/components/Port0EntryTable.svelte';
-    import PortZeroEntryTable from '$lib/components/PortZeroEntryTable.svelte';
-	import { fetchPort0Entries, fetchVulnerabilities } from '$lib/api';
-	import type { Vulnerability, PortZeroEntryRow } from '$lib/types';
-  
-    let vulnerabilities = writable<Vulnerability[]>([]);
-    let port0Entries = writable<PortZeroEntryRow[]>([]);
-    let portZeroEntries = writable<PortZeroEntryRow[]>([]);
+    import { fetchData } from '$lib/api';
 
-    let selectedProject = ''; // Selected project folder
-    let ipList = writable<string[]>([]); // List of IP addresses from Neo4j
-    let selectedIps = writable<string[]>([]); // List of selected scope IPs
-    let analysisTypes = writable<string[]>([]); // Available analysis types
-    let selectedAnalysisTypes = writable<string[]>([]); // Selected analyses
-    let projectFolders = writable<string[]>([]); // List of project folders fetched from the server
+    interface ExploitData {
+        file: string;
+        name: string;
+        ip: string;
+        port: number;
+        viable_exploit: string;
+        archetype: string;
+        svc_name: string;
+        protocol: string;
+        severity: number;
+        pluginID: number;
+        pluginName: string;
+        pluginFamily: string;
+    }
 
-    //Fetch csv files and parse them
-    async function fetchCsvData(){
-        try{
-            //fetch vulnerability CSV
-            const vulnerabilityRes = await fetch('/server/data/z/data_with_exploits.csv');
-            const vulnerabilityText = await vulnerabilityRes.text();
-            Papa.parse<Vulnerability>(vulnerabilityText, {
-                header: true,
-                complete: function(results: ParseResult<Vulnerability>){
-                    vulnerabilities.set(results.data); //setting vulnerability data
-                }
-            });
+    interface EntryPoint {
+        ip: string;
+        port: number;
+        vulnerability_count: number;
+    }
 
-            //fetch port 0 entries csv
-            const port0Res = await fetch('/server/data/z/port_0_entries.csv');
-            const port0Text = await port0Res.text();
-            Papa.parse<PortZeroEntryRow>(port0Text,{
-                header: true,
-                complete: function(results: ParseResult<PortZeroEntryRow>){
-                    port0Entries.set(results.data);
-                }
-            })
+    interface RankedEntry {
+        ip: string;
+        port: number;
+        severity_score: number;
+        exploit_score: number;
+        distinct_vulnerabilities: number;
+        combined_score: number;
+    }
 
-            //fetch port 0 entries csv
-            const portZeroRes = await fetch('/server/data/z/entrypoint_most_info.csv');
-            const portZeroText = await portZeroRes.text();
-            Papa.parse<PortZeroEntryRow>(portZeroText, {
-                header: true,
-                complete: function(results: ParseResult<PortZeroEntryRow>) {
-                    portZeroEntries.set(results.data); //set port zero entries data
-                }
-            });
-        }catch(error){
-            console.error('Error fetching or pasing CSV:', error);
+    let exploits: Writable<ExploitData[]> = writable([]);
+    let entryPoints: Writable<EntryPoint[]> = writable([]);
+    let rankedEntries: Writable<RankedEntry[]> = writable([]);
+    let projectFolders: Writable<string[]> = writable([]);
+    let selectedProject: string = '';
+
+    // New stores to hold Scope IPs and available analyses
+    let scopeIPs: Writable<string[]> = writable([]);
+    let availableAnalyses: Writable<string[]> = writable([]);
+
+    async function fetchCsvData(project: string) {
+        try {
+            const basePath = `/server/data/${project}`;
+
+            await Promise.all([
+                fetchAndParse<ExploitData>(`${basePath}/data_with_exploits.csv`, exploits),
+                fetchAndParse<EntryPoint>(`${basePath}/entrypoint_most_info.csv`, entryPoints),
+                fetchAndParse<RankedEntry>(`${basePath}/ranked_entry_points.csv`, rankedEntries)
+            ]);
+
+            // Populate scope IPs and available analyses dynamically
+            scopeIPs.set($entryPoints.map((entry) => entry.ip));
+            availableAnalyses.set($rankedEntries.map((entry) => `Port ${entry.port} - Score ${entry.combined_score}`));
+        } catch (error) {
+            console.error('Error fetching or parsing CSV:', error);
         }
     }
-    onMount(() => {
-    fetchCsvData(); //Fetch CSV data on mount
-    fetchProjectFolders(); //Fetch project folders on mount
-    fetchProjectData();    //Fetch other project-related data on mount
-    }); 
-    //Fetch project folders from the backend
+
+    async function fetchAndParse<T>(url: string, store: Writable<T[]>) {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error(`Failed to fetch ${url}`);
+        const text = await response.text();
+        Papa.parse(text, {
+            header: true,
+            complete: (results) => store.set(results.data as T[])
+        });
+    }
+
     async function fetchProjectFolders() {
         try {
-            const response = await fetch('http://localhost:3000/projects');
-            if (response.ok) {
-                const folders = await response.json();
-                projectFolders.set(folders); // Set project folders in the store
-            } else {
-                console.error('Failed to fetch project folders');
-            }
+            const folders = await fetchData<string[]>('http://localhost:3000/projects');
+            projectFolders.set(folders);
         } catch (error) {
             console.error('Error fetching project folders:', error);
         }
     }
-  
-    // Fetch other project data (IPs, analysis types) from the backend
-    async function fetchProjectData() {
-        try {
-            const response = await fetch('http://localhost:3000/api/project-data');
-            if (response.ok) {
-                const data = await response.json();
-                if (data.ipList) ipList.set(data.ipList); // Fetch IP list
-                if (data.analysisTypes) analysisTypes.set(data.analysisTypes); // Fetch analysis types
-            } else {
-                console.error('Failed to fetch project data');
-            }
-        } catch (error) {
-            console.error('Error fetching project data:', error);
-        }
+
+    function moveUp<T>(list: Writable<T[]>, index: number) {
+        list.update(arr => {
+            if (index > 0) [arr[index], arr[index - 1]] = [arr[index - 1], arr[index]];
+            return arr;
+        });
     }
-  
-    onMount(() => {
-        fetchProjectFolders(); // Fetch project folders on mount
-        fetchProjectData();    // Fetch other project-related data on mount
-    });
-  
-    // Move an item up in the list
-    function moveUp(list: string[], index: number) {
-        if (index > 0) {
-            const temp = list[index];
-            list[index] = list[index - 1];
-            list[index - 1] = temp;
-        }
+
+    function moveDown<T>(list: Writable<T[]>, index: number) {
+        list.update(arr => {
+            if (index < arr.length - 1) [arr[index], arr[index + 1]] = [arr[index + 1], arr[index]];
+            return arr;
+        });
     }
-  
-    // Move an item down in the list
-    function moveDown(list: string[], index: number) {
-        if (index < list.length - 1) {
-            const temp = list[index];
-            list[index] = list[index + 1];
-            list[index + 1] = temp;
-        }
-    }
-  
-    // Start the analysis
-    async function startAnalysis() {
-        try {
-            const selectedIpsVal = $selectedIps;
-            const selectedAnalysisTypesVal = $selectedAnalysisTypes;
-  
-            const response = await fetch('http://localhost:3000/api/start-analysis', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    projectName: selectedProject,
-                    ipList: selectedIpsVal,
-                    analysisTypes: selectedAnalysisTypesVal,
-                }),
-            });
-            if (response.ok) {
-                console.log('Analysis started successfully');
-            } else {
-                console.error('Failed to start analysis');
-            }
-        } catch (error) {
-            console.error('Error starting analysis:', error);
-        }
-    }
-  </script>
-  
-  <div class="container h-full mx-auto flex flex-col space-y-4">
+
+    $: if (selectedProject) fetchCsvData(selectedProject);
+    onMount(fetchProjectFolders);
+</script>
+
+<div class="container h-full mx-auto flex flex-col space-y-4">
     <h2 class="h2">Configure Project and Analysis</h2>
-  
-    <!-- Current Project Folder -->
-    <div>
-        <label for="project-folder">Current Project Folder</label>
-        <select class="text-gray-700" id="project-folder" bind:value={selectedProject}>
-            <option value="" disabled>Select Project Folder</option>
-            {#each $projectFolders as folder}
-                <option value={folder}>{folder}</option>
-            {/each}
-        </select>
+
+    <!-- Project Selection -->
+    <h3>Projects</h3>
+    <div class="snap-x scroll-px-4 snap-mandatory scroll-smooth flex gap-4 overflow-x-auto px-4 py-2 rounded-md shadow-sm">
+        {#each $projectFolders as folder}
+            <button
+                class="snap-start shrink-0 card py-4 px-6 w-40 md:w-60 text-center cursor-pointer hover:bg-primary-100 rounded-md shadow transition duration-300"
+                on:click={() => (selectedProject = folder)}
+            >
+                {folder}
+            </button>
+        {/each}
     </div>
-  
-    <div class="flex justify-center gap-5">
-      <button class="btn btn-sm variant-ghost-surface" >Port0</button>
-      <button class="btn btn-sm variant-ghost-surface" >Exploits</button>
-      <button class="btn btn-sm variant-ghost-surface" >Ranked Entry</button>
-      <button class="btn btn-sm variant-ghost-surface" >Info</button>
-    </div>
-  
+
     <!-- Scope IP List -->
-    <div>
-        <label for="ip-list">Scope IP List</label>
-        <ul id="ip-list">
-          {#each $ipList as ip, index (ip)}
-          <li class="flex items-center">
-              <input type="checkbox" value={ip} bind:group={$selectedIps} /> {ip}
-              <button on:click={() => moveUp($ipList, index)}>⬆️</button>
-              <button on:click={() => moveDown($ipList, index)}>⬇️</button>
-          </li>
-          {/each}
-        </ul>
-    </div>
-  
-    <!-- Entry Points Allowed -->
-    <div>
-        <label for="analysis-types">Entry Points Allowed</label>
-        <ul id="analysis-types">
-          {#each $analysisTypes as analysis, index (analysis)}
-          <li class="flex items-center">
-              <input type="checkbox" value={analysis} bind:group={$selectedAnalysisTypes} /> {analysis}
-              <button on:click={() => moveUp($analysisTypes, index)}>⬆️</button>
-              <button on:click={() => moveDown($analysisTypes, index)}>⬇️</button>
-          </li>
-          {/each}
-        </ul>
-    </div>
-  
-    <!-- Data Tables -->
+    <h3>Scope IP List</h3>
+    <ul>
+        {#each $scopeIPs as ip, index}
+            <li>
+                {ip}
+                <button on:click={() => moveUp(scopeIPs, index)}>↑</button>
+                <button on:click={() => moveDown(scopeIPs, index)}>↓</button>
+            </li>
+        {/each}
+    </ul>
+
+    <!-- Available Analyses -->
+    <h3>Entry Points Allowed</h3>
+    <ul>
+        {#each $availableAnalyses as analysis, index}
+            <li>
+                {analysis}
+                <button on:click={() => moveUp(availableAnalyses, index)}>↑</button>
+                <button on:click={() => moveDown(availableAnalyses, index)}>↓</button>
+            </li>
+        {/each}
+    </ul>
+
+    <button on:click={() => console.log('Start Analysis')}>Start Analysis</button>
+
+    <!-- Data Tables Section -->
     <div class="data-tables-section">
-      <h3>Vulnerabilities</h3>
-      <VulnerabilityTable />
-  
-      <h3>Ranked Entry Points</h3>
-      <RankedEntryPointTable />
-  
-      <h3>Port0 Entries</h3>
-      <Port0EntryTable />
-  
-      <h3>PortZero Entries</h3>
-      <PortZeroEntryTable />
+        <h3>Data with Exploits</h3>
+        <DataWithExploits exploits={$exploits} />
+
+        <h3>Ranked Entry Points</h3>
+        <RankedEntryPointTable rankedEntries={$rankedEntries} />
+
+        <h3>Entry Points (Most Info)</h3>
+        <EntrypointMostInfo entries={$entryPoints} />
     </div>
-  
-    <!-- Start Analysis Button -->
-    <button class="btn variant-filled" on:click={startAnalysis}>Start Analysis</button>
-  </div>
-  
-  <style>
+</div>
+<style>
     .container {
-      padding: 20px;
+        padding: 20px;
     }
-  </style>
-  
+
+    .snap-x {
+        display: flex;
+        gap: 16px;
+        overflow-x: auto;
+    }
+
+    .card {
+        background-color: #174972;
+        color: white;
+        border-radius: 8px;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+</style>
