@@ -21,7 +21,7 @@
 
 [Gilbert I. Guzman](https://github.com/Azaze7 "Gilbert's Github") - *Team Lead/Analyst/Repo Master*: Created GitHub Repo, Communicated with Staff, Bugfixed code, Programmmed Colorblind Filters, Programmed Universal Fonts, Wrote Manual, Programmed Settings Page, Programmed Support Page.
 
-[Alberto Villegas](https://github.com/bertvillegas "Alberto's Github") - *Quality Manager/Programmer*: Assisted In Creation of all UX, Bugfixed code, Collaborated on Reports UI.
+[Alberto Villegas](https://github.com/bertvillegas "Alberto's Github") - *Quality Manager/Programmer*: Assisted In Creation of all UX, Bugfixed code, Collaborated on Reports UI, Assisted with Project Manager Frontend.
 
 [Brian Mata](https://github.com/donburgers "Brian's Github") - *Dataflow & Business Manager/Programmer*: Assisted In Creation of all UX, Bugfixed code, Created Database, Programmed Darkmode, Programmed Backend for login, Programmed Pulling/Pusing of data to database.
 
@@ -154,6 +154,6 @@ Short video archives demonstrating the various vertical slices for INFILTR8 have
 * Due: [9/30/24]
   * https://youtu.be/GIlSGcYOIUc
  
-* DEMO #3 - GUI Update, 
+* DEMO #3 - GUI Update, Database Update, Improved ReadMe & Github, "AI Algorithm" Integration, & Logs Page Login.
 * Due: [10/18/24]
   * https://youtu.be/GIlSGcYOIUc
