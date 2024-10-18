@@ -1,51 +1,35 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
-  import { writable } from 'svelte/store';
-  import { fetchRankedEntryPoints } from '$lib/api';
-  import type { RankedEntryPointRow } from '$lib/types'; 
-
-  let rows = writable<RankedEntryPointRow[]>([]);
-  let loading = writable(true);
-  let error = writable<string | null>(null);
-
-  
-  onMount(async () => {
-    try {
-      const data: RankedEntryPointRow[] = await fetchRankedEntryPoints();
-      rows.set(data); 
-      loading.set(false);
-    } catch (err) {
-      console.error("Error fetching ranked entry points:", err);
-      error.set('Failed to load data. Please try again later.');
-      loading.set(false);
-    }
-  });
+  export let rankedEntries: Array<{
+      ip: string;
+      port: number;
+      severity_score: number;
+      exploit_score: number;
+      distinct_vulnerabilities: number;
+      combined_score: number;
+  }> = [];
 </script>
 
-<!-- HTML Section to render the data table -->
-<div class="table-container space-y-4">
-  {#if $loading}
-    <p>Loading...</p>
-  {:else if $error}
-    <p class="text-red-500">{$error}</p>
-  {:else}
-    <table class="table table-hover table-compact table-auto w-full">
-      <thead>
-        <tr>
+<table>
+  <thead>
+      <tr>
           <th>IP</th>
           <th>Port</th>
+          <th>Severity Score</th>
+          <th>Exploit Score</th>
+          <th>Distinct Vulnerabilities</th>
           <th>Combined Score</th>
-        </tr>
-      </thead>
-      <tbody>
-        {#each $rows as row, index (row.ip + '-' + row.port + '-' + index)}
+      </tr>
+  </thead>
+  <tbody>
+      {#each rankedEntries as { ip, port, severity_score, exploit_score, distinct_vulnerabilities, combined_score }}
           <tr>
-            <td>{row.ip || 'N/A'}</td>
-            <td>{row.port || 'N/A'}</td>
-            <td>{row.combined_score ?? 'N/A'}</td>
+              <td>{ip}</td>
+              <td>{port}</td>
+              <td>{severity_score}</td>
+              <td>{exploit_score}</td>
+              <td>{distinct_vulnerabilities}</td>
+              <td>{combined_score}</td>
           </tr>
-        {/each}
-      </tbody>
-    </table>
-  {/if}
-</div>
+      {/each}
+  </tbody>
+</table>

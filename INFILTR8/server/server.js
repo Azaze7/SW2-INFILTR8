@@ -11,6 +11,7 @@ import neo4j from 'neo4j-driver';
 import authRoutes from './auth.js';  
 import logEndPoints from './logendpoints.js';
 
+
 const app = express();
 const port = 3000;
 
@@ -19,7 +20,14 @@ const __dirname = dirname(__filename);
 
 // Middleware to parse JSON request bodies
 app.use(bodyParser.json());
-
+// Allow CORS from your frontend
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5173');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,POST');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    next();
+});
 // Enable CORS for all routes with specific origin
 app.use(cors({
     origin: 'http://localhost:5173',  
@@ -308,7 +316,34 @@ app.get('/api/port-zero-entries', async (req, res) => {
     }
 });
 
-// Start the server
+
+// Serve project folders and files dynamically
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5173');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,POST');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    next();
+});
+
+// Serve static files from the 'data' directory
+app.use('/data', express.static(path.join(__dirname, 'data')));
+
+// Endpoint to list project folders
+app.get('/projects', (req, res) => {
+    const projectsDir = path.join(__dirname, 'data');
+    fs.readdir(projectsDir, { withFileTypes: true }, (err, files) => {
+        if (err) {
+            console.error('Error reading project folders:', err);
+            return res.status(500).send('Failed to read project folders');
+        }
+        const folders = files.filter(file => file.isDirectory()).map(folder => folder.name);
+        res.json(folders);
+    });
+});
+
 app.listen(port, () => {
-    console.log(`Server running on http://localhost:${port}`);
+    console.log(`Server is running on port ${port}`);
+    
+
 });

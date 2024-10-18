@@ -1,0 +1,134 @@
+import express from 'express';
+import cors from 'cors';
+import { promises as fsPromises } from 'fs';
+import multer from 'multer';
+import path from 'path';
+import neo4j from 'neo4j-driver';
+import dotenv from 'dotenv';
+import csv from 'csv-parser';
+import rateLimit from 'express-rate-limit';
+import { body, validationResult } from 'express-validator';
+import pino from 'pino';
+
+dotenv.config();
+const app = express();
+const PORT = process.env.PORT || 5000;
+const logger = pino();
+
+// Neo4j Setup
+const neo4jDriver = neo4j.driver(
+  process.env.NEO4J_URI,
+  neo4j.auth.basic(process.env.NEO4J_USERNAME, process.env.NEO4J_PASSWORD)
+);
+
+// Middleware
+app.use(express.json());
+app.use(cors({
+  origin: 'http://localhost:5173',
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'X-Requested-With', 'Accept']
+}));
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100 // limit each IP to 100 requests per windowMs
+});
+app.use(limiter);
+
+// Multer Setup
+const storage = multer.diskStorage({
+  destination: async (req, file, cb) => {
+    try {
+      const projectDir = path.join(__dirname, 'data', req.body.projectName || 'uploads');
+      await fsPromises.mkdir(projectDir, { recursive: true });
+      cb(null, projectDir);
+    } catch (err) {
+      cb(err);
+    }
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.originalname);
+  }
+});
+
+const upload = multer({ storage });
+
+// Create Project Endpoint
+app.post('/create-project', [
+  body('projectName').isString().notEmpty()
+], async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  const { projectName } = req.body;
+  const projectDir = path.join(__dirname, 'data', projectName);
+  try {
+    await fsPromises.mkdir(projectDir, { recursive: true });
+    logger.info(`Project folder ${projectDir} created successfully`);
+    res.status(200).send('Project folder created successfully');
+  } catch (err) {
+    logger.error('Error creating project folder:', err);
+    res.status(500).send('Failed to create project folder');
+  }
+});
+
+// Upload CSV Endpoint
+app.post('/upload-csv', upload.single('file'), async (req, res) => {
+  if (!req.file) {
+    return res.status(400).send('No file uploaded');
+  }
+  res.status(200).send('File uploaded successfully');
+});
+
+// Process CSV and Insert Data into Neo4j
+app.post('/process-csv', async (req, res) => {
+  const { csvFilePath, query } = req.body;
+  const csvData = [];
+  try {
+    const fileStream = fsPromises.createReadStream(csvFilePath);
+    fileStream
+      .pipe(csv())
+      .on('data', (row) => csvData.push(row))
+      .on('end', async () => {
+        try {
+          const session = neo4jDriver.session();
+          const tx = session.beginTransaction();
+          for (const row of csvData) {
+            await tx.run(query, row);
+          }
+          await tx.commit();
+          session.close();
+          res.status(200).send('CSV data processed successfully');
+        } catch (err) {
+          logger.error('Error processing CSV data:', err);
+          res.status(500).send('Failed to process CSV data');
+        }
+      })
+      .on('error', (err) => {
+        logger.error('Error reading CSV file:', err);
+        res.status(500).send('Failed to read CSV file');
+      });
+  } catch (err) {
+    logger.error('Error processing CSV:', err);
+    res.status(500).send('Failed to process CSV');
+  }
+});
+
+// Centralized Error Handling
+app.use((err, req, res, next) => {
+  logger.error(err.stack);
+  res.status(err.status || 500).send({ error: err.message });
+});
+
+// Gracefully Close Neo4j Driver
+process.on('exit', () => {
+  neo4jDriver.close();
+});
+
+// Start Server
+app.listen(PORT, () => {
+  logger.info(`Server running on port ${PORT}`);
+});
