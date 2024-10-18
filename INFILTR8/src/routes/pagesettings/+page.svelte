@@ -123,8 +123,8 @@
                             {texts[currentIndexValue]}
                         </p>
                         <div class="flex justify-between mt-4">
-                            <button class="text-white text-2xl" on:click={prevText}>←</button>
-                            <button class="text-white text-2xl" on:click={nextText}>→</button>
+                            <button class="px-4 py-2 bg-gray-700 rounded hover:bg-gray-600" on:click={prevText}>←</button>
+                            <button class="px-4 py-2 bg-gray-700 rounded hover:bg-gray-600" on:click={nextText}>→</button>
                         </div>
                     </div>
                 </div>
