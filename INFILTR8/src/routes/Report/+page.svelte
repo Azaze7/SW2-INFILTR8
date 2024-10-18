@@ -75,8 +75,8 @@
 
         <div class="file-type-selection">
             <label for="fileType">Select file type:</label>
-            <select id="fileType" bind:value={selectedFileType}>
-                <option value="" disabled>Select File Type</option>  
+            <select id="fileType" class="select-dropdown" bind:value={selectedFileType}>
+                <option value="" disabled>Select File Type</option>
                 {#each fileTypes as fileType}
                     <option value={fileType}>{fileType}</option> 
                 {/each}
@@ -130,7 +130,7 @@
         grid-area: main;
         padding: 30px;
         overflow-y: auto;
-        background-color: var(--bg);
+        background-color: transparent; /* Or you can directly specify the blue color */
     }
 
     /* Right Side Section Styling */
@@ -166,11 +166,27 @@
         }
     }
 
+/* Style for the select dropdown */
+.select-dropdown {
+    background-color: #1d1b28; /* Same as your main background */
+    color: #ffffff; /* White text for contrast */
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #3b3b6d; /* Slightly lighter blue border */
+    font-size: 14px;
+}
+
+/* Style for the options */
+.select-dropdown option {
+    background-color: #1d1b28; /* Matching background for options */
+    color: #ffffff; /* White text for options */
+}
+
     /* Folder card styling */
 .folder-card {
     display: flex;
     align-items: center;
-    background-color: #232a50;
+    background-color: #174972;
     border-radius: 16px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15); /* Subtle shadow */
     padding: 10px 20px;
@@ -283,17 +299,19 @@
 }
 
 .export-button {
+    background-color: #1d1b28; /* Same background as the rest of the page */
+    color: #ffffff; /* White text for contrast */
     padding: 10px 20px;
-    background-color: var(--color-main);
-    color: #fff;
-    border: none;
-    border-radius: 8px;
+    border: 1px solid #3b3b6d; /* Slightly lighter blue for the border */
+    border-radius: 4px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, border 0.3s ease;
 }
 
+/* Hover effect */
 .export-button:hover {
-    background-color: var(--color-main-dark); /* Hover effect */
+    background-color: #3b3b6d; /* Lighter shade of blue on hover */
+    border: 1px solid #5b5b8d; /* Even lighter border on hover */
 }
 
 </style>
