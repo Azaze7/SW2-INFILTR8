@@ -81,7 +81,7 @@ Team #6 extends its sincere gratitude to all of our customers and our guidance t
 | --------------- | --------------- | --------------- |
 | Gil-Test-Resources | 🗂️ | Contains Pre-fixed files to run the .nessus file. maing.py has been modified to handle new inputs and get a sample output. This is not the final version, and exists only for testing backend! |
 | Initial-Dependecies-And-Resources | 🗂️ | Contains main source code, sample *broken* .nessus file, the finalized SRS, and some diagrams. These files will help kickstart development. |
-| my-app | 🗂️ | Contains files necessary to build and run INFILTR8, including its backend and GUI. |
+| INFILTR8 | 🗂️ | Contains files necessary to build and run INFILTR8, including its backend and GUI. |
 | README | .md | All of the text that you are currently reading. |
 | install | .sh | Shell-script that installs the system for you. |
 | .DS_Store | - | Stores folder customization options (MacOS Only). |
@@ -156,4 +156,4 @@ Short video archives demonstrating the various vertical slices for INFILTR8 have
  
 * DEMO #3 - GUI Update, Database Update, Improved ReadMe & Github, "AI Algorithm" Integration, & Logs Page Login.
 * Due: [10/18/24]
-  * https://youtu.be/GIlSGcYOIUc
+  * https://www.youtube.com/watch?v=jpO2zd9zbng
