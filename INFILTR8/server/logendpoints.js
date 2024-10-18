@@ -51,7 +51,7 @@ router.delete('/deletelogs', async (req, res) => {
   }
 });
 
-// Create a log entry and link it to ther user
+// Create a log entry and link it to the user
 router.post('/createlog', async (req, res) => {
   const { id, username, type, message } = req.body;
 
@@ -69,8 +69,11 @@ router.post('/createlog', async (req, res) => {
     // Create the log entry
     const logEntry = `[${date}] [${type}] [User: ${username}] [Log ID: ${id}] [${message}]\n`;
 
-    // Ensure the logs directory exists
-    fs.mkdirSync(path.join(__dirname, 'logs'), { recursive: true });
+    // Ensure the logs directory exists (this will create it if it doesn't exist)
+    const logsDir = path.join(__dirname, '..', 'logs');
+    if (!fs.existsSync(logsDir)) {
+      fs.mkdirSync(logsDir, { recursive: true });
+    }
 
     // Append the log entry to the log file
     fs.appendFile(logFilePath, logEntry, (err) => {
