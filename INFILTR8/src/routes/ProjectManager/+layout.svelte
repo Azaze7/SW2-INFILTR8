@@ -10,7 +10,7 @@
     import { computePosition, autoUpdate, flip, shift, offset, arrow } from '@floating-ui/dom';    
     import { popup, storePopup, LightSwitch, storeHighlightJs, AppRail, AppRailTile, AppRailAnchor, AppShell, AppBar,  } from '@skeletonlabs/skeleton';
     import { initializeStores, Drawer, getDrawerStore, } from '@skeletonlabs/skeleton';
-    import { ArrowLeft, Bolt, Home, Settings, UserCircle2, Squircle, FlaskConical, FolderRoot, Clipboard, BadgeHelp} from "lucide-svelte";
+    import { ArrowLeft, Bolt, Home, Settings, UserCircle2, Squircle, FlaskConical, FolderRoot, Clipboard, BadgeHelp, Scroll} from "lucide-svelte";
     import { slide } from "svelte/transition";
     
     import Sidebar from '$lib/components/AceternityUI/Sidebar/Sidebar.svelte';
@@ -122,8 +122,9 @@
         { label: "Project Manager", href: "/ProjectManager", icon: FolderRoot },
         { label: "Analysis", href: "/analysis", icon: FlaskConical },
         { label: "Reports", href: "/Report", icon: Clipboard },
+        { label: "Logs", href: "/Logs", icon: Scroll },
         { label: "Settings", href: "/pagesettings", icon: Settings },
-        { label: "Support", href: "/Login", icon: BadgeHelp} 
+        { label: "Support", href: "/support", icon: BadgeHelp} 
         
     ];
   
@@ -195,7 +196,7 @@
                     </div>
                 </div>
                 <div>
-                    <LightSwitch />
+                    <!--<LightSwitch />-->
                     <SidebarLink
                         link={{
                           label: "Sign Out",

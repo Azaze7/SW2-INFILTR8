@@ -3,6 +3,21 @@
     import { goto } from '$app/navigation';
     import { user } from './userStore'; 
     import RetroGrid from '$lib/components/AceternityUI/RetroGrid/RetroGrid.svelte';
+    import { onMount } from "svelte";
+    import { tweened } from "svelte/motion";
+    import { cubicInOut, elasticOut, sineOut } from "svelte/easing";
+    import { draw, fade } from "svelte/transition";
+    import { fly } from "svelte/transition";
+    import { Key, Lock, LockKeyholeOpen } from "lucide-svelte";
+	import EncryptButton from '../Buttons/EncryptButton.svelte';
+	import ShimmerButton from '../Buttons/ShimmerButton.svelte';
+
+    let intervalRef: string | number | NodeJS.Timeout | undefined;
+    let text = "Framework ?";
+    const TARGET_TEXT = "Svelte is Vibe";
+    const CYCLES_PER_LETTER = 2;
+    const SHUFFLE_TIME = 50;
+    const CHARS = "!@#$%^&*():{};|,.<>/?";
 
     const SERVER_URL = 'http://localhost:3000';
     let username = '';
@@ -12,6 +27,37 @@
     let register = false;
     let errorMessage = '';
     let loading = false;
+
+    function scramble() {
+        let pos = 0;
+
+        intervalRef = setInterval(() => {
+            const scrambled = TARGET_TEXT.split("")
+            .map((char, index) => {
+                if (pos / CYCLES_PER_LETTER > index) {
+                    return char;
+                }
+
+                const randomCharIndex = Math.floor(Math.random() * CHARS.length);
+                const randomChar = CHARS[randomCharIndex];
+
+                return randomChar;
+            })
+            .join("");
+
+            text = scrambled;
+            pos++;
+
+            if (pos >= TARGET_TEXT.length * CYCLES_PER_LETTER) {
+            stopScramble();
+        }
+        }, SHUFFLE_TIME);
+    }
+
+    function stopScramble() {
+        clearInterval(intervalRef);
+        text = TARGET_TEXT;
+    }
 
     const login = async (): Promise<void> => {
         loading = true;
@@ -124,6 +170,7 @@
         </div>
     </div>
 {:else}
+
     <div class="relative min-h-screen flex items-center justify-center overflow-hidden ">
         <RetroGrid/>
         <div class="relative z-10 bg-white bg-opacity-90 p-8 rounded-lg shadow-lg max-w-md w-full">
@@ -186,8 +233,23 @@
                     </label>
                 {/if}
 
+                <!--<ShimmerButton/>
+
+                <div class="z-10 flex min-h-[16rem] items-center justify-center">
+                    <ShimmerButton class="shadow-2xl">
+                      <span
+                        class="whitespace-pre-wrap text-center text-sm font-medium leading-none tracking-tight text-white dark:from-white dark:to-slate-900/10 lg:text-lg"
+                      >
+                        Shimmer Button
+                      </span>
+                    </ShimmerButton>
+                  </div>
+                -->
+
+                <!--<EncryptButton/>-->
+
                 <button 
-                    type="submit" 
+                    type='submit'
                     disabled={loading}
                     class="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition disabled:opacity-50"
                 >

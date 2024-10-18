@@ -1,13 +1,7 @@
 <script lang="ts">
-	import { LightSwitch } from '@skeletonlabs/skeleton';
-    import { onMount } from "svelte";
     import { writable } from "svelte/store";
-						
-    let greeting = "";
-    let currentHour = new Date().getHours();
+    import { onMount } from "svelte";
 
-    let fontSize = 17;
-    let filter = 'none';
     let showHelp = writable(false);
     let helpText = writable("INFILTR8 is designed to help Analyst's find and rank any security vulnerabilities found on the PC that it is currently running on.<br><br>This version of the software was created by Team #6 [The Nine Bytes] for the U.S. Army Combat Capabilities Development Command. [DEVCOM]");
     let currentTextIndex = writable(0);
@@ -23,35 +17,6 @@
         "Additional assistance can be found on Team 6's GitHub Page.<br><br>Simply click the appropriate button when out of the manual."
     ];
 
-    // Determine the greeting based on the time of day
-    if (currentHour < 12) {
-        greeting = "Good morning!";
-    } else if (currentHour < 18) {
-        greeting = "Good afternoon!";
-    } else {
-        greeting = "Good evening!";
-    }
-
-    //@ts-ignore
-    function changeFontSize(increase) {
-        fontSize += increase ? 1 : -1;
-        document.documentElement.style.fontSize = `${fontSize}px`;
-        //@ts-ignore
-        localStorage.setItem('fontSize', fontSize);
-    }
-
-    //@ts-ignore
-    function applyFilter(newFilter) {
-        filter = newFilter;
-        document.documentElement.style.filter = filter;
-        localStorage.setItem('filter', filter);
-    }
-
-    function openGit() {
-        window.open('https://github.com/Azaze7/CS4311_INFILTR8_6TheNine-Bytes_Fall2024', '_blank');
-    }
-
-
     function toggleHelp() {
         showHelp.update(value => !value);
     }
@@ -66,52 +31,28 @@
         helpText.set(texts[$currentTextIndex]);
     }
 
-    onMount(() => {
-        const savedFontSize = localStorage.getItem('fontSize');
-        const savedFilter = localStorage.getItem('filter');
+    function openGit() {
+        window.open('https://github.com/Azaze7/CS4311_INFILTR8_6TheNine-Bytes_Fall2024', '_blank');
+    }
 
-        if (savedFontSize) {
-            fontSize = parseInt(savedFontSize, 10);
-            document.documentElement.style.fontSize = `${fontSize}px`;
-        }
-
-        if (savedFilter) {
-            filter = savedFilter;
-            document.documentElement.style.filter = filter;
-        }
-    });
 </script>
+
 
 <div class="container h-full mx-auto flex justify-center items-center">
 	<div class="space-y-10 text-center flex flex-col items-center">
-		<h2 class="h2">Fonts, Accommodations, & More</h2>
+		<h2 class="h2">Source Code & Contact</h2>
 		<figure>
 			<div class="card">
-				
-            	<div class="font-size-controls">
-                    <label class="gray-text">Change Font Size:</label>                
-                	<button on:click={() => changeFontSize(false)}>-</button>
-                	<span>{fontSize}px</span>
-                	<button on:click={() => changeFontSize(true)}>+</button>
-				</div>
-            	<div class="colorblind-filters">
-                <label>Colorblind Filters:</label>
-                	<button on:click={() => applyFilter('none')}>None</button>
-                	<button on:click={() => applyFilter('url(#protanopia)')}>Red</button>
-                	<button on:click={() => applyFilter('url(#deuteranopia)')}>Green</button>
-                	<button on:click={() => applyFilter('url(#tritanopia)')}>Blue</button>
-            	</div>
-				<div class="help-manual">
+                <div class="colorblind-filters">
+                <!-- svelte-ignore a11y-label-has-associated-control -->
+                <label>See INFILTR8 on: </label>
+                <button on:click={() => openGit()}>GitHub</button>
+                </div>
+                <div class="help-manual">
 					<label>Help/Manual:</label>
 					<button class="help-button" on:click={toggleHelp}>?</button>
 				</div>
-                <div class="lightmode-control flex items-center">
-                    <label class="mr-2">Lightmode / Darkmode:  </label>
-                    <LightSwitch />
-                </div>
-                                    
-			</div>
-			{#if $showHelp}
+                {#if $showHelp}
         	<div class="help-box">
             <button class="close-button" on:click={toggleHelp}>X</button>
             <div class="help-content">
@@ -124,32 +65,12 @@
             </div>
         	</div>
        		{/if}
-			<section class="img-bg" />
-		</figure>
-		<!-- / -->
-		
-            <div class="colorblind-filters">
-                <label>See INFILTR8 on: </label>
-                <button on:click={() => openGit()}>GitHub</button>
-		</div>
-		<div class="space-y-2">
-	
-		</div>
-	</div>
+        </div>
+        </figure>
+    </div>
 </div>
 
-<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
-    <filter id="protanopia">
-        <feColorMatrix type="matrix" values="0.567 0.433 0 0 0 0.558 0.442 0 0 0 0 0.242 0.758 0 0 0 0 0 1 0"/>
-    </filter>
-    <filter id="deuteranopia">
-        <feColorMatrix type="matrix" values="0.625 0.375 0 0 0 0.7 0.3 0 0 0 0 0.3 0.7 0 0 0 0 0 1 0"/>
-    </filter>
-    <filter id="tritanopia">
-        <feColorMatrix type="matrix" values="0.95 0.05 0 0 0 0 0.433 0.567 0 0 0 0 0.475 0.525 0 0 0 0 0 1 0"/>
-    </filter>
-</svg>
-
+<h1 class="flex justify-center">Hi! You can also message our team via GitHub if you'd like.</h1>
 <style lang="postcss">
 	@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
 
@@ -223,7 +144,7 @@
 
     .dashboard-button {
         background-color: var(--button-purple);
-        color: rgb(227, 8, 8);
+        color: rgb(130, 52, 255);
         border: none;
         padding: 10px 20px;
         cursor: pointer;
@@ -236,7 +157,7 @@
     }
 
     .font-size-controls label, .colorblind-filters label, .help-manual label {
-        color: rgb(198, 40, 40);
+        color: rgb(130, 52, 255);
     }
 
     .font-size-controls button, .colorblind-filters button, .help-button {
