@@ -97,20 +97,18 @@ export async function deleteLogsForUser(username) {
 }
 
 // Example usage
-// fetchLogsForUser(username);
+// fetchLogs();
 /**
  * Fetches all logs related to the specified username.
- * @param {string} username - The username whose logs should be fetched
  * @returns {Promise<void>} A promise that resolves with the logs for the user
  */
-export async function fetchLogsForUser(username) {
+export async function fetchLogs() {
   try {
     const response = await fetch('http://localhost:3000/fetchlogs', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ username }),
     });
 
     if (response.ok) {

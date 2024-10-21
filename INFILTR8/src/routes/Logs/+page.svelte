@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Table } from "@skeletonlabs/skeleton";
   import { user } from '../../lib/components/loginUI/userStore';
-  import { createLogEntry, deleteLogsForUser, fetchLogsForUser } from './logservice';
+  import { createLogEntry, deleteLogsForUser, fetchLogs } from './logservice';
   import type { TableSource } from '@skeletonlabs/skeleton';
 
   let username = '';
@@ -34,7 +34,7 @@
 
   // Function to fetch logs for the user and trigger filtering
   async function fetchUserLogs() {
-    const fetchedLogs = await fetchLogsForUser(username);
+    const fetchedLogs = await fetchLogs();
 
     if (fetchedLogs !== undefined && fetchedLogs !== null) {
       logs = fetchedLogs;
