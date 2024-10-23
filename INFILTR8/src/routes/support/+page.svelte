@@ -47,20 +47,6 @@
         greeting = "Good evening!";
     }
 
-    //Function to increase or decrease font size.
-    function changeFontSize(increase: boolean) {
-        fontSize += increase ? 1 : -1;
-        document.documentElement.style.fontSize = `${fontSize}px`;
-        localStorage.setItem('fontSize', fontSize.toString());
-    }
-
-    //Functon to apply the colorblind filters. 
-    function applyFilter(newFilter: string) {
-        filter = newFilter;
-        document.documentElement.style.filter = filter;
-        localStorage.setItem('filter', filter);
-    }
-
     //Function so when we click button we open the github.
     function openGit() {
         window.open('https://github.com/Azaze7/CS4311_INFILTR8_6TheNine-Bytes_Fall2024', '_blank');
@@ -107,9 +93,46 @@
         <h2 class="text-3xl font-bold">Source Code, Contact, & Manual</h2>
         <figure>
             <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
-                <!--Load butterfly image. -->
+                <!--Load Breathing animations for the Butterfly image. -->
+                <style>
+                    .breathing {
+                      width: 450px;
+                      height: 450px;
+                      position: absolute;
+                      top: 8px;
+                      right: 8px;
+                      animation: breathe 5s ease-in-out infinite, move 10s linear infinite;
+                    }
+                  
+                    @keyframes breathe {
+                      0%, 100% {
+                        transform: scale(1);
+                      }
+                      50% {
+                        transform: scale(1.05);
+                      }
+                    }
+                    
+                    @keyframes move {
+                      0% {
+                        top: 8px;
+                        right: 8px;
+                      }
+                      50% {
+                        top: 10px;
+                        right: 10px;
+                      }
+                      100% {
+                        top: 8px;
+                        right: 8px;
+                      }
+                    }
+                </style>
+
+                <!--Load Butterfly image. -->
                 <!-- Link to photo: https://www.freepik.com/free-vector/butterfly-technology-vector-digital-transformation-blue-graphic_18236534.htm#fromView=search&page=1&position=21&uuid=1571800d-858e-48b7-a6fc-5070848c3276">Image by rawpixel.com on Freepik. -->
-                <img src="src/Butterfly.png" alt="Wireframe Butterfly" class="w-80 h-80 absolute top-2 right-2">
+                <img src="src/Butterfly.png" alt="Wireframe Butterfly" class="w-80 h-80 absolute top-2 right-2 breathing">
+
                 <div class="flex items-center gap-4">
                     <!--Title for github button. -->
                     <span class="text-gray-400">Source Code / Contact:</span>
@@ -124,15 +147,16 @@
         </figure>
         {#if $showHelp}
         <div class="fixed inset-0 bg-gray-900 bg-opacity-90 flex flex-col items-center justify-center p-6 z-50">
-            <button class="absolute top-2 right-2 text-white text-xl" on:click={toggleHelp}>X</button>
             <div class="bg-gray-800 p-8 rounded-lg shadow-lg max-w-md">
+                <!--Title for INFILTR8 manual. -->
                 <h3 class="text-2xl font-bold text-purple-500">INFI<span class="text-indigo-500">LTR8</span> Manual</h3>
                 <p class="text-gray-300 mt-4">
                     {texts[currentIndexValue]}
                 </p>
                 <div class="flex justify-between mt-4">
-                    <!--Previous and next button for manual.-->
+                    <!--Previous, next, and exit button for manual.-->
                     <button class="text-white text-2xl" on:click={prevText}>←</button>
+                    <button class="text-white text-2xl" on:click={toggleHelp}>X</button>
                     <button class="text-white text-2xl" on:click={nextText}>→</button>
                 </div>
             </div>
