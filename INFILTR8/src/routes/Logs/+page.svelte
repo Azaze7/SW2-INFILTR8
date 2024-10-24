@@ -7,6 +7,8 @@
   let filteredLogs: any[] = [];
   let defaultOption = "None";
   let logType = ["None", "Information", "Warning", "Error"];
+  let startDate: string;
+  let endDate: string;
 
   fetchUserLogs();
 
@@ -44,8 +46,30 @@
   function filterLogsBy() {
     // console.log("Filtering logs by:", defaultOption);
     filteredLogs = (defaultOption === "None") ? logs : logs.filter(log => log.type === defaultOption);
+
+    // Filter by date range
+    if (startDate) {
+        const start = new Date(startDate + 'T00:00:00Z');
+        console.log("Start:", start.toISOString(), startDate);
+        filteredLogs = filteredLogs.filter(log => parseLogDate(log.date) >= start);
+    }
+    if (endDate) {
+        const end = new Date(endDate + 'T23:59:59Z');
+        filteredLogs = filteredLogs.filter(log => parseLogDate(log.date) <= end);
+    }
+
     totalPages = Math.max(1, Math.ceil(filteredLogs.length / logsPerPage)); // Recalculate total pages after filtering
     updateTableSource(); // Update the table content after filtering
+  }
+
+  function parseLogDate(dateString: { split: (arg0: string) => [any, any]; }) {
+    const [datePart, timePart] = dateString.split(' ');
+    const [month, day, year] = datePart.split('/').map((num: string) => parseInt(num, 10));
+    const [hours, minutes, seconds] = timePart.split(':').map((num: string) => parseInt(num, 10));
+    
+    // Create a new Date object (year needs to be adjusted for 2-digit year)
+    const fullYear = year < 100 ? 2000 + year : year; // Adjust for 2-digit year
+    return new Date(fullYear, month - 1, day, hours, minutes, seconds); // Month is 0-indexed
   }
 
   // Function to handle pagination
@@ -85,17 +109,30 @@
 
 <div class="filter-section">
   <label for="filter-by">Filter logs by:</label>
-  <select id="filter-by" bind:value={defaultOption} on:change={filterLogsBy}>
+  <select id="filter-by" class="filter-select" bind:value={defaultOption} on:change={filterLogsBy}>
     {#each logType as type}
       <option value={type}>{type}</option>
     {/each}
   </select>
 </div>
 
+<!-- Date filters -->
+<div class="date-filter">
+  <div class="date-input">
+    <label for="start-date">Start Date:</label>
+    <input id="start-date" type="date" class="filter-date" bind:value={startDate} on:change={filterLogsBy} />
+  </div>
+  
+  <div class="date-input">
+    <label for="end-date">End Date:</label>
+    <input id="end-date" type="date" class="filter-date" bind:value={endDate} on:change={filterLogsBy} />
+  </div>
+</div>
+
 <!-- Input to allow users to specify logs per page -->
 <div class="pagination-controls">
   <label for="logs-per-page">Logs per page:</label>
-  <input id="logs-per-page" type="number" min="1" bind:value={customLogsPerPage} on:input={updateLogsPerPage} />
+  <input id="logs-per-page" type="number" min="1" class="logs-selection" bind:value={customLogsPerPage} on:input={updateLogsPerPage} />
 </div>
 
 <div class="total-logs">
@@ -131,6 +168,14 @@
     display: flex;
     align-items: center;
     gap: 10px;
+  }
+
+  .filter-select {
+    width: 130px;
+  }
+
+  .logs-selection {
+    width: 75px;
   }
 
   label {
@@ -173,5 +218,18 @@
   span {
     font-size: 18px;
     font-weight: bold;
+  }
+
+  .date-filter {
+  display: flex;
+  align-items: center;
+  }
+
+  .date-input {
+    margin-right: 20px;
+  }
+
+  .filter-date {
+    width: 140px;
   }
 </style>
