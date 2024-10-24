@@ -1,35 +1,24 @@
 <script lang="ts">
   import { Table } from "@skeletonlabs/skeleton";
-  import { user } from '../../lib/components/loginUI/userStore';
-  import { createLogEntry, deleteLogsForUser, fetchLogs } from './logservice';
+  import { fetchLogs } from './logservice';
   import type { TableSource } from '@skeletonlabs/skeleton';
 
-  let username = '';
   let logs: any[] = [];
   let filteredLogs: any[] = [];
   let defaultOption = "None";
   let logType = ["None", "Information", "Warning", "Error"];
 
-  // Get the username from the user store
-  user.subscribe(currentUser => {
-    if (currentUser) {
-      username = currentUser.username;
-      console.log(username);
-      fetchUserLogs();
-    } else {
-      console.log('No user is currently set.');
-    }
-  });
+  fetchUserLogs();
 
   // Pagination state
   let currentPage = 1;
-  let logsPerPage = 20; // Number of logs to show per page
+  let logsPerPage = 10; // Number of logs to show per page
   let totalPages = 1; // Total pages calculated later
   let customLogsPerPage = logsPerPage; // User custom logs per page input
 
   let tableSource: TableSource = {
-      head: ['Type', 'Date', 'Message'],
-      body: [],
+    head: ['Type', 'Date', 'Message'],
+    body: [],
   };
 
   // Function to fetch logs for the user and trigger filtering
@@ -53,7 +42,7 @@
 
   // Function to filter logs based on the selected type
   function filterLogsBy() {
-    console.log("Filtering logs by:", defaultOption);
+    // console.log("Filtering logs by:", defaultOption);
     filteredLogs = (defaultOption === "None") ? logs : logs.filter(log => log.type === defaultOption);
     totalPages = Math.max(1, Math.ceil(filteredLogs.length / logsPerPage)); // Recalculate total pages after filtering
     updateTableSource(); // Update the table content after filtering
@@ -70,7 +59,7 @@
   // Handle changes to logs per page
   function updateLogsPerPage() {
     if (customLogsPerPage < 1) {
-      customLogsPerPage = 1; // Enforce minimum value of 1
+      customLogsPerPage = 1;
     }
     logsPerPage = customLogsPerPage; // Set logsPerPage based on user input
     totalPages = Math.max(1, Math.ceil(filteredLogs.length / logsPerPage)); // Recalculate total pages
@@ -107,6 +96,10 @@
 <div class="pagination-controls">
   <label for="logs-per-page">Logs per page:</label>
   <input id="logs-per-page" type="number" min="1" bind:value={customLogsPerPage} on:input={updateLogsPerPage} />
+</div>
+
+<div class="total-logs">
+  <label for="total-logs">Total logs: {logs.length}</label>
 </div>
 
 <!-- Render the Table -->
