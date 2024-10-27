@@ -154,20 +154,23 @@
         </table>
     </div>
 
-    <!-- Available Analyses -->
-    <h3>Entry Points Allowed</h3>
-    <ul>
-        {#each $availableAnalyses as analysis, index}
-            <li>
-                {analysis}
-                <button on:click={() => moveUp(availableAnalyses, index)}>↑</button>
-                <button on:click={() => moveDown(availableAnalyses, index)}>↓</button>
-            </li>
-        {/each}
-    </ul>
-
-    <button on:click={() => console.log('Start Analysis')}>Start Analysis</button>
-
+    <!-- Available Analyses Section with Table Style -->
+    <div>
+        <h3>Entry Points Allowed</h3>
+        <table class="table w-full table-auto">
+            <tbody>
+                {#each $availableAnalyses as analysis, index}
+                    <tr>
+                        <td>{analysis}</td>
+                        <td class="flex space-x-2">
+                            <button class="btn btn-sm" on:click={() => moveUp(availableAnalyses, index)}>↑</button>
+                            <button class="btn btn-sm" on:click={() => moveDown(availableAnalyses, index)}>↓</button>
+                        </td>
+                    </tr>
+                {/each}
+            </tbody>
+        </table>
+    </div>
     <!-- Data Tables Section -->
     <div class="data-tables-section">
         <h3>Data with Exploits</h3>
