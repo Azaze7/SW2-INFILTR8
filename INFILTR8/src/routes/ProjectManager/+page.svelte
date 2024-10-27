@@ -109,15 +109,6 @@
         <h2 class="text-2xl font-semibold">Configure Project and Analysis</h2>
         <!-- Add any search or other interactive elements here -->
     </header>
-
-    <!-- Project Selection -->
-    <div class="flex gap-4">
-        {#each $projectFolders as folder}
-            <button class="card text-center" on:click={() => (selectedProject = folder)}>
-                {folder}
-            </button>
-        {/each}
-    </div>
 </div>
 
 <div class="container h-full mx-auto flex flex-col space-y-4">
@@ -172,7 +163,7 @@
         </table>
     </div>
     <!-- Data Tables Section -->
-    <div class="data-tables-section">
+    <div class="data-tables-section space-y-4">
         <h3>Data with Exploits</h3>
         <DataWithExploits exploits={$exploits} />
 
