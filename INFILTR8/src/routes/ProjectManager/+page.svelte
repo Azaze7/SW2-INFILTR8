@@ -103,6 +103,20 @@
     onMount(fetchProjectFolders);
 </script>
 
+<div class="overflow-x-auto space-y-4 container mx-auto px-4">
+    <!-- Header-->
+    <header class="flex justify-between gap-4">
+        <h2 class="text-2xl font-semibold">Configure Project and Analysis</h2>
+        <!-- Add any search or other interactive elements here-->         
+    </header>
+     <!-- Project Selection -->
+     <div class="flex gap-4">
+        {#each $projectFolders as folder}
+            <button class="card text-center" on:click={() => (selectedProject = folder)}>
+                {folder}
+            </button>
+        {/each}
+</div>
 <div class="container h-full mx-auto flex flex-col space-y-4">
     <h2 class="h2">Configure Project and Analysis</h2>
 
