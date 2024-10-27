@@ -44,7 +44,9 @@
 
 <AppShell>
     <svelte:fragment slot="pageHeader">
-        <h1 class="text-2xl font-bold mb-4">Current Project</h1>
+        <header class="flex justify-between p-4">
+            <h1 class="text-2xl font-bold mb-4">Current Project</h1>
+        </header>
     </svelte:fragment>
 
     <svelte:fragment slot="sidebarLeft">
