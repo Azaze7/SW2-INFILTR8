@@ -136,17 +136,23 @@
         {/each}
     </div>
 
-    <!-- Scope IP List -->
-    <h3>Scope IP List</h3>
-    <ul>
-        {#each $scopeIPs as ip, index}
-            <li>
-                {ip}
-                <button on:click={() => moveUp(scopeIPs, index)}>↑</button>
-                <button on:click={() => moveDown(scopeIPs, index)}>↓</button>
-            </li>
-        {/each}
-    </ul>
+    <!-- Scope IP List Section with Table Style -->
+    <div>
+        <h3>Scope IP List</h3>
+        <table class="table w-full table-auto">
+            <tbody>
+                {#each $scopeIPs as ip, index}
+                    <tr>
+                        <td>{ip}</td>
+                        <td class="flex space-x-2">
+                            <button class="btn btn-sm" on:click={() => moveUp(scopeIPs, index)}>↑</button>
+                            <button class="btn btn-sm" on:click={() => moveDown(scopeIPs, index)}>↓</button>
+                        </td>
+                    </tr>
+                {/each}
+            </tbody>
+        </table>
+    </div>
 
     <!-- Available Analyses -->
     <h3>Entry Points Allowed</h3>
