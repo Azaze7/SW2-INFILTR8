@@ -19,23 +19,23 @@
 
 **This Project was completed through the cooperation of *nine* team members!**
 
-[Gilbert I. Guzman](https://github.com/Azaze7 "Gilbert's Github") - *Team Lead/Analyst/Repo Master*: Created GitHub Repo, Communicated with Staff, Bugfixed code, Programmmed Colorblind Filters, Programmed Universal Fonts, Wrote Manual, Programmed Settings Page, Programmed Support Page.
+[Gilbert I. Guzman](https://github.com/Azaze7 "Gilbert's Github") - *Team Lead/Analyst/Repo Master*: Created GitHub Repo, Communicated with Staff, Bugfixed code, Programmmed Colorblind Filters, Programmed Universal Fonts, Wrote Manual, Programmed Settings Page, Programmed Support Page, Programmed Analysis Page, Recorded Demo Videos.
 
-[Alberto Villegas](https://github.com/bertvillegas "Alberto's Github") - *Quality Manager/Programmer*: Assisted In Creation of all UX, Bugfixed code, Collaborated on Reports UI, Assisted with Project Manager Frontend.
+[Alberto Villegas](https://github.com/bertvillegas "Alberto's Github") - *Quality Manager/Programmer*: Assisted In Creation of all UX, Bugfixed code, Collaborated on Reports UI, Assisted with Project Manager Frontend, Report Frontend.
 
-[Brian Mata](https://github.com/donburgers "Brian's Github") - *Dataflow & Business Manager/Programmer*: Assisted In Creation of all UX, Bugfixed code, Created Database, Programmed Darkmode, Programmed Backend for login, Programmed Pulling/Pusing of data to database.
+[Brian Mata](https://github.com/donburgers "Brian's Github") - *Dataflow & Business Manager/Programmer*: Assisted In Creation of all UX, Bugfixed code, Created Database, Programmed Darkmode, Programmed Backend for login, Programmed Pulling/Pusing of data to database, Bugfixing for Sprint #4.
 
-[Christian Garcia](https://github.com/chris-garcia01 "Christian G.'s Github") - *Quality Manager/V&V*: Assisted In Creation of all UX, Bugfixed code, Readme Assistance and Commentation, Assisted in settings UI.
+[Christian Garcia](https://github.com/chris-garcia01 "Christian G.'s Github") - *Quality Manager/V&V*: Assisted In Creation of all UX, Bugfixed code, Readme Assistance and Commentation, Assisted in settings UI, Analysis Page Backend.
 
-[Christian Revilla ](https://github.com/carevilla "Christian R.'s Github") - *Analysis Manager/Programmer*: Assisted In Creation of all UX, Bugfixed code, Programmed Frontend for login, Programmed Routing of svelte pages, Taught teammates tailwind.
+[Christian Revilla ](https://github.com/carevilla "Christian R.'s Github") - *Analysis Manager/Programmer*: Assisted In Creation of all UX, Bugfixed code, Programmed Frontend for login, Programmed Routing of svelte pages, Taught teammates tailwind, Bugfixing for Sprint #4.
 
-[Janelle Guzman](https://github.com/jbguzman "Janelle's Github") - *Customer Interface Manager/Designer*: Assisted In Creation of all UX, Bugfixed code, Assisted in backend logs, assisted with website design aethetics.
+[Janelle Guzman](https://github.com/jbguzman "Janelle's Github") - *Customer Interface Manager/Designer*: Assisted In Creation of all UX, Bugfixed code, Assisted in backend logs, assisted with website design aethetics, Logs Page Frontend.
 
-[Jose Luis Rojas](https://github.com/joseluisrojas21 "Jose's Github") - *Bahavioral Model Manager/Designer*: Assisted In Creation of UX, Bugfixed code, Assisted in frontend logs, assisted with initial database prototyping.
+[Jose Luis Rojas](https://github.com/joseluisrojas21 "Jose's Github") - *Bahavioral Model Manager/Designer*: Assisted In Creation of UX, Bugfixed code, Assisted in frontend logs, assisted with initial database prototyping, Logs Page Backend.
 
-[Kimberly Kocian](https://github.com/kkocian7 "Kimberly's Github") - *Support Manager/V&V*: Assisted In Creation of all UX, Bugfixed code, Assisted with Project Manager frontend, assisted with svelte routing. 
+[Kimberly Kocian](https://github.com/kkocian7 "Kimberly's Github") - *Support Manager/V&V*: Assisted In Creation of all UX, Bugfixed code, Assisted with Project Manager frontend, assisted with svelte routing, Project Manager fixing. 
 
-[Luis Sanchez](https://github.com/ldsanchez3 "Luis's Github") - *Planning Manager/Analyst*: Assisted In Creation of all UX, Bugfixed code, Assisted with Project Manager Backend, general formatting. 
+[Luis Sanchez](https://github.com/ldsanchez3 "Luis's Github") - *Planning Manager/Analyst*: Assisted In Creation of all UX, Bugfixed code, Assisted with Project Manager Backend, general formatting, Reports Backend. 
 
 <p align="center">
 <img src="https://github.com/Azaze7/SW2-INFILTR8/blob/main/Initial-Dependencies-And-Resources/The%20Nine-Bytes-Logo.png" height="200px"> 
@@ -156,4 +156,8 @@ Short video archives demonstrating the various vertical slices for INFILTR8 have
  
 * DEMO #3 - GUI Update, Database Update, Improved ReadMe & Github, "AI Algorithm" Integration, & Logs Page Login.
 * Due: [10/18/24]
-  * https://www.youtube.com/watch?v=jpO2zd9zbng
+  * https://youtu.be/xTV-pyUmyZs
+
+* DEMO #4 - AI Algorithm Integration, Analysis Page & Progress Display, Upload .nessus via GUI & Logs Update.
+* Due: [10/28/24]
+  * https://youtu.be/cFGu_UDyXlM
