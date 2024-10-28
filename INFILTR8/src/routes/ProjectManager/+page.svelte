@@ -2,10 +2,12 @@
     import { writable, type Writable } from 'svelte/store';
     import { onMount } from 'svelte';
     import Papa from 'papaparse';
-
+    /*
     import DataWithExploits from '$lib/components/DataWithExploits.svelte';
     import EntrypointMostInfo from '$lib/components/entrypoint_most_info.svelte';
     import RankedEntryPointTable from '$lib/components/RankedEntryPointTable.svelte';
+    */
+    import Datatable from '$lib/components/datatable/Datatable.svelte';
     import { fetchData } from '$lib/api';
 
     interface ExploitData {
@@ -41,28 +43,77 @@
     let exploits: Writable<ExploitData[]> = writable([]);
     let entryPoints: Writable<EntryPoint[]> = writable([]);
     let rankedEntries: Writable<RankedEntry[]> = writable([]);
+    let portEntries: Writable<ExploitData[]> = writable([]);
     let projectFolders: Writable<string[]> = writable([]);
     let selectedProject: string = '';
 
     // New stores to hold Scope IPs and available analyses
-    let scopeIPs: Writable<string[]> = writable([]);
-    let availableAnalyses: Writable<string[]> = writable([]);
+    let scopeIPs: Writable<{ ip: string }[]> = writable([]);
+    let availableAnalyses: Writable<{ analysis: string }[]> = writable([]);
 
-    async function fetchCsvData(project: string) {
+    // Define col structures for each table
+    const rankedEntryColumns = [
+        { key: 'ip', label: 'IP Address' },
+        { key: 'port', label: 'Port' },
+        { key: 'severity_score', label: 'Severity Score' },
+        { key: 'exploit_score', label: 'Exploit Score' },
+        { key: 'distinct_vulnerabilities', label: 'Distinct Vulnerabilities' },
+        { key: 'combined_score', label: 'Combined Score' }
+    ];
+
+    const exploitColumns = [
+        { key: 'file', label: 'File' },
+        { key: 'name', label: 'Name' },
+        { key: 'ip', label: 'IP Address' },
+        { key: 'port', label: 'Port' },
+        { key: 'viable_exploit', label: 'Viable Exploit' },
+        { key: 'archetype', label: 'Archetype' },
+        { key: 'svc_name', label: 'Service Name' },
+        { key: 'protocol', label: 'Protocol' },
+        { key: 'severity', label: 'Severity' },
+        { key: 'pluginID', label: 'Plugin ID' },
+        { key: 'pluginName', label: 'Plugin Name' },
+        { key: 'pluginFamily', label: 'Plugin Family' }
+    ];
+
+    const entryPointColumns = [
+        { key: 'ip', label: 'IP Address' },
+        { key: 'port', label: 'Port' },
+        { key: 'vulnerability_count', label: 'Vulnerability Count' }
+    ];
+
+    const portEntryColumns = [
+        { key: 'file', label: 'File' },
+        { key: 'name', label: 'Name' },
+        { key: 'ip', label: 'IP Address' },
+        { key: 'port', label: 'Port' },
+        { key: 'viable_exploit', label: 'Viable Exploit' },
+        { key: 'archetype', label: 'Archetype' },
+        { key: 'svc_name', label: 'Service Name' },
+        { key: 'protocol', label: 'Protocol' },
+        { key: 'severity', label: 'Severity' },
+        { key: 'pluginID', label: 'Plugin ID' },
+        { key: 'pluginName', label: 'Plugin Name' },
+        { key: 'pluginFamily', label: 'Plugin Family' }
+    ];
+
+    // Fetch and parse CSV data based on the selected project
+    async function fetchProjectData(project: string) {
         try {
-            const basePath = `/server/data/${project}`;
-
+            const basePath = `/INFILTR8/server/data/${project}`;
             await Promise.all([
                 fetchAndParse<ExploitData>(`${basePath}/data_with_exploits.csv`, exploits),
                 fetchAndParse<EntryPoint>(`${basePath}/entrypoint_most_info.csv`, entryPoints),
-                fetchAndParse<RankedEntry>(`${basePath}/ranked_entry_points.csv`, rankedEntries)
+                fetchAndParse<RankedEntry>(`${basePath}/ranked_entry_points.csv`, rankedEntries),
+                fetchAndParse<ExploitData>(`${basePath}/port_0_entries.csv`, portEntries)
             ]);
 
-            // Populate scope IPs and available analyses dynamically
-            scopeIPs.set($entryPoints.map((entry) => entry.ip));
-            availableAnalyses.set($rankedEntries.map((entry) => `Port ${entry.port} - Score ${entry.combined_score}`));
+            console.log("Exploits after fetch:", $exploits);
+            console.log("Entry Points after fetch:", $entryPoints);
+            console.log("Ranked Entries after fetch:", $rankedEntries);
+            console.log("Port Entries after fetch:", $portEntries);
         } catch (error) {
-            console.error('Error fetching or parsing CSV:', error);
+            console.error('Error fetching project data:', error);
         }
     }
 
@@ -72,6 +123,7 @@
         const text = await response.text();
         Papa.parse(text, {
             header: true,
+            skipEmptyLines: true,
             complete: (results) => store.set(results.data as T[])
         });
     }
@@ -99,9 +151,20 @@
         });
     }
 
-    $: if (selectedProject) fetchCsvData(selectedProject);
+    $: if (selectedProject) fetchProjectData(selectedProject);
+    console.log("Exploits:", $exploits);
+    console.log("Entry Points:", $entryPoints);
+    console.log("Ranked Entries:", $rankedEntries);
+    console.log("Port Entries:", $portEntries);
     onMount(fetchProjectFolders);
 </script>
+
+<div class="overflow-x-auto space-y-4 container mx-auto px-4">
+    <!-- Header -->
+    <header class="flex justify-between gap-4">
+        <h2 class="text-2xl font-semibold">Configure Project and Analysis</h2>
+    </header>
+</div>
 
 <div class="container h-full mx-auto flex flex-col space-y-4">
     <h2 class="h2">Configure Project and Analysis</h2>
@@ -119,44 +182,31 @@
         {/each}
     </div>
 
-    <!-- Scope IP List -->
-    <h3>Scope IP List</h3>
-    <ul>
-        {#each $scopeIPs as ip, index}
-            <li>
-                {ip}
-                <button on:click={() => moveUp(scopeIPs, index)}>↑</button>
-                <button on:click={() => moveDown(scopeIPs, index)}>↓</button>
-            </li>
-        {/each}
-    </ul>
-
-    <!-- Available Analyses -->
-    <h3>Entry Points Allowed</h3>
-    <ul>
-        {#each $availableAnalyses as analysis, index}
-            <li>
-                {analysis}
-                <button on:click={() => moveUp(availableAnalyses, index)}>↑</button>
-                <button on:click={() => moveDown(availableAnalyses, index)}>↓</button>
-            </li>
-        {/each}
-    </ul>
-
-    <button on:click={() => console.log('Start Analysis')}>Start Analysis</button>
-
-    <!-- Data Tables Section -->
-    <div class="data-tables-section">
+    <!-- Exploits Table -->
+    <section>
         <h3>Data with Exploits</h3>
-        <DataWithExploits exploits={$exploits} />
+        <Datatable data={$exploits} columns={exploitColumns} />
+    </section>
 
-        <h3>Ranked Entry Points</h3>
-        <RankedEntryPointTable rankedEntries={$rankedEntries} />
-
+    <!-- Entry Points Table -->
+    <section>
         <h3>Entry Points (Most Info)</h3>
-        <EntrypointMostInfo entries={$entryPoints} />
-    </div>
+        <Datatable data={$entryPoints} columns={entryPointColumns} />
+    </section>
+
+    <!-- Ranked Entry Points Table -->
+    <section>
+        <h3>Ranked Entry Points</h3>
+        <Datatable data={$rankedEntries} columns={rankedEntryColumns} />
+    </section>
+
+    <!-- Port 0 Entries Table -->
+    <section>
+        <h3>Port 0 Entries</h3>
+        <Datatable data={$portEntries} columns={portEntryColumns} />
+    </section>
 </div>
+
 <style>
     .container {
         padding: 20px;

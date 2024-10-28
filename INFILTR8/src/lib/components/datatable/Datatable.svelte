@@ -8,14 +8,24 @@
 	import Pagination from '$lib/components/datatable/Pagination.svelte';
 
 	//Load local data
-	import data from '$lib/data/data';
+	//import localData from '$lib/data/data';
+
 
 	//Import handler from SSD
 	import { DataHandler } from '@vincjo/datatables';
 
-	//Init data handler - CLIENT
-	const handler = new DataHandler(data, { rowsPerPage: 5 });
-	const rows = handler.getRows();
+	 /** @type {Array<Record<string, any>>} */
+	export let data = [];  // Data passed in from parent component
+
+	/** @type {Array<{ key: string; label: string }>} */
+	export let columns = [];
+	console.log("Datatable data:", data); // Check if data is received
+
+	// Reactive DataHandler initialization to handle data updates
+	let handler;
+
+	$: handler = new DataHandler(data, { rowsPerPage: 5 });
+	$: rows = handler.getRows();  // Make rows reactive to updates in handler
 </script>
 
 <div class=" overflow-x-auto space-y-4">
@@ -28,22 +38,22 @@
 	<table class="table table-hover table-compact w-full table-auto">
 		<thead>
 			<tr>
-				<ThSort {handler} orderBy="first_name">First name</ThSort>
-				<ThSort {handler} orderBy="last_name">Last name</ThSort>
-				<ThSort {handler} orderBy="email">Email</ThSort>
+				{#each columns as column}
+					<ThSort {handler} orderBy={column.key}>{column.label}</ThSort>
+				{/each}
 			</tr>
 			<tr>
-				<ThFilter {handler} filterBy="first_name" />
-				<ThFilter {handler} filterBy="last_name" />
-				<ThFilter {handler} filterBy="email" />
+				{#each columns as column}
+					<ThFilter {handler} filterBy={column.key} />
+				{/each}
 			</tr>
 		</thead>
 		<tbody>
 			{#each $rows as row}
 				<tr>
-					<td>{row.first_name}</td>
-					<td>{row.last_name}</td>
-					<td>{row.email}</td>
+					{#each columns as column}
+						<td>{row[column.key]}</td>
+					{/each}
 				</tr>
 			{/each}
 		</tbody>
