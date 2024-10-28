@@ -3,6 +3,7 @@
     import { onMount } from 'svelte';
     import Papa from 'papaparse';
 
+    import Datatable from '$lib/components/datatable/Datatable.svelte';
     import DataWithExploits from '$lib/components/DataWithExploits.svelte';
     import EntrypointMostInfo from '$lib/components/entrypoint_most_info.svelte';
     import RankedEntryPointTable from '$lib/components/RankedEntryPointTable.svelte';
@@ -45,8 +46,17 @@
     let selectedProject: string = '';
 
     // New stores to hold Scope IPs and available analyses
-    let scopeIPs: Writable<string[]> = writable([]);
-    let availableAnalyses: Writable<string[]> = writable([]);
+    let scopeIPs: Writable<{ ip: string }[]> = writable([]);
+    let availableAnalyses: Writable<{ analysis: string }[]> = writable([]);
+
+    //Define col structures for each table
+    const scopeIPColumns = [
+        { key: 'ip', label: 'IP Address' }
+    ];
+
+    const analysesColumns = [
+        { key: 'analysis', label: 'Entry Points Allowed' }
+    ];
 
     async function fetchCsvData(project: string) {
         try {
@@ -58,9 +68,9 @@
                 fetchAndParse<RankedEntry>(`${basePath}/ranked_entry_points.csv`, rankedEntries)
             ]);
 
-            // Populate scope IPs and available analyses dynamically
-            scopeIPs.set($entryPoints.map((entry) => entry.ip));
-            availableAnalyses.set($rankedEntries.map((entry) => `Port ${entry.port} - Score ${entry.combined_score}`));
+            // Populate `scopeIPs` as an array of objects
+            scopeIPs.set($entryPoints.map((entry) => ({ ip: entry.ip })));
+            availableAnalyses.set($rankedEntries.map((entry) => ({ analysis: `Port ${entry.port} - Score ${entry.combined_score}` })));
         } catch (error) {
             console.error('Error fetching or parsing CSV:', error);
         }
@@ -107,7 +117,6 @@
     <!-- Header -->
     <header class="flex justify-between gap-4">
         <h2 class="text-2xl font-semibold">Configure Project and Analysis</h2>
-        <!-- Add any search or other interactive elements here -->
     </header>
 </div>
 
@@ -127,41 +136,19 @@
         {/each}
     </div>
 
-    <!-- Scope IP List Section with Table Style -->
-    <div>
+    <!-- Scope IP List Section using Datatable component -->
+    <section class="mt-8">
         <h3>Scope IP List</h3>
-        <table class="table w-full table-auto">
-            <tbody>
-                {#each $scopeIPs as ip, index}
-                    <tr>
-                        <td>{ip}</td>
-                        <td class="flex space-x-2">
-                            <button class="btn btn-sm" on:click={() => moveUp(scopeIPs, index)}>↑</button>
-                            <button class="btn btn-sm" on:click={() => moveDown(scopeIPs, index)}>↓</button>
-                        </td>
-                    </tr>
-                {/each}
-            </tbody>
-        </table>
-    </div>
+        <Datatable data={$scopeIPs} columns={scopeIPColumns} />
+    </section>
 
-    <!-- Available Analyses Section with Table Style -->
-    <div>
+    <!-- Entry Points Allowed Section using Datatable component -->
+    <section class="mt-8">
         <h3>Entry Points Allowed</h3>
-        <table class="table w-full table-auto">
-            <tbody>
-                {#each $availableAnalyses as analysis, index}
-                    <tr>
-                        <td>{analysis}</td>
-                        <td class="flex space-x-2">
-                            <button class="btn btn-sm" on:click={() => moveUp(availableAnalyses, index)}>↑</button>
-                            <button class="btn btn-sm" on:click={() => moveDown(availableAnalyses, index)}>↓</button>
-                        </td>
-                    </tr>
-                {/each}
-            </tbody>
-        </table>
-    </div>
+        <Datatable data={$availableAnalyses} columns={analysesColumns} />
+    </section>
+
+
     <!-- Data Tables Section -->
     <div class="data-tables-section space-y-4">
         <h3>Data with Exploits</h3>

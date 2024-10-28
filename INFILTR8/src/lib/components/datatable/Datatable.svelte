@@ -8,19 +8,20 @@
 	import Pagination from '$lib/components/datatable/Pagination.svelte';
 
 	//Load local data
-	import data from '$lib/data/data';
+	import localData from '$lib/data/data';
+
 
 	//Import handler from SSD
 	import { DataHandler } from '@vincjo/datatables';
 
 	 /** @type {Array<Record<string, any>>} */
-	export let datas = [];  // Use JSDoc to define types without TypeScript
+	export let data = [];  // Use JSDoc to define types without TypeScript
 
 	/** @type {Array<{ key: string; label: string }>} */
 	export let columns = [];
 
 	//Init data handler - CLIENT
-	const handler = new DataHandler(data, { rowsPerPage: 5 });
+	const handler = new DataHandler(localData, { rowsPerPage: 5 });
 	const rows = handler.getRows();
 </script>
 
