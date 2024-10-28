@@ -44,8 +44,20 @@
     let availableAnalyses: Writable<string[]> = writable([]);
     let selectedFileType = '';
     const fileTypes = ['PDF', 'XML'];
+    const attackTypes = ['*All','Unauthenticated Port Bypass', 'Default Credentials', 'Unpatched Software Exploits', 'Missing Encryption Protocols', 'Weak Passwords (Brute Force)']
     let progress: Writable<number> = writable(0);
+    let selectedTime = '';
+    let selectedAMPM = '';
+    const timeOptions: string[] = [];
+    const ampmOptions: string[] = ['AM', 'PM'];
 
+    //Dropdown for time.
+    for (let hour = 1; hour <= 12; hour++) {
+        ['00', '15', '30', '45'].forEach((minute) => {
+            timeOptions.push(`${hour}:${minute}`);
+        });
+    }
+    
     async function fetchCsvData(project: string) {
         try {
             const basePath = `/server/data/${project}`;
@@ -100,6 +112,11 @@
         } else if (selectedFileType === 'XML') {
             exportToXML(data);
         }
+    }
+
+    //To DO. (ADD THIS!)
+    function confirmAnalysis(){
+        console.log('Analysis Confirmed.');
     }
 
     function exportToPDF(data: any) {
@@ -354,12 +371,41 @@
             <img src="src/Brain.png" alt="Wireframe Brain" class="w-80 h-80 absolute top-2 right-2 breathing"> 
             <div class="mt-4 flex items-center gap-4"> 
                 <span class="text-gray-400">Select Analysis Type:</span> 
+                <select id="fileType" class="bg-indigo-500 text-white px-4 py-2 roundedselect-dropdown" bind:value={selectedFileType}> 
+                    <option value="" disabled>Attack Type</option> 
+                    {#each attackTypes as attackType} 
+                        <option value={attackType}>{attackType}</option> 
+                    {/each} 
+                </select> 
             </div> 
             <div class="mt-4 flex items-center gap-4"> 
-                <span class="text-gray-400">Schedule Analysis:</span> 
+                <span class="text-gray-400">Schedule A Analysis:</span> 
+                <div class="time-dropdown">
+                    <select id="time" class="bg-indigo-500 text-white px-4 py-2 rounded select-dropdown" bind:value={selectedTime}>
+                        <option value="" disabled>Select Time</option>
+                        {#each timeOptions as timeOption}
+                            <option value={timeOption}>{timeOption}</option>
+                        {/each}
+                    </select>
+                </div>
+                
+                <div class="ampm-dropdown">
+                    <select id="ampm" class="bg-indigo-500 text-white px-4 py-2 rounded select-dropdown" bind:value={selectedAMPM}>
+                        <option value="" disabled>AM/PM</option>
+                        {#each ampmOptions as ampmOption}
+                            <option value={ampmOption}>{ampmOption}</option>
+                        {/each}
+                    </select>
+                </div>
             </div> 
+
+            <div class="mt-4 flex items-center gap-4"> 
+                <span class="text-gray-400">Confirm Analysis Appointment: </span> 
+            <button class="bg-indigo-500 text-white px-4 py-2 rounded" on:click={exportData}>Confirm Time</button> 
+            </div> 
+
             <div class="mt-4 flex items-center gap-2 justify-center"> 
-                <span class="mr-2 text-gray-400 underline">Export Analysis Report</span> 
+                <span class="mr-2 text-gray-400 underline">View/Export Analysis Report</span> 
             </div> 
 
             <div class="action-container"> 
