@@ -8,7 +8,7 @@
 	import Pagination from '$lib/components/datatable/Pagination.svelte';
 
 	//Load local data
-	import localData from '$lib/data/data';
+	//import localData from '$lib/data/data';
 
 
 	//Import handler from SSD
@@ -19,10 +19,13 @@
 
 	/** @type {Array<{ key: string; label: string }>} */
 	export let columns = [];
+	console.log("Datatable data:", data); // Check if data is received
 
-	//Init data handler - CLIENT
-	const handler = new DataHandler(data, { rowsPerPage: 5 });
-	const rows = handler.getRows();
+	// Reactive DataHandler initialization to handle data updates
+	let handler;
+
+	$: handler = new DataHandler(data, { rowsPerPage: 5 });
+	$: rows = handler.getRows();  // Make rows reactive to updates in handler
 </script>
 
 <div class=" overflow-x-auto space-y-4">

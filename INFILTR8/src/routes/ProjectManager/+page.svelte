@@ -2,11 +2,12 @@
     import { writable, type Writable } from 'svelte/store';
     import { onMount } from 'svelte';
     import Papa from 'papaparse';
-
-    import Datatable from '$lib/components/datatable/Datatable.svelte';
+    /*
     import DataWithExploits from '$lib/components/DataWithExploits.svelte';
     import EntrypointMostInfo from '$lib/components/entrypoint_most_info.svelte';
     import RankedEntryPointTable from '$lib/components/RankedEntryPointTable.svelte';
+    */
+    import Datatable from '$lib/components/datatable/Datatable.svelte';
     import { fetchData } from '$lib/api';
 
     interface ExploitData {
@@ -99,13 +100,18 @@
     // Fetch and parse CSV data based on the selected project
     async function fetchProjectData(project: string) {
         try {
-            const basePath = `/server/data/${project}`;
+            const basePath = `/INFILTR8/server/data/${project}`;
             await Promise.all([
                 fetchAndParse<ExploitData>(`${basePath}/data_with_exploits.csv`, exploits),
                 fetchAndParse<EntryPoint>(`${basePath}/entrypoint_most_info.csv`, entryPoints),
                 fetchAndParse<RankedEntry>(`${basePath}/ranked_entry_points.csv`, rankedEntries),
                 fetchAndParse<ExploitData>(`${basePath}/port_0_entries.csv`, portEntries)
             ]);
+
+            console.log("Exploits after fetch:", $exploits);
+            console.log("Entry Points after fetch:", $entryPoints);
+            console.log("Ranked Entries after fetch:", $rankedEntries);
+            console.log("Port Entries after fetch:", $portEntries);
         } catch (error) {
             console.error('Error fetching project data:', error);
         }
@@ -117,6 +123,7 @@
         const text = await response.text();
         Papa.parse(text, {
             header: true,
+            skipEmptyLines: true,
             complete: (results) => store.set(results.data as T[])
         });
     }
@@ -145,6 +152,10 @@
     }
 
     $: if (selectedProject) fetchProjectData(selectedProject);
+    console.log("Exploits:", $exploits);
+    console.log("Entry Points:", $entryPoints);
+    console.log("Ranked Entries:", $rankedEntries);
+    console.log("Port Entries:", $portEntries);
     onMount(fetchProjectFolders);
 </script>
 
