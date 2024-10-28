@@ -123,7 +123,7 @@
         console.log('Analysis Appointment Confirmed:', fullTime);
         createLogEntry({
         type: 'Information',
-        message: `${fullTime} is confirmed as Appointment Time!`
+        message: `${fullTime} is confirmed as Appointment Time for Project ${selectedProject}!`
     });
     }
 
