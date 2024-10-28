@@ -13,6 +13,12 @@
 	//Import handler from SSD
 	import { DataHandler } from '@vincjo/datatables';
 
+	 /** @type {Array<Record<string, any>>} */
+	export let datas = [];  // Use JSDoc to define types without TypeScript
+
+	/** @type {Array<{ key: string; label: string }>} */
+	export let columns = [];
+
 	//Init data handler - CLIENT
 	const handler = new DataHandler(data, { rowsPerPage: 5 });
 	const rows = handler.getRows();
