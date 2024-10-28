@@ -15,13 +15,13 @@
 	import { DataHandler } from '@vincjo/datatables';
 
 	 /** @type {Array<Record<string, any>>} */
-	export let data = [];  // Use JSDoc to define types without TypeScript
+	export let data = [];  // Data passed in from parent component
 
 	/** @type {Array<{ key: string; label: string }>} */
 	export let columns = [];
 
 	//Init data handler - CLIENT
-	const handler = new DataHandler(localData, { rowsPerPage: 5 });
+	const handler = new DataHandler(data, { rowsPerPage: 5 });
 	const rows = handler.getRows();
 </script>
 
@@ -35,22 +35,22 @@
 	<table class="table table-hover table-compact w-full table-auto">
 		<thead>
 			<tr>
-				<ThSort {handler} orderBy="first_name">First name</ThSort>
-				<ThSort {handler} orderBy="last_name">Last name</ThSort>
-				<ThSort {handler} orderBy="email">Email</ThSort>
+				{#each columns as column}
+					<ThSort {handler} orderBy={column.key}>{column.label}</ThSort>
+				{/each}
 			</tr>
 			<tr>
-				<ThFilter {handler} filterBy="first_name" />
-				<ThFilter {handler} filterBy="last_name" />
-				<ThFilter {handler} filterBy="email" />
+				{#each columns as column}
+					<ThFilter {handler} filterBy={column.key} />
+				{/each}
 			</tr>
 		</thead>
 		<tbody>
 			{#each $rows as row}
 				<tr>
-					<td>{row.first_name}</td>
-					<td>{row.last_name}</td>
-					<td>{row.email}</td>
+					{#each columns as column}
+						<td>{row[column.key]}</td>
+					{/each}
 				</tr>
 			{/each}
 		</tbody>

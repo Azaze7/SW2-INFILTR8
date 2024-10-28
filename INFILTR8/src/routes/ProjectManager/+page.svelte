@@ -42,6 +42,7 @@
     let exploits: Writable<ExploitData[]> = writable([]);
     let entryPoints: Writable<EntryPoint[]> = writable([]);
     let rankedEntries: Writable<RankedEntry[]> = writable([]);
+    let portEntries: Writable<ExploitData[]> = writable([]);
     let projectFolders: Writable<string[]> = writable([]);
     let selectedProject: string = '';
 
@@ -49,30 +50,64 @@
     let scopeIPs: Writable<{ ip: string }[]> = writable([]);
     let availableAnalyses: Writable<{ analysis: string }[]> = writable([]);
 
-    //Define col structures for each table
-    const scopeIPColumns = [
-        { key: 'ip', label: 'IP Address' }
+    // Define col structures for each table
+    const rankedEntryColumns = [
+        { key: 'ip', label: 'IP Address' },
+        { key: 'port', label: 'Port' },
+        { key: 'severity_score', label: 'Severity Score' },
+        { key: 'exploit_score', label: 'Exploit Score' },
+        { key: 'distinct_vulnerabilities', label: 'Distinct Vulnerabilities' },
+        { key: 'combined_score', label: 'Combined Score' }
     ];
 
-    const analysesColumns = [
-        { key: 'analysis', label: 'Entry Points Allowed' }
+    const exploitColumns = [
+        { key: 'file', label: 'File' },
+        { key: 'name', label: 'Name' },
+        { key: 'ip', label: 'IP Address' },
+        { key: 'port', label: 'Port' },
+        { key: 'viable_exploit', label: 'Viable Exploit' },
+        { key: 'archetype', label: 'Archetype' },
+        { key: 'svc_name', label: 'Service Name' },
+        { key: 'protocol', label: 'Protocol' },
+        { key: 'severity', label: 'Severity' },
+        { key: 'pluginID', label: 'Plugin ID' },
+        { key: 'pluginName', label: 'Plugin Name' },
+        { key: 'pluginFamily', label: 'Plugin Family' }
     ];
 
-    async function fetchCsvData(project: string) {
+    const entryPointColumns = [
+        { key: 'ip', label: 'IP Address' },
+        { key: 'port', label: 'Port' },
+        { key: 'vulnerability_count', label: 'Vulnerability Count' }
+    ];
+
+    const portEntryColumns = [
+        { key: 'file', label: 'File' },
+        { key: 'name', label: 'Name' },
+        { key: 'ip', label: 'IP Address' },
+        { key: 'port', label: 'Port' },
+        { key: 'viable_exploit', label: 'Viable Exploit' },
+        { key: 'archetype', label: 'Archetype' },
+        { key: 'svc_name', label: 'Service Name' },
+        { key: 'protocol', label: 'Protocol' },
+        { key: 'severity', label: 'Severity' },
+        { key: 'pluginID', label: 'Plugin ID' },
+        { key: 'pluginName', label: 'Plugin Name' },
+        { key: 'pluginFamily', label: 'Plugin Family' }
+    ];
+
+    // Fetch and parse CSV data based on the selected project
+    async function fetchProjectData(project: string) {
         try {
             const basePath = `/server/data/${project}`;
-
             await Promise.all([
                 fetchAndParse<ExploitData>(`${basePath}/data_with_exploits.csv`, exploits),
                 fetchAndParse<EntryPoint>(`${basePath}/entrypoint_most_info.csv`, entryPoints),
-                fetchAndParse<RankedEntry>(`${basePath}/ranked_entry_points.csv`, rankedEntries)
+                fetchAndParse<RankedEntry>(`${basePath}/ranked_entry_points.csv`, rankedEntries),
+                fetchAndParse<ExploitData>(`${basePath}/port_0_entries.csv`, portEntries)
             ]);
-
-            // Populate `scopeIPs` as an array of objects
-            scopeIPs.set($entryPoints.map((entry) => ({ ip: entry.ip })));
-            availableAnalyses.set($rankedEntries.map((entry) => ({ analysis: `Port ${entry.port} - Score ${entry.combined_score}` })));
         } catch (error) {
-            console.error('Error fetching or parsing CSV:', error);
+            console.error('Error fetching project data:', error);
         }
     }
 
@@ -109,7 +144,7 @@
         });
     }
 
-    $: if (selectedProject) fetchCsvData(selectedProject);
+    $: if (selectedProject) fetchProjectData(selectedProject);
     onMount(fetchProjectFolders);
 </script>
 
@@ -136,31 +171,31 @@
         {/each}
     </div>
 
-    <!-- Scope IP List Section using Datatable component -->
-    <section class="mt-8">
-        <h3>Scope IP List</h3>
-        <Datatable data={$scopeIPs} columns={scopeIPColumns} />
-    </section>
-
-    <!-- Entry Points Allowed Section using Datatable component -->
-    <section class="mt-8">
-        <h3>Entry Points Allowed</h3>
-        <Datatable data={$availableAnalyses} columns={analysesColumns} />
-    </section>
-
-
-    <!-- Data Tables Section -->
-    <div class="data-tables-section space-y-4">
+    <!-- Exploits Table -->
+    <section>
         <h3>Data with Exploits</h3>
-        <DataWithExploits exploits={$exploits} />
+        <Datatable data={$exploits} columns={exploitColumns} />
+    </section>
 
-        <h3>Ranked Entry Points</h3>
-        <RankedEntryPointTable rankedEntries={$rankedEntries} />
-
+    <!-- Entry Points Table -->
+    <section>
         <h3>Entry Points (Most Info)</h3>
-        <EntrypointMostInfo entries={$entryPoints} />
-    </div>
+        <Datatable data={$entryPoints} columns={entryPointColumns} />
+    </section>
+
+    <!-- Ranked Entry Points Table -->
+    <section>
+        <h3>Ranked Entry Points</h3>
+        <Datatable data={$rankedEntries} columns={rankedEntryColumns} />
+    </section>
+
+    <!-- Port 0 Entries Table -->
+    <section>
+        <h3>Port 0 Entries</h3>
+        <Datatable data={$portEntries} columns={portEntryColumns} />
+    </section>
 </div>
+
 <style>
     .container {
         padding: 20px;
