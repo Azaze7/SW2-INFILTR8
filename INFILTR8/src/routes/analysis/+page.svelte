@@ -4,6 +4,7 @@
     import Papa from 'papaparse'; 
     import { fetchData } from '$lib/api'; 
     import jsPDF from 'jspdf'; 
+    import { createLogEntry } from '../../routes/Logs/logservice';
 
     interface ExploitData {
         file: string;
@@ -48,6 +49,8 @@
     let progress: Writable<number> = writable(0);
     let selectedTime = '';
     let selectedAMPM = '';
+    let fullTime = '';
+    let attackType = '';
     const timeOptions: string[] = [];
     const ampmOptions: string[] = ['AM', 'PM'];
 
@@ -116,10 +119,20 @@
 
     //To DO. (ADD THIS!)
     function confirmAnalysis(){
-        console.log('Analysis Confirmed.');
+        fullTime = selectedTime + selectedAMPM;
+        console.log('Analysis Appointment Confirmed:', fullTime);
+        createLogEntry({
+        type: 'Information',
+        message: `${fullTime} is confirmed as Appointment Time!`
+    });
     }
 
     function exportToPDF(data: any) {
+    console.log('Exporting Project Folder to PDF:', selectedProject);
+    createLogEntry({
+        type: 'Information',
+        message: `Project ${selectedProject} was exported as a PDF!`
+    });
     const doc = new jsPDF();
     doc.text(`INFILTR8 REPORT`, 10, 10);
     const now = new Date();
@@ -183,6 +196,11 @@
 
 
     function exportToXML(data: any) {
+        console.log('Exporting Project Folder to XML:', selectedProject);
+        createLogEntry({
+        type: 'Information',
+        message: `Project ${selectedProject} was exported as an XML!`
+        });
         const xmlContent = jsonToXML(data);
         const blob = new Blob([xmlContent], { type: 'application/xml' });
         const link = document.createElement('a');
@@ -375,7 +393,7 @@
                     <option value="" disabled>Attack Type</option> 
                     {#each attackTypes as attackType} 
                         <option value={attackType}>{attackType}</option> 
-                    {/each} 
+                    {/each}
                 </select> 
             </div> 
             <div class="mt-4 flex items-center gap-4"> 
@@ -401,7 +419,7 @@
 
             <div class="mt-4 flex items-center gap-4"> 
                 <span class="text-gray-400">Confirm Analysis Appointment: </span> 
-            <button class="bg-indigo-500 text-white px-4 py-2 rounded" on:click={exportData}>Confirm Time</button> 
+            <button class="bg-indigo-500 text-white px-4 py-2 rounded" on:click={confirmAnalysis}>Confirm Time</button> 
             </div> 
 
             <div class="mt-4 flex items-center gap-2 justify-center"> 
