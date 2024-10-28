@@ -17,7 +17,9 @@ user.subscribe(currentUser => {
  */
 function generateRandomId() {
   const now = new Date();
-  return `${now.getMonth()}${now.getDate()}${now.getFullYear()}_${Math.floor(Math.random() * 100000)}`;
+  const randomNum = Math.floor(Math.random() * 100000); // Generates a number from 0 to 99999
+  const paddedRandomNum = String(randomNum).padStart(5, '0'); // Pads the number to 5 digits
+  return `${now.getMonth() + 1}${now.getDate()}${now.getFullYear()}_${paddedRandomNum}`; // Note: Months are 0-indexed, so add 1
 }
 
 // Example usage
