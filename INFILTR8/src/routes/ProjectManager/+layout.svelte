@@ -2,6 +2,7 @@
     import '/src/app.postcss';
     import { writable } from 'svelte/store';
     import { goto } from '$app/navigation';
+    import { user } from "$lib/components/loginUI/userStore";
     import { projectFolders } from '$lib/stores/projectFoldersStore';
     import Sidebar from '$lib/components/AceternityUI/Sidebar/Sidebar.svelte';
     import SidebarLink from '$lib/components/AceternityUI/Sidebar/SidebarLink.svelte';
@@ -57,7 +58,9 @@
                 <div class="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
                     <div class="font-normal flex space-x-2 items-center text-sm text-white py-1">
                         <div class="h-5 w-5 bg-white rounded-br-lg rounded-tr-sm rounded-tl-lg rounded-bl-sm"></div>
-                        <span class="font-medium text-white">{greeting}</span>
+                        <span class="font-medium text-white whitespace-pre">
+                            <p>{greeting}{" "}{$user?.username}</p>
+                        </span>
                     </div>
 
                     <div class="mt-8 flex flex-col gap-2">
