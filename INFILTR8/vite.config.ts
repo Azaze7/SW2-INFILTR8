@@ -7,7 +7,7 @@ export default defineConfig({
     plugins: [sveltekit(), purgeCss()],
     server: {
         fs: {
-            // Allow serving files from the 'server/data' directory
+            
             allow: [path.resolve('server/data')],
         },
     },
