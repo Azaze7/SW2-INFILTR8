@@ -128,26 +128,26 @@
 </script>
 
 <AppShell>
-    <!-- Page Header -->
     <svelte:fragment slot="sidebarRight">
-        <h1 class="text-2xl font-bold mb-4">Current Project Folder</h1>
-        <div class="snap-x scroll-px-4 snap-mandatory scroll-smooth flex gap-4 overflow-x-auto px-4 py-2 rounded-md shadow-sm">
-            {#each $projectFolders as folder, index}
-                <button 
-                    class="snap-start shrink-0 card py-4 px-6 w-40 md:w-60 text-center cursor-pointer hover:bg-primary-100 rounded-md shadow transition duration-300"
-                    on:click={() => selectProject(folder)}
-                    on:keydown={(event) => {
-                        if (event.key === 'Enter' || event.key === ' ') {
-                            selectProject(folder);
-                        }
-                    }}
-                    aria-label={`Select project ${folder}`}
-                >
-                    {folder}
-                </button>
-            {/each}
-        </div>
-    </svelte:fragment>
+    <h1 class="text-2xl font-bold mb-4">Current Project Folder</h1>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 px-4 py-2 rounded-md shadow-sm">
+        {#each $projectFolders as folder, index}
+            <button 
+                class="card py-4 px-6 w-full text-center cursor-pointer hover:bg-primary-100 rounded-md shadow transition duration-300"
+                on:click={() => selectProject(folder)}
+                on:keydown={(event) => {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                        selectProject(folder);
+                    }
+                }}
+                aria-label={`Select project ${folder}`}
+            >
+                {folder}
+            </button>
+        {/each}
+    </div>
+</svelte:fragment>
+
 
     <!-- Sidebar with Drawer -->
     <svelte:fragment slot="sidebarLeft">
