@@ -2,11 +2,6 @@
     import { writable, type Writable } from 'svelte/store';
     import { onMount } from 'svelte';
     import Papa from 'papaparse';
-    /*
-    import DataWithExploits from '$lib/components/DataWithExploits.svelte';
-    import EntrypointMostInfo from '$lib/components/entrypoint_most_info.svelte';
-    import RankedEntryPointTable from '$lib/components/RankedEntryPointTable.svelte';
-    */
     import Datatable from '$lib/components/datatable/Datatable.svelte';
     import { fetchData } from '$lib/api';
 
@@ -47,20 +42,10 @@
     let projectFolders: Writable<string[]> = writable([]);
     let selectedProject: string = '';
 
-    // New stores to hold Scope IPs and available analyses
-    let scopeIPs: Writable<{ ip: string }[]> = writable([]);
-    let availableAnalyses: Writable<{ analysis: string }[]> = writable([]);
+    let loading = writable(false);
+    let error = writable<string | null>(null);
 
-    // Define col structures for each table
-    const rankedEntryColumns = [
-        { key: 'ip', label: 'IP Address' },
-        { key: 'port', label: 'Port' },
-        { key: 'severity_score', label: 'Severity Score' },
-        { key: 'exploit_score', label: 'Exploit Score' },
-        { key: 'distinct_vulnerabilities', label: 'Distinct Vulnerabilities' },
-        { key: 'combined_score', label: 'Combined Score' }
-    ];
-
+    // Column Definitions
     const exploitColumns = [
         { key: 'file', label: 'File' },
         { key: 'name', label: 'Name' },
@@ -82,146 +67,128 @@
         { key: 'vulnerability_count', label: 'Vulnerability Count' }
     ];
 
-    const portEntryColumns = [
-        { key: 'file', label: 'File' },
-        { key: 'name', label: 'Name' },
+    const rankedEntryColumns = [
         { key: 'ip', label: 'IP Address' },
         { key: 'port', label: 'Port' },
-        { key: 'viable_exploit', label: 'Viable Exploit' },
-        { key: 'archetype', label: 'Archetype' },
-        { key: 'svc_name', label: 'Service Name' },
-        { key: 'protocol', label: 'Protocol' },
-        { key: 'severity', label: 'Severity' },
-        { key: 'pluginID', label: 'Plugin ID' },
-        { key: 'pluginName', label: 'Plugin Name' },
-        { key: 'pluginFamily', label: 'Plugin Family' }
+        { key: 'severity_score', label: 'Severity Score' },
+        { key: 'exploit_score', label: 'Exploit Score' },
+        { key: 'distinct_vulnerabilities', label: 'Distinct Vulnerabilities' },
+        { key: 'combined_score', label: 'Combined Score' }
     ];
 
-    // Fetch and parse CSV data based on the selected project
-    async function fetchProjectData(project: string) {
+    // Fetch project folders on mount
+    onMount(fetchProjectFolders);
+
+    async function fetchProjectFolders() {
         try {
-            const basePath = `/INFILTR8/server/data/${project}`;
+            const folders = await fetchData<string[]>('http://localhost:3000/projects');
+            projectFolders.set(folders);
+        } catch (err) {
+            error.set('Failed to fetch project folders.');
+            console.error(err);
+        }
+    }
+
+    $: if (selectedProject) {
+        fetchProjectData(selectedProject);
+    }
+
+    async function fetchProjectData(project: string) {
+        loading.set(true);
+        error.set(null);
+        const basePath = `/server/data/${project}`;
+
+        try {
             await Promise.all([
                 fetchAndParse<ExploitData>(`${basePath}/data_with_exploits.csv`, exploits),
                 fetchAndParse<EntryPoint>(`${basePath}/entrypoint_most_info.csv`, entryPoints),
                 fetchAndParse<RankedEntry>(`${basePath}/ranked_entry_points.csv`, rankedEntries),
                 fetchAndParse<ExploitData>(`${basePath}/port_0_entries.csv`, portEntries)
             ]);
-
-            console.log("Exploits after fetch:", $exploits);
-            console.log("Entry Points after fetch:", $entryPoints);
-            console.log("Ranked Entries after fetch:", $rankedEntries);
-            console.log("Port Entries after fetch:", $portEntries);
-        } catch (error) {
-            console.error('Error fetching project data:', error);
+        } catch (err) {
+            error.set(`Failed to load data for project: ${project}`);
+            console.error(err);
+        } finally {
+            loading.set(false);
         }
     }
 
     async function fetchAndParse<T>(url: string, store: Writable<T[]>) {
-        const response = await fetch(url);
-        if (!response.ok) throw new Error(`Failed to fetch ${url}`);
-        const text = await response.text();
-        Papa.parse(text, {
-            header: true,
-            skipEmptyLines: true,
-            complete: (results) => store.set(results.data as T[])
-        });
-    }
-
-    async function fetchProjectFolders() {
         try {
-            const folders = await fetchData<string[]>('http://localhost:3000/projects');
-            projectFolders.set(folders);
-        } catch (error) {
-            console.error('Error fetching project folders:', error);
+            const response = await fetch(url);
+            if (!response.ok) throw new Error(`Failed to fetch ${url}`);
+            const text = await response.text();
+            Papa.parse(text, {
+                header: true,
+                skipEmptyLines: true,
+                complete: (results) => store.set(results.data as T[])
+            });
+        } catch (err) {
+            console.error(`Error fetching or parsing ${url}:`, err);
         }
     }
-
-    function moveUp<T>(list: Writable<T[]>, index: number) {
-        list.update(arr => {
-            if (index > 0) [arr[index], arr[index - 1]] = [arr[index - 1], arr[index]];
-            return arr;
-        });
-    }
-
-    function moveDown<T>(list: Writable<T[]>, index: number) {
-        list.update(arr => {
-            if (index < arr.length - 1) [arr[index], arr[index + 1]] = [arr[index + 1], arr[index]];
-            return arr;
-        });
-    }
-
-    $: if (selectedProject) fetchProjectData(selectedProject);
-    console.log("Exploits:", $exploits);
-    console.log("Entry Points:", $entryPoints);
-    console.log("Ranked Entries:", $rankedEntries);
-    console.log("Port Entries:", $portEntries);
-    onMount(fetchProjectFolders);
 </script>
 
-<div class="overflow-x-auto space-y-4 container mx-auto px-4">
-    <!-- Header -->
+<!-- HTML Layout -->
+<div class="container mx-auto px-4 space-y-4">
     <header class="flex justify-between gap-4">
         <h2 class="text-2xl font-semibold">Configure Project and Analysis</h2>
     </header>
+
+    <section>
+        <h3>Projects</h3>
+        <div class="flex gap-4 overflow-x-auto px-4 py-2">
+            {#each $projectFolders as folder, index}
+                <button
+                    id={`project-${index}`}
+                    name={`project-${index}`}
+                    class="card"
+                    on:click={() => (selectedProject = folder)}
+                >
+                    {folder}
+                </button>
+            {/each}
+        </div>
+    </section>
+
+    {#if $loading}
+        <p>Loading data...</p>
+    {:else if $error}
+        <p class="text-red-500">{$error}</p>
+    {:else}
+        <section>
+            <h3>Data with Exploits</h3>
+            <Datatable data={$exploits} columns={exploitColumns} />
+        </section>
+
+        <section>
+            <h3>Entry Points (Most Info)</h3>
+            <Datatable data={$entryPoints} columns={entryPointColumns} />
+        </section>
+
+        <section>
+            <h3>Ranked Entry Points</h3>
+            <Datatable data={$rankedEntries} columns={rankedEntryColumns} />
+        </section>
+
+        <section>
+            <h3>Port 0 Entries</h3>
+            <Datatable data={$portEntries} columns={exploitColumns} />
+        </section>
+    {/if}
 </div>
 
-<div class="container h-full mx-auto flex flex-col space-y-4">
-    <h2 class="h2">Configure Project and Analysis</h2>
-
-    <!-- Project Selection -->
-    <h3>Projects</h3>
-    <div class="snap-x scroll-px-4 snap-mandatory scroll-smooth flex gap-4 overflow-x-auto px-4 py-2 rounded-md shadow-sm">
-        {#each $projectFolders as folder}
-            <button
-                class="snap-start shrink-0 card py-4 px-6 w-40 md:w-60 text-center cursor-pointer hover:bg-primary-100 rounded-md shadow transition duration-300"
-                on:click={() => (selectedProject = folder)}
-            >
-                {folder}
-            </button>
-        {/each}
-    </div>
-
-    <!-- Exploits Table -->
-    <section>
-        <h3>Data with Exploits</h3>
-        <Datatable data={$exploits} columns={exploitColumns} />
-    </section>
-
-    <!-- Entry Points Table -->
-    <section>
-        <h3>Entry Points (Most Info)</h3>
-        <Datatable data={$entryPoints} columns={entryPointColumns} />
-    </section>
-
-    <!-- Ranked Entry Points Table -->
-    <section>
-        <h3>Ranked Entry Points</h3>
-        <Datatable data={$rankedEntries} columns={rankedEntryColumns} />
-    </section>
-
-    <!-- Port 0 Entries Table -->
-    <section>
-        <h3>Port 0 Entries</h3>
-        <Datatable data={$portEntries} columns={portEntryColumns} />
-    </section>
-</div>
-
+<!-- Styles -->
 <style>
     .container {
         padding: 20px;
-    }
-
-    .snap-x {
-        display: flex;
-        gap: 16px;
-        overflow-x: auto;
     }
 
     .card {
         background-color: #174972;
         color: white;
         border-radius: 8px;
+        padding: 16px;
         transition: transform 0.2s, box-shadow 0.2s;
     }
 
