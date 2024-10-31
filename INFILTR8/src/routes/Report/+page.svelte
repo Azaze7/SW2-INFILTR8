@@ -39,16 +39,15 @@
             </div>
             <div class="ml-auto text-gray-400 text-lg">⋮</div>
         </div>
-        
-        <h2>IP List</h2>
-        <div class="ip-list-container">
-            <div class="ip-header">
-                <span class="ip-header-item"></span> 
-                <span class="ip-header-item">IP Address</span>
-                <span class="ip-header-item">Device</span>
-                <span class="ip-header-item">Vulnerability</span>
-                <span class="ip-header-item">Status</span>
-            </div>
+
+        <h2 class="text-xl font-semibold mb-4">IP List</h2>
+        <div class="grid grid-cols-[0.1fr_1fr_1fr_2fr_1fr] p-2 bg-gray-800 text-white rounded-md mb-2">
+            <span class="text-left">Select</span> 
+            <span class="text-left">IP Address</span>
+            <span class="text-left">Device</span>
+            <span class="text-left">Vulnerability</span>
+            <span class="text-left">Status</span>
+        </div>
         
             <ul class="ip-list">
                 {#each ipList as item}
