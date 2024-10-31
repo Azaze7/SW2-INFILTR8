@@ -22,23 +22,12 @@
     }
 </script>
 
-<div class="grid-container">
-    <main class="main-content">
-        <div class="logo"><a href="#"><span>Lo</span>gs</a></div>
-        <h1>Reports</h1>
-        
-        <div class="folder-card">
-            <div class="folder-icon">
-                <img src="https://img.icons8.com/ios-filled/50/000000/folder-invoices.png" alt="Folder Icon" />
-            </div>
-            <div class="folder-details">
-                <h2>{folder.name}</h2>
-                <p>{folder.items} items | {folder.size}</p>
-            </div>
-            <div class="folder-options">
-                <span>⋮</span>
-            </div>
+<div class="grid grid-cols-[250px_1fr_350px] h-screen font-sans">
+    <main class="p-8 overflow-y-auto">
+        <div class="flex items-center mb-4">
+            <a href="#" class="text-2xl font-bold"><span>Lo</span>gs</a>
         </div>
+        <h1 class="text-center text-3xl font-semibold mb-4">Reports</h1>
 
         <h2>IP List</h2>
         <div class="ip-list-container">
