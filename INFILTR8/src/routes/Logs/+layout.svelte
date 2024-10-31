@@ -59,7 +59,6 @@
     let files: File[] = [];
     let uploadProgress = writable(0); // Store to track the upload progress percentage
 
-    // Function to handle file uploads
     // Function to handle file uploads using XMLHttpRequest to track progress
     async function uploadFiles() {
         if (files.length === 0) {
@@ -97,14 +96,8 @@
     xhr.send(formData);
 }
 
-
-
-    
-    
-	
-
-        // Function to handle project selection
-        function selectProject(folder: string) {
+    // Function to handle project selection
+    function selectProject(folder: string) {
         console.log('Selected Project:', folder);
     }
 
@@ -128,14 +121,7 @@
         
     ];
   
-
-
-
 </script>
-
-
-
-
 
 <AppShell>
 
@@ -147,7 +133,7 @@
     <!-- Sidebar with Drawer -->
     <svelte:fragment slot="sidebarLeft">
         <div
-            class="rounded-md flex flex-col md:flex-row bg-[#111827] w-full flex-1 max-w-7xl mx-auto border border-[#111827] overflow-hidden h-full"
+            class="flex flex-col md:flex-row bg-[#111827] w-full max-w-7xl mx-auto border border-[#111827] overflow-hidden h-full rounded-md"
         >
             <Sidebar class="justify-between gap-10">
                 <div class="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
