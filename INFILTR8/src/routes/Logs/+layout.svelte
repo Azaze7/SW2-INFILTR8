@@ -165,7 +165,14 @@
                         {/each}
                     </div>
                 </div>
-                <div>
+                <div class="flex flex-col items-center space-y-4 p-4 bg-[#111827]">
+                    <button class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+                        Button 1
+                    </button>
+                    <button class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+                        Button 2
+                    </button>
+                
                     <!--<LightSwitch />-->
                     <SidebarLink
                         link={{
@@ -178,10 +185,6 @@
             </Sidebar>
         </div>
     </svelte:fragment>
-
-
-
-
 
     <!-- Page Route Content -->
     <slot />
