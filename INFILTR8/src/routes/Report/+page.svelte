@@ -29,6 +29,17 @@
         </div>
         <h1 class="text-center text-3xl font-semibold mb-4">Reports</h1>
 
+        <div class="flex items-center bg-blue-900 text-white rounded-xl shadow-md p-4 mb-4 hover:scale-105 hover:shadow-lg transition-transform">
+            <div class="flex items-center justify-center w-12 h-12">
+                <img src="https://img.icons8.com/ios-filled/50/000000/folder-invoices.png" alt="Folder Icon" />
+            </div>
+            <div class="ml-4">
+                <h2 class="text-lg font-semibold">{folder.name}</h2>
+                <p class="text-sm text-gray-400">{folder.items} items | {folder.size}</p>
+            </div>
+            <div class="ml-auto text-gray-400 text-lg">⋮</div>
+        </div>
+        
         <h2>IP List</h2>
         <div class="ip-list-container">
             <div class="ip-header">
