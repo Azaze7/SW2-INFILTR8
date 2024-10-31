@@ -49,20 +49,19 @@
             <span class="text-left">Status</span>
         </div>
         
-            <ul class="ip-list">
-                {#each ipList as item}
-                    <li class="ip-item">
-                        <span>
-                            <input type="checkbox">
-                        </span>
-                        <span class="ip-text">{item.ip}</span>
-                        <span class="ip-text">{item.device}</span>
-                        <span class="ip-text">{item.vulnerability}</span>
-                        <span class="ip-text">{item.status}</span>
-                    </li>
-                {/each}
-            </ul>
-        </div>
+        <ul class="space-y-2">
+            {#each ipList as item}
+                <li class="grid grid-cols-[0.1fr_1fr_1fr_2fr_1fr] p-2 bg-gray-900 text-white rounded-md items-center hover:bg-gray-700 transition-colors">
+                    <span>
+                        <input type="checkbox" class="mr-2 scale-110">
+                    </span>
+                    <span class="truncate">{item.ip}</span>
+                    <span class="truncate">{item.device}</span>
+                    <span class="truncate">{item.vulnerability}</span>
+                    <span class="truncate">{item.status}</span>
+                </li>
+            {/each}
+        </ul>
 
         <div class="action-container">
             <div class="file-type-selection">
