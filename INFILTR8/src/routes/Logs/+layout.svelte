@@ -140,10 +140,10 @@
                     {#if $vopen}
                         <a
                             href="/"
-                            class="font-normal flex space-x-2 items-center text-sm text-white py-1 relative z-20"
+                            class="flex items-center space-x-2 text-sm font-normal text-white py-1 relative z-20"
                         >
                             <div
-                                class="h-5 w-5 bg-white rounded-br-lg rounded-tr-sm rounded-tl-lg rounded-bl-sm flex-shrink-0"
+                                class="h-5 w-5 bg-white rounded-br-lg rounded-tr-sm rounded-tl-lg rounded-bl-sm"
                             ></div>
                             <span class="font-medium text-white whitespace-pre">
                                 <p>{greeting}{" "}{$user?.username}</p>
