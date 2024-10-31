@@ -48,7 +48,7 @@
             <span class="text-left">Vulnerability</span>
             <span class="text-left">Status</span>
         </div>
-        
+
         <ul class="space-y-2">
             {#each ipList as item}
                 <li class="grid grid-cols-[0.1fr_1fr_1fr_2fr_1fr] p-2 bg-gray-900 text-white rounded-md items-center hover:bg-gray-700 transition-colors">
@@ -63,10 +63,10 @@
             {/each}
         </ul>
 
-        <div class="action-container">
-            <div class="file-type-selection">
-                <label for="fileType">Select file type:</label>
-                <select id="fileType" class="select-dropdown" bind:value={selectedFileType}>
+        <div class="flex items-center justify-between mt-6">
+            <div class="flex flex-col">
+                <label for="fileType" class="text-white mb-2">Select file type:</label>
+                <select id="fileType" class="bg-gray-900 text-white p-2 rounded-md border border-gray-600" bind:value={selectedFileType}>
                     <option value="" disabled>Select File Type</option>
                     {#each fileTypes as fileType}
                         <option value={fileType}>{fileType}</option> 
@@ -74,225 +74,9 @@
                 </select>
             </div>
         
-            <button on:click={exportData} class="export-button">Export</button>
+            <button on:click={exportData} class="bg-gray-900 text-white px-4 py-2 rounded-md border border-gray-600 hover:bg-gray-700 transition-colors">
+                Export
+            </button>
         </div>
     </main>
 </div>
-
-<style>
-    :root {
-        --bg: #1d1b28;
-        --color-main: #4628e9;
-        --color-main-dark: #191528;
-        --color-second: #aaa7b9;
-        --transition: all .3s ease-out;
-    }
-
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-
-    .grid-container {
-        display: grid;
-        grid-template-areas: "sidebar main right";
-        grid-template-columns: 250px 1fr 350px;
-        height: 100vh;
-        font-family: Arial, sans-serif;
-    }
-
-    .sidebar {
-        grid-area: sidebar;
-        background-color: #f1f1f1;
-        color: white;
-        padding: 20px;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .main-content {
-        grid-area: main;
-        padding: 30px;
-        overflow-y: auto;
-        background-color: transparent;
-    }
-
-    .right-side {
-        grid-area: right;
-        background-color: var(--bg);
-        padding: 20px;
-        box-shadow: -2px 0 4px rgba(0, 0, 0, 0.1);
-    }
-
-    @media (max-width: 1024px) {
-        .grid-container {
-            grid-template-areas: "sidebar main";
-            grid-template-columns: 250px 1fr;
-        }
-
-        .right-side {
-            display: none;
-        }
-    }
-
-    @media (max-width: 768px) {
-        .grid-container {
-            grid-template-areas: "main";
-            grid-template-columns: 1fr;
-        }
-
-        .sidebar {
-            display: none;
-        }
-    }
-
-    .action-container {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-top: 20px;
-    }
-
-    .file-type-selection {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .select-dropdown {
-        background-color: #1d1b28;
-        color: #ffffff;
-        padding: 10px;
-        border-radius: 4px;
-        border: 1px solid #3b3b6d;
-        font-size: 14px;
-    }
-
-    .select-dropdown option {
-        background-color: #1d1b28;
-        color: #ffffff;
-    }
-
-    .export-button {
-        background-color: #1d1b28;
-        color: #ffffff;
-        padding: 10px 20px;
-        border: 1px solid #3b3b6d;
-        border-radius: 4px;
-        cursor: pointer;
-        transition: background-color 0.3s ease, border 0.3s ease;
-    }
-
-    .export-button:hover {
-        background-color: #3b3b6d;
-        border: 1px solid #5b5b8d;
-    }
-
-    .folder-card {
-        display: flex;
-        align-items: center;
-        background-color: #174972;
-        border-radius: 16px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-        padding: 10px 20px;
-        width: 320px;
-        height: 80px;
-        margin: 10px;
-        cursor: pointer;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .folder-card:hover {
-        transform: scale(1.02);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    }
-
-    .folder-icon {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 50px;
-        height: 50px;
-    }
-
-    .folder-details {
-        flex-grow: 1;
-        margin-left: 20px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-    }
-
-    .folder-details h2 {
-        font-size: 16px;
-        margin: 0;
-        font-weight: bold;
-        color: #000;
-    }
-
-    .folder-details p {
-        font-size: 12px;
-        margin: 5px 0 0;
-        color: #888;
-    }
-
-    .folder-options {
-        display: flex;
-        align-items: center;
-        font-size: 20px;
-        color: #888;
-    }
-    
-    .ip-header {
-        display: grid;
-        grid-template-columns: 0.1fr 1fr 1fr 2fr 1fr;
-        padding: 10px 0;
-        font-weight: bold;
-        font-size: 16px;
-        color: #fff;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-        margin-bottom: 10px;
-        text-align: left;
-        align-items: center;
-    }
-
-    .ip-header-item {
-        text-align: left;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    .ip-item {
-        display: grid;
-        grid-template-columns: 0.1fr 1fr 1fr 2fr 1fr;
-        align-items: center;
-        padding: 10px 0;
-        font-size: 16px;
-        color: #fff;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .ip-item input[type="checkbox"] {
-        margin-right: 7px;
-        transform: scale(1.0);
-    }
-
-    .ip-text {
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-    }
-
-    .ip-item:hover {
-        background-color: rgba(255, 255, 255, 0.1);
-        border: 1px solid rgb(222, 222, 222);
-    }
-
-    .button-container {
-        display: flex;
-        justify-content: flex-end;
-        margin-top: 20px;
-    }
-
-</style>
