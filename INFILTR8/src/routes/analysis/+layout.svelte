@@ -106,51 +106,10 @@ function selectProject(folder: string) {
 
 <!-- App Shell -->
 <AppShell>
-    <!-- Header -->
-    <svelte:fragment slot="header">
-        <AppBar>
-            <svelte:fragment slot="lead">
-                <!-- You can add content here if needed -->
-            </svelte:fragment>
-            <svelte:fragment slot="trail">
-                <button class="btn btn-sm variant-ghost-surface" use:popup={NotificationPopup}>Notification</button>
-                <div class="card p-4 w-72 shadow-xl" data-popup="NotificationPopup">
-                    <div><p>Notification Content</p></div>
-                    <div class="arrow bg-surface-100-800-token" />
-                </div>
-                
-                <button class="btn btn-sm variant-ghost-surface" use:popup={AccountPopup}>Account</button>
-                <div class="card p-4 w-72 shadow-xl" data-popup="AccountPopup">
-                    <div><p>Account Content</p></div>
-                    <div class="arrow bg-surface-100-800-token" />
-                </div>
-                    
-                <a class="btn btn-sm variant-ghost-surface" href="/Login" target="_blank" rel="noreferrer">
-                    Sign out
-                </a>
-            </svelte:fragment>
-        </AppBar>
-    </svelte:fragment>
 
     <!-- Page Header -->
     <svelte:fragment slot="pageHeader">
-        <h1 class="text-2xl font-bold mb-4">Select Project Folder</h1>
-        <div class="snap-x scroll-px-4 snap-mandatory scroll-smooth flex gap-4 overflow-x-auto px-4 py-2 bg-surface-200 rounded-md shadow-sm">
-            {#each $projectFolders as folder, index}
-                <button 
-                    class="snap-start shrink-0 card py-4 px-6 w-40 md:w-60 text-center cursor-pointer hover:bg-primary-100 rounded-md shadow transition duration-300"
-                    on:click={() => selectProject(folder)}
-                    on:keydown={(event) => {
-                        if (event.key === 'Enter' || event.key === ' ') {
-                            selectProject(folder);
-                        }
-                    }}
-                    aria-label={`Select project ${folder}`}
-                >
-                    {folder}
-                </button>
-            {/each}
-        </div>
+        <h1 class="text-2xl font-bold mb-4">Analysis</h1>
     </svelte:fragment>
 
     <!-- Sidebar with Drawer -->

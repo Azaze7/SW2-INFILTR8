@@ -1,18 +1,14 @@
 <script lang="ts">
     import '/src/app.postcss';
     import { page } from '$app/stores';
-    import { goto } from '$app/navigation';
-    import { get, writable } from 'svelte/store';
+    import { writable } from 'svelte/store';
     import { user } from "$lib/components/loginUI/userStore";
-    import type { PopupSettings, DrawerSettings } from '@skeletonlabs/skeleton';
+    import type { PopupSettings } from '@skeletonlabs/skeleton';
     import { projectFolders } from '$lib/stores/projectFoldersStore';
-    import SvgSpinnersBlocksWave from "$lib/components/icons/SvgSpinnersBlocksWave.svelte"; 
     import { computePosition, autoUpdate, flip, shift, offset, arrow } from '@floating-ui/dom';    
-    import { popup, storePopup, LightSwitch, storeHighlightJs, AppRail, AppRailTile, AppRailAnchor, AppShell, AppBar,  } from '@skeletonlabs/skeleton';
-    import { initializeStores, Drawer, getDrawerStore, } from '@skeletonlabs/skeleton';
-    import { ArrowLeft, Bolt, Home, Settings, UserCircle2, Squircle, FlaskConical, FolderRoot, Clipboard, BadgeHelp, Scroll} from "lucide-svelte";
-    import { slide } from "svelte/transition";
-    
+    import { storePopup, storeHighlightJs, AppShell } from '@skeletonlabs/skeleton';
+    import { initializeStores, getDrawerStore, } from '@skeletonlabs/skeleton';
+    import { ArrowLeft, Home, Settings, FlaskConical, FolderRoot, Clipboard, BadgeHelp, Scroll} from "lucide-svelte";
     import Sidebar from '$lib/components/AceternityUI/Sidebar/Sidebar.svelte';
     import SidebarLink from '$lib/components/AceternityUI/Sidebar/SidebarLink.svelte';
     import { vopen } from '$lib/stores/svelteContent';
@@ -129,93 +125,45 @@
         { label: "Support", href: "/support", icon: BadgeHelp} 
         
     ];
-  
-
-
-
 </script>
 
-
-
-
-
 <AppShell>
-    <!-- Header -->
-<!--
-        <svelte:fragment slot="header">
-            <AppBar>
-                <svelte:fragment slot="lead">
-                   
-                </svelte:fragment>
-                <svelte:fragment slot="trail">
-                    <button class="btn btn-sm variant-ghost-surface" use:popup={NotificationPopup}>Notification</button>
-                    <div class="card p-4 w-72 shadow-xl" data-popup="NotificationPopup">
-                        <div><p>Notification Content</p></div>
-                        <div class="arrow bg-surface-100-800-token" />
-                    </div>
-                    
-                    <button class="btn btn-sm variant-ghost-surface" use:popup={AccountPopup}>Account</button>
-                    <div class="card p-4 w-72 shadow-xl" data-popup="AccountPopup">
-                        <div><p>Account Content</p></div>
-                        <div class="arrow bg-surface-100-800-token" />
-                    </div>
-                        
-                    <a class="btn btn-sm variant-ghost-surface" href="/Login" target="_blank" rel="noreferrer">
-                        Sign out
-                    </a>
-                </svelte:fragment>
-            </AppBar>
-        </svelte:fragment> -->
-
-
-    <!-- Page Header -->
     <svelte:fragment slot="sidebarRight">
-        <h1 class="text-2xl font-bold mb-4">Select Project Folder</h1>
-        <div class="snap-x scroll-px-4 snap-mandatory scroll-smooth flex gap-4 overflow-x-auto px-4 py-2 rounded-md shadow-sm">
-            {#each $projectFolders as folder, index}
-                <button 
-                    class="snap-start shrink-0 card py-4 px-6 w-40 md:w-60 text-center cursor-pointer hover:bg-primary-100 rounded-md shadow transition duration-300"
-                    on:click={() => selectProject(folder)}
-                    on:keydown={(event) => {
-                        if (event.key === 'Enter' || event.key === ' ') {
-                            selectProject(folder);
-                        }
-                    }}
-                    aria-label={`Select project ${folder}`}
-                >
-                    {folder}
-                </button>
-            {/each}
-        </div>
-    </svelte:fragment>
+    <h1 class="text-2xl font-bold mb-4">Current Project Folder</h1>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 px-4 py-2 rounded-md shadow-sm">
+        {#each $projectFolders as folder, index}
+            <button 
+                class="card py-4 px-6 w-full text-center cursor-pointer hover:bg-primary-100 rounded-md shadow transition duration-300"
+                on:click={() => selectProject(folder)}
+                on:keydown={(event) => {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                        selectProject(folder);
+                    }
+                }}
+                aria-label={`Select project ${folder}`}
+            >
+                {folder}
+            </button>
+        {/each}
+    </div>
+</svelte:fragment>
+
 
     <!-- Sidebar with Drawer -->
     <svelte:fragment slot="sidebarLeft">
-        <div
-            class="rounded-md flex flex-col md:flex-row bg-[#111827] w-full flex-1 max-w-7xl mx-auto border border-[#111827] overflow-hidden h-full"
-        >
+        <div class="rounded-md flex flex-col md:flex-row bg-[#111827] w-full flex-1 max-w-7xl mx-auto border border-[#111827] overflow-hidden h-full">
             <Sidebar class="justify-between gap-10">
                 <div class="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
                     {#if $vopen}
-                        <a
-                            href="/"
-                            class="font-normal flex space-x-2 items-center text-sm text-white py-1 relative z-20"
-                        >
-                            <div
-                                class="h-5 w-5 bg-white rounded-br-lg rounded-tr-sm rounded-tl-lg rounded-bl-sm flex-shrink-0"
-                            ></div>
+                        <a href="/" class="font-normal flex space-x-2 items-center text-sm text-white py-1 relative z-20">
+                            <div class="h-5 w-5 bg-white rounded-br-lg rounded-tr-sm rounded-tl-lg rounded-bl-sm flex-shrink-0"></div>
                             <span class="font-medium text-white whitespace-pre">
                                 <p>{greeting}{" "}{$user?.username}</p>
                             </span>
                         </a>
                     {:else}
-                        <a
-                            href="/"
-                            class="font-normal flex space-x-2 items-center text-sm text-white py-1 relative z-20"
-                        >
-                            <div
-                                class="h-5 w-5 bg-white rounded-br-lg rounded-tr-sm rounded-tl-lg rounded-bl-sm flex-shrink-0"
-                            ></div>
+                        <a href="/" class="font-normal flex space-x-2 items-center text-sm text-white py-1 relative z-20">
+                            <div class="h-5 w-5 bg-white rounded-br-lg rounded-tr-sm rounded-tl-lg rounded-bl-sm flex-shrink-0"></div>
                         </a>
                     {/if}
                     <div class="mt-8 flex flex-col gap-2">
@@ -225,28 +173,17 @@
                     </div>
                 </div>
                 <div>
-                    
                     <SidebarLink
                         link={{
-                          label: "Sign Out",
-                          href: "/Login",
-                          icon: ArrowLeft,
+                            label: "Sign Out",
+                            href: "/Login",
+                            icon: ArrowLeft,
                         }}
                     />
                 </div>    
             </Sidebar>
         </div>
     </svelte:fragment>
-
-
-
-
-
     <!-- Page Route Content -->
     <slot />
 </AppShell>
-
-
-<style>
-
-</style>
