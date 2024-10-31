@@ -26,10 +26,10 @@
 <main class="p-8 overflow-y-auto">
     <h1 class="text-center text-3xl font-semibold mb-4">Reports</h1>
 
-    <div class="flex items-center bg-blue-900 text-white rounded-xl shadow-md p-4 mb-4">
+    <div class="flex items-center bg-blue-900 text-white rounded-xl shadow-md p-4 mb-4 w-48 hover:scale-105 hover:shadow-lg transition-transform">
         <div>
-            <h2 class="text-lg font-semibold">{folder.name}</h2>
-            <p class="text-sm text-gray-400">{folder.items} items | {folder.size}</p>
+            <h2 class="text-lg font-semibold text-center">{folder.name}</h2>
+            <p class="text-sm text-gray-400 text-center">{folder.items} items | {folder.size}</p>
         </div>
     </div>
 
