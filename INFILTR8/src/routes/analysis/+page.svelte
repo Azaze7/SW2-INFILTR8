@@ -101,6 +101,10 @@
     function exportData() {
         if (!selectedFileType) {
             console.log('No file type selected');
+            createLogEntry({
+                type: 'Warning',
+                message: `No file type selected for export of project: ${selectedProject}`
+            });
             return;
         }
         console.log(`Exporting as ${selectedFileType}`);
@@ -110,6 +114,7 @@
             entryPoints: $entryPoints,
             rankedEntries: $rankedEntries
         };
+
         if (selectedFileType === 'PDF') {
             exportToPDF(data);
         } else if (selectedFileType === 'XML') {
@@ -121,18 +126,33 @@
     function confirmAnalysis(){
         fullTime = selectedTime + selectedAMPM;
         console.log('Analysis Appointment Confirmed:', fullTime);
-        createLogEntry({
-        type: 'Information',
-        message: `${fullTime} is confirmed as Appointment Time for Project ${selectedProject}!`
-    });
+        if (fullTime === '' || selectedProject === '') {
+            createLogEntry({
+                type: 'Warning',
+                message: `No project or time was selected when confirming the analysis time`
+            });
+        } else {
+            createLogEntry({
+                type: 'Information',
+                message: `${fullTime} is confirmed as Appointment Time for Project ${selectedProject}`
+            });
+        }
     }
 
     function exportToPDF(data: any) {
     console.log('Exporting Project Folder to PDF:', selectedProject);
-    createLogEntry({
-        type: 'Information',
-        message: `Project ${selectedProject} was exported as a PDF!`
-    });
+    if (selectedProject === '') {
+        createLogEntry({
+            type: 'Warning',
+            message: `No project was selected for exporting`
+        });
+    } else {
+        createLogEntry({
+            type: 'Information',
+            message: `Project ${selectedProject} was exported as a PDF`
+        });
+    }
+
     const doc = new jsPDF();
     doc.text(`INFILTR8 REPORT`, 10, 10);
     const now = new Date();
@@ -199,7 +219,7 @@
         console.log('Exporting Project Folder to XML:', selectedProject);
         createLogEntry({
         type: 'Information',
-        message: `Project ${selectedProject} was exported as an XML!`
+        message: `Project ${selectedProject} was exported as an XML`
         });
         const xmlContent = jsonToXML(data);
         const blob = new Blob([xmlContent], { type: 'application/xml' });
