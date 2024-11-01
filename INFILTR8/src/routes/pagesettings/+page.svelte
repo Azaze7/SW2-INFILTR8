@@ -4,6 +4,8 @@
     import { LightSwitch } from '@skeletonlabs/skeleton';
     //Import the ability to use code when we click buttons on the settings page.
     import { onMount } from "svelte";
+    //Import the ability to create logs
+    import { createLogEntry } from '../../routes/Logs/logservice';
     
     //Set greeting empty and time for the current time for the sidebar.
     let greeting = "";
@@ -27,6 +29,11 @@
         fontSize += increase ? 1 : -1;
         document.documentElement.style.fontSize = `${fontSize}px`;
         localStorage.setItem('fontSize', fontSize.toString());
+        const action = increase ? 'increased' : 'decreased';
+        createLogEntry({
+            type: 'Information',
+            message: `Font size ${action} to: ${fontSize}`
+        });
     }
     
     //Functon to apply the colorblind filters. 
@@ -34,6 +41,25 @@
         filter = newFilter;
         document.documentElement.style.filter = filter;
         localStorage.setItem('filter', filter);
+        let filterMessage;
+        switch (filter) {
+            case 'none':
+                filterMessage = 'None';
+                break;
+            case 'url(#protanopia)':
+                filterMessage = 'Red';
+                break;
+            case 'url(#deuteranopia)':
+                filterMessage = 'Green';
+                break;
+            case 'url(#tritanopia)':
+                filterMessage = 'Blue';
+                break;
+        }
+        createLogEntry({
+            type: 'Information',
+            message: `Filter changed to: ${filterMessage}`
+        });
     }
     
     //Function so when we click button we open the github.
