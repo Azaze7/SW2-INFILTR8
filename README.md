@@ -79,14 +79,16 @@ Team #6 extends its sincere gratitude to all of our customers and our guidance t
 
 | Filename | Type | Description | 
 | --------------- | --------------- | --------------- |
-. Run Install Script for Linux:
+| .vscode | 🗂️ | settings.json for use in VSCode.  |
 | Gil-Test-Resources | 🗂 | [Depricated]. Contains Pre-fixed files to run the .nessus file. maing.py has been modified to handle new inputs and get a sample output. This is not the final version, and exists only for testing backend! |
-| Initial-Dependecies-And-Resources | 🗂️ | Contains main source code, sample *broken* .nessus file, the finalized SRS, and some diagrams. These files will help kickstart development. |
 | INFILTR8 | 🗂️ | Contains files necessary to build and run INFILTR8, including its backend and GUI. |
-
+| Initial-Dependecies-And-Resources | 🗂️ | Contains main source code, sample *broken* .nessus file, the finalized SRS, and some diagrams. These files will help kickstart development. |
+| my-app | 🗂 | [Depricated]. Contains files necessary to build and run INFILTR8, on the old naming scheme so no longer used. |
+| .gitignore | .txt | File that contains what should be ignored when committing to GitHub. We dont carry logs or .env, for example. |
 | README | .md | All of the text that you are currently reading. |
-| install | .sh | Shell-script that installs the system for you. |
-| .DS_Store | - | Stores folder customization options (MacOS Only). |
+| install | .sh | Shell-script that installs the system for you. (Linux Only) |
+| .package-lock | .json | Contains a snapshot of your entire dependency tree for Node.js. |
+| .package | .json | Contains the snapshot of the Node.js databse. |
 
 ## 🖥️ Tech Stack Foundation
 
