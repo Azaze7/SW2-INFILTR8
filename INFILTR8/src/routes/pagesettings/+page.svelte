@@ -1,21 +1,21 @@
 <!--Settings Page Code -- Christian Garcia -->
 <script lang="ts">
-    // Import LightSwitch component for toggling light/dark mode themes
+    //Import LightSwitch for toggling light/dark mode themes
     import { LightSwitch } from '@skeletonlabs/skeleton';
-    // Import onMount lifecycle function to handle actions when the component loads
+    //Import onMount to execute actions when component loads
     import { onMount } from "svelte";
-    // Import logging service to create log entries for user actions
+    //Import createLogEntry to log user actions
     import { createLogEntry } from '../../routes/Logs/logservice';
     
-    // Initialize greeting variable and set currentHour to the current time (for sidebar display)
+    //Initialize greeting and currentHour for sidebar greeting
     let greeting = "";
     let currentHour = new Date().getHours();
     
-    // Initialize default font size and filter (for colorblind options) to none
+    //Set default font size and color filter (no filter applied initially)
     let fontSize = 17;
     let filter = 'none';
     
-    // Set greeting based on the time of day (morning, afternoon, evening)
+    //Assign greeting based on current time of day
     if (currentHour < 12) {
         greeting = "Good morning!";
     } else if (currentHour < 18) {
@@ -24,13 +24,12 @@
         greeting = "Good evening!";
     }
     
-    // Function to increase or decrease the font size
+    //Adjusts font size and logs the action
     function changeFontSize(increase: boolean) {
-        fontSize += increase ? 1 : -1; // Adjust font size
-        document.documentElement.style.fontSize = `${fontSize}px`; // Apply font size to document
-        localStorage.setItem('fontSize', fontSize.toString()); // Save font size to local storage
+        fontSize += increase ? 1 : -1;
+        document.documentElement.style.fontSize = `${fontSize}px`;
+        localStorage.setItem('fontSize', fontSize.toString());
         
-        // Log the font size change
         const action = increase ? 'increased' : 'decreased';
         createLogEntry({
             type: 'Information',
@@ -38,37 +37,27 @@
         });
     }
     
-    // Function to apply a colorblind filter based on the selected option
+    //Applies the selected colorblind filter and logs the change
     function applyFilter(newFilter: string) {
         filter = newFilter;
-        document.documentElement.style.filter = filter; // Apply filter to document
-        localStorage.setItem('filter', filter); // Save filter setting to local storage
+        document.documentElement.style.filter = filter;
+        localStorage.setItem('filter', filter);
         
-        // Set filter message for log entry based on the selected filter
         let filterMessage;
         switch (filter) {
-            case 'none':
-                filterMessage = 'None';
-                break;
-            case 'url(#protanopia)':
-                filterMessage = 'Red';
-                break;
-            case 'url(#deuteranopia)':
-                filterMessage = 'Green';
-                break;
-            case 'url(#tritanopia)':
-                filterMessage = 'Blue';
-                break;
+            case 'none': filterMessage = 'None'; break;
+            case 'url(#protanopia)': filterMessage = 'Red'; break;
+            case 'url(#deuteranopia)': filterMessage = 'Green'; break;
+            case 'url(#tritanopia)': filterMessage = 'Blue'; break;
         }
         
-        // Log the filter change
         createLogEntry({
             type: 'Information',
             message: `Filter changed to: ${filterMessage}`
         });
     }
 
-    // Function to log when LightSwitch (light/dark mode) is activated
+    //Logs when the LightSwitch (light/dark mode) is toggled
     function logLightSwitch() {
         createLogEntry({
             type: 'Information',
@@ -76,23 +65,21 @@
         }); 
     }
     
-    // Function to open the GitHub repository in a new tab
+    //Opens GitHub repository link in a new browser tab
     function openGit() {
         window.open('https://github.com/Azaze7/CS4311_INFILTR8_6TheNine-Bytes_Fall2024', '_blank');
     }
     
-    // onMount function to load saved settings (font size and color filter) when the component loads
+    //Loads saved settings (font size and color filter) when component loads
     onMount(() => {
-        const savedFontSize = localStorage.getItem('fontSize'); // Retrieve saved font size
-        const savedFilter = localStorage.getItem('filter'); // Retrieve saved filter
-        
-        // Apply saved font size if it exists
+        const savedFontSize = localStorage.getItem('fontSize');
+        const savedFilter = localStorage.getItem('filter');
+    
         if (savedFontSize) {
             fontSize = parseInt(savedFontSize, 10);
             document.documentElement.style.fontSize = `${fontSize}px`;
         }
-        
-        // Apply saved filter if it exists
+    
         if (savedFilter) {
             filter = savedFilter;
             document.documentElement.style.filter = filter;
@@ -100,14 +87,14 @@
     });
 </script>
 
-<!-- Main container for settings page layout -->
+<!--Main container for the settings layout-->
 <div class="container h-full mx-auto flex justify-center items-center">
     <div class="space-y-10 text-center flex flex-col items-center">
-        <!-- Title of the settings page -->
+        <!--Page title-->
         <h2 class="text-3xl font-bold">Fonts, Accommodations, & More</h2>
         <figure>
             <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
-                <!-- Style for breathing animation applied to the tool image -->
+                <!--Breathing animation styling for the tool image-->
                 <style>
                     .breathing {
                       width: 320px;
@@ -119,34 +106,21 @@
                     }
                   
                     @keyframes breathe {
-                      0%, 100% {
-                        transform: scale(1);
-                      }
-                      50% {
-                        transform: scale(1.05);
-                      }
+                      0%, 100% { transform: scale(1); }
+                      50% { transform: scale(1.05); }
                     }
                   
                     @keyframes move {
-                      0% {
-                        top: 8px;
-                        right: 8px;
-                      }
-                      50% {
-                        top: 9px;
-                        right: 9px;
-                      }
-                      100% {
-                        top: 8px;
-                        right: 8px;
-                      }
+                      0% { top: 8px; right: 8px; }
+                      50% { top: 9px; right: 9px; }
+                      100% { top: 8px; right: 8px; }
                     }
                 </style> 
 
-                <!-- Tool image with breathing animation -->
+                <!--Animated tool image-->
                 <img src="src/Tools.png" alt="Wireframe Tools" class="w-80 h-80 absolute top-2 right-2 breathing">
 
-                <!-- Font size adjustment controls -->
+                <!--Font size adjustment buttons-->
                 <div class="mt-4 flex items-center gap-4">
                     <span class="text-gray-400">Change Font Size:</span>
                     <button class="bg-indigo-500 text-white px-2 py-1 rounded" on:click={() => changeFontSize(false)}>-</button>
@@ -154,7 +128,7 @@
                     <button class="bg-indigo-500 text-white px-2 py-1 rounded" on:click={() => changeFontSize(true)}>+</button>
                 </div>
 
-                <!-- Colorblind filter options -->
+                <!--Colorblind filter selection buttons-->
                 <div class="mt-4 flex items-center gap-4">
                     <span class="text-gray-400">Colorblind Filters:</span>
                     <button class="bg-indigo-500 text-white px-2 py-1 rounded" on:click={() => applyFilter('none')}>None</button>
@@ -163,7 +137,7 @@
                     <button class="bg-indigo-500 text-white px-2 py-1 rounded" on:click={() => applyFilter('url(#tritanopia)')}>Blue</button>
                 </div>
 
-                <!-- Light/Dark mode toggle switch -->
+                <!--Toggle switch for light/dark mode-->
                 <div class="mt-4 flex items-center gap-2 ">
                     <span class="mr-2 text-gray-400">Lightmode / Darkmode:</span>
                     <LightSwitch on:click={logLightSwitch}/>
@@ -171,7 +145,7 @@
             </div>
         </figure>
 
-        <!-- Button to open GitHub repository -->
+        <!--Button to open GitHub repository-->
         <div class="flex items-center gap-4">
             <span class="text-gray-400">See INFILTR8 on:</span>
             <button class="bg-indigo-500 text-white px-4 py-2 rounded" on:click={() => openGit()}>GitHub</button>
@@ -179,7 +153,7 @@
     </div>
 </div>
 
-<!-- SVG filters for colorblind settings -->
+<!--SVG filters for colorblind settings-->
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
     <filter id="protanopia">
         <feColorMatrix type="matrix" values="0.567 0.433 0 0 0 0.558 0.442 0 0 0 0 0.242 0.758 0 0 0 0 0 1 0"/>
