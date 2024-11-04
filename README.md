@@ -91,7 +91,7 @@ Team #6 extends its sincere gratitude to all of our customers and our guidance t
 **The following table shows the technology to be used to develop INFILTR8, taken explicitly from the given SRS document.**
 
 | Name | Type | Version | Description | 
-| --------------- | --------------- | --------------- |
+| --------------- | --------------- | --------------- | --------------- |
 | Github | Version Control | v1 | A web-based platform for version control and collaboration, using Git for managing code repositories. Will be used to store INFILTR8 as it develops. |
 | JS | Language | v1 | JavaScript, a versatile scripting language primarily used for web development to create interactive effects within web browsers. [Used for Site].|
 | Neo4j | Database | v1 | Graph database management system designed to store and query complex relationships between data. [Used for Backend].|
