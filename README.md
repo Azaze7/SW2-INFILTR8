@@ -90,13 +90,13 @@ Team #6 extends its sincere gratitude to all of our customers and our guidance t
 
 **The following table shows the technology to be used to develop INFILTR8, taken explicitly from the given SRS document.**
 
-| Name | Type | Description | 
+| Name | Type | Version | Description | 
 | --------------- | --------------- | --------------- |
-| Github | Version Control | A web-based platform for version control and collaboration, using Git for managing code repositories. Will be used to store INFILTR8 as it develops. |
-| JS | Language | JavaScript, a versatile scripting language primarily used for web development to create interactive effects within web browsers. [Used for Site].|
-| Neo4j | Database | Graph database management system designed to store and query complex relationships between data. [Used for Backend].|
-| Python | Langauge | High-level, interpreted programming language known for its readability and versatility. [Used for Code].|
-| Tailwind | Library | Utility-first CSS framework for rapidly building custom user interfaces. [Used for Frontend].|
+| Github | Version Control | v1 | A web-based platform for version control and collaboration, using Git for managing code repositories. Will be used to store INFILTR8 as it develops. |
+| JS | Language | v1 | JavaScript, a versatile scripting language primarily used for web development to create interactive effects within web browsers. [Used for Site].|
+| Neo4j | Database | v1 | Graph database management system designed to store and query complex relationships between data. [Used for Backend].|
+| Python | Langauge | v1 | High-level, interpreted programming language known for its readability and versatility. [Used for Code].|
+| Tailwind | Library | v1 | Utility-first CSS framework for rapidly building custom user interfaces. [Used for Frontend].|
 
 ## 💾 Install Instructions
 1. After pulling GitHub code (via your preferred method), open the terminal.
@@ -147,32 +147,32 @@ You can also use the install script if you’ve downloaded the source code from 
 
 Short video archives demonstrating the various vertical slices for INFILTR8 have been recorded to show the software design process.
 
-* [Shipped].
 * DEMO #1 - README & GitHub Update, Non-Functional GUI, Data Storage, GitHub Configuration, DAC Added to GitHub, Stack Foundation & Project Dashboard.
-* Due: [9/16/24]
+* Due: [9/16/24].
+* [Shipped].
   * https://youtu.be/wsV8tB8XbOw
 
-* [Shipped].
 * DEMO #2 - README & GitHub Update, Improved Database, Processing Recon Data, Allowed/Off-limit IP List, Entry Point Types Selection, & Start of Logs.
-* Due: [9/30/24]
+* Due: [9/30/24].
+* [Shipped].
   * https://youtu.be/GIlSGcYOIUc
 
-* [Shipped].
 * DEMO #3 - README & GitHub Update, "AI Algorithm" Integration, GUI Update, Database Update, & Logs Update.
-* Due: [10/18/24]
+* Due: [10/18/24].
+* [Shipped].
   * https://youtu.be/xTV-pyUmyZs
 
-* [Shipped].
 * DEMO #4 - README & GitHub Update, AI Algorithm Integration (Finalized), Analysis Page Execution, Analysis Progress Display, Upload .nessus via GUI, & Logs Update.
-* Due: [10/28/24]
+* Due: [10/28/24].
+* [Shipped].
   * https://youtu.be/cFGu_UDyXlM
 
-* [Pending].
 * DEMO #5 - README & GitHub Update, View Analysis Results, Export Analysis Results, Anaysis Scheduling, Filter Results.
-* Due: [11/11/24]
+* Due: [11/11/24].
+* [Pending].
   * https://www.youtube.com/watch?v=t4JFM3Ws0uA
 
-* [Pending].
 * DEMO #6 - README & GitHub Update, INFILTR8 Installer, All Tech Debt Resolved, Clean GitHub Repo, Final Demo Video.
-* Due: [12/2/24]
+* Due: [12/2/24].
+* [Pending].
   * https://www.youtube.com/watch?v=t4JFM3Ws0uA
