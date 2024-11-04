@@ -230,33 +230,6 @@
             Create Project
           </button>
 
-        <!-- Notification Button in the Top-Right Corner -->
-        <div class="fixed top-100 right-4">
-          <button class="relative p-3 bg-blue-500 text-white rounded-full cursor-pointer" on:click={toggleMenu}>
-            🔔
-            {#if unreadNotifications.length > 0}
-              <span class="absolute top-0 right-0 block w-4 h-4 text-xs text-white bg-red-500 rounded-full flex items-center justify-center">
-                {unreadNotifications.length}
-              </span>
-            {/if}
-          </button>
-
-          <!-- Dropdown menu, only shows when showMenu is true -->
-          {#if showMenu}
-            <div class="absolute right-0 top-12 bg-gray-900 text-white shadow-lg rounded-lg w-60 z-50">
-              {#if notifications.length === 0}
-                <p class="p-4 text-center text-gray-500">No notifications</p>
-              {:else}
-                {#each notifications as { id, message, read }}
-                  <div class={`p-4 border-b last:border-none ${read ? 'bg-gray-700 text-gray-400' : 'bg-gray-800 text-white font-semibold'} cursor-pointer`} on:click={() => markAsRead(id)}>
-                    {message}
-                  </div>
-                {/each}
-              {/if}
-            </div>
-          {/if}
-         </div>
-
           <!-- Dropdown Menu for Project Creation -->
           <div class="card p-4 w-72 shadow-xl" data-popup="createProjectPopup">
               <input 

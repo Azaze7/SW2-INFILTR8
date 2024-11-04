@@ -1,4 +1,6 @@
 <script>
+
+
     let folder = {
         name: "Current Folder",
         items: 63,
