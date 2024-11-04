@@ -99,43 +99,51 @@ Team #6 extends its sincere gratitude to all of our customers and our guidance t
 | Tailwind | Library | v1 | Utility-first CSS framework for rapidly building custom user interfaces. [Used for Frontend].|
 
 ## 💾 Install Instructions
-1. After pulling GitHub code (via your preferred method), open the terminal.
+* After pulling GitHub code (via your preferred method), open the terminal in Split Terminal.
 
-2. `cd` into the folder called "INFILTR8":
+1. In terminal #1.
+a. `cd` into the folder called "INFILTR8":
     ```bash
     cd INFILTR8
     ```
 
-3. Install dependencies:
+b. Install dependencies:
     ```bash
     npm i
     ```
 
-4. Fund if prompted to:
+c. Fund if prompted to:
      ```bash
     npm fund
     ```
 
-4. Build INFILTR8:
+d. Build INFILTR8:
     ```bash
     npm run build
     ```
 
-5. Start INFILTR8:
+e. Start INFILTR8:
     ```bash
     npm run dev
     ```
 
-You must also ensure the database is running so login onto the site is possible.
-
-1. Start Database (In Split Terminal):
+2. In terminal #2.
+a. `cd` into the folder called "INFILTR8":
     ```bash
     cd INFILTR8
+    ```
+    
+b. `cd` into the folder called "server":
+    ```bash
     cd server
-    run command “node server.js”
+    ```
+    
+c. Run the database:
+    ```bash
+    node server.js
     ```
 
-You can also use the install script if you’ve downloaded the source code from GitHub as a ZIP file.
+***You can also use the install script if you’ve downloaded the source code from GitHub as a ZIP file.***
 
 1. Run Install Script:
     ```bash
