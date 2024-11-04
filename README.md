@@ -101,7 +101,7 @@ Special Thanks to All of those who contributed! We could not do it without you!
 | Github | Version Control | - | A web-based platform for version control and collaboration, using Git for managing code repositories. Will be used to store INFILTR8 as it develops. |
 | Neo4j Aura | Database | v3.5 | Cloud Based graph database management system designed to store and query complex relationships between data. [Used for Backend]. |
 | Node.js/JS | Runtime Environment | v20.17.0 |  Chrome based runtime environment built on JavaScript, versatile scripting language primarily used for web development to create interactive effects within web browsers. [Used for Site]. |
-| npm | Package Manager | 10.9.0 | Package manager for Node.js. [Used for Code]. |
+| npm | Package Manager | v10.9.0 | Package manager for Node.js. [Used for Code]. |
 | Python | Langauge | v3.12.7 | High-level, interpreted programming language known for its readability and versatility. [Used for Code]. |
 | Svelte | Framework/Library | v5.0 | Front-end framwork for building web applications compiling components to highly efficient JavaScript. [Used for making Site Contents]. |
 | Tailwind | CSS Framework | v3.0 | Utility-first CSS framework for rapidly building custom user interfaces. [Used for Frontend]. |
