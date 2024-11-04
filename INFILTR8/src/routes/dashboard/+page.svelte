@@ -6,25 +6,6 @@
   import { projectFolders } from '$lib/stores/projectFoldersStore'; 
   import { createLogEntry } from '../../routes/Logs/logservice';
 
-  let showMenu = false;
-  let notifications = [
-    { id: 1, message: "Target files are missing!", read: false },
-    { id: 2, message: "Target IP 10.0.10 is missing", read: false },
-  ];
-
-  // Toggle the visibility of the notification menu
-  function toggleMenu() {
-    showMenu = !showMenu;
-  }
-
-  // Mark a notification as read
-  function markAsRead(id) {
-    const notification = notifications.find(n => n.id === id);
-    if (notification) {
-      notification.read = true; // Mark the notification as read
-    }
-  }
-
   let button: HTMLButtonElement | null = null;
   let dropdownMenu: HTMLDivElement | null = null;
   let isDropdownVisible = false;
