@@ -13,9 +13,9 @@
 3. What Files are Enclosed Here?
 4. Tech Stack Foundation.
 5. Install Instructions.
-6. Vieo Demonstration.
+6. Project Milestones & Video Demonstrations.
 
-## 🎏 Team Composition [The Nine-Bytes]
+## 🎏 Team Composition. [The Nine-Bytes]
 
 **This Project was completed through the cooperation of *nine* team members!**
 
@@ -45,7 +45,7 @@
 Special Thanks to All of those who contributed! We could not do it without you!
 </p>
 
-## 🎖️ Guidance Team & Customer Information [DEVCOM] 
+## 🎖️ Guidance Team & Customer Information. [DEVCOM] 
 
 **The following individuals are the guidance team for the development of INFILTR8. They are:**
 
@@ -72,25 +72,27 @@ Special Thanks to All of those who contributed! We could not do it without you!
 * Miriam Olague 	
 
 <p align="center">
-***Team #6 extends its sincere gratitude to all of our customers and our guidance team! Thank you for believing in us!***
+**Team #6 extends its sincere gratitude to all of our customers and our guidance team! Thank you for believing in us!**
 </p>
 
 ## 🗂️ What Files are Enclosed Here?
 
+**The following table shows the files currently stored on this repo, which have been used for the development and use of INFILTR8.**
+
 | Filename | Type | Description | 
 | --------------- | --------------- | --------------- |
 | .vscode | 🗂️ | settings.json for use in VSCode.  |
-| Gil-Test-Resources | 📦 | [Depricated]. Contains Pre-fixed files to run the .nessus file. maing.py has been modified to handle new inputs and get a sample output. This is not the final version, and exists only for testing backend! |
+| Gil-Test-Resources | 📦 | [Depricated]. Contained early pre-fixed files to run the .nessus file. maing.py has been modified to handle new inputs and get a sample output. This is not the final version, and existed only for testing backend! |
 | INFILTR8 | 🗂️ | Contains files necessary to build and run INFILTR8, including its backend and GUI. |
 | Initial-Dependecies-And-Resources | 🗂️ | Contains main source code, sample *broken* .nessus file, the finalized SRS, and some diagrams. These files will help kickstart development. |
-| my-app | 📦 | [Depricated]. Contains files necessary to build and run INFILTR8, on the old naming scheme so no longer used. |
+| my-app | 📦 | [Depricated]. Contained files necessary to build and run earlier versions of INFILTR8, on the old naming scheme so no longer used. |
 | .gitignore | .txt | File that contains what should be ignored when committing to GitHub. We dont carry logs or .env, for example. |
 | README | .md | All of the text that you are currently reading. |
 | install | .sh | Shell-script that installs the system for you. (Linux Only) |
 | .package-lock | .json | Contains a snapshot of your entire dependency tree for Node.js. |
 | .package | .json | Contains the snapshot of the Node.js databse. |
 
-## 🖥️ Tech Stack Foundation
+## 🖥️ Tech Stack Foundation.
 
 **The following table shows the technology to be used to develop INFILTR8, taken explicitly from the given SRS document.**
 
@@ -102,7 +104,7 @@ Special Thanks to All of those who contributed! We could not do it without you!
 | Python | Langauge | v1 | High-level, interpreted programming language known for its readability and versatility. [Used for Code].|
 | Tailwind | Library | v1 | Utility-first CSS framework for rapidly building custom user interfaces. [Used for Frontend].|
 
-## 💾 Install Instructions
+## 💾 Install Instructions.
 * After pulling GitHub code (via your preferred method), open the terminal in Split Terminal.
 
 A. In terminal #1.
