@@ -72,7 +72,7 @@ Special Thanks to All of those who contributed! We could not do it without you!
 * Miriam Olague 	
 
 <p align="center">
-**Team #6 extends its sincere gratitude to all of our customers and our guidance team! Thank you for believing in us!**
+### *Team #6 extends its sincere gratitude to all of our customers and our guidance team! Thank you for believing in us!*
 </p>
 
 ## 🗂️ What Files are Enclosed Here?
@@ -161,37 +161,36 @@ B. In terminal #2.
     ./install.sh
     ```
 
-
 ## 🎞️ Project Milestones & Video Demonstrations.
 
 Short video archives demonstrating the various vertical slices for INFILTR8 have been recorded to show the software design process.
 
 * DEMO #1 - README & GitHub Update, Non-Functional GUI, Data Storage, GitHub Configuration, DAC Added to GitHub, Stack Foundation & Project Dashboard.
 * Due: [9/16/24].
-* [Shipped].
+* [Shipped ✅].
   * https://youtu.be/wsV8tB8XbOw
 
 * DEMO #2 - README & GitHub Update, Improved Database, Processing Recon Data, Allowed/Off-limit IP List, Entry Point Types Selection, & Start of Logs.
 * Due: [9/30/24].
-* [Shipped].
+* [Shipped ✅].
   * https://youtu.be/GIlSGcYOIUc
 
 * DEMO #3 - README & GitHub Update, "AI Algorithm" Integration, GUI Update, Database Update, & Logs Update.
 * Due: [10/18/24].
-* [Shipped].
+* [Shipped ✅].
   * https://youtu.be/xTV-pyUmyZs
 
 * DEMO #4 - README & GitHub Update, AI Algorithm Integration (Finalized), Analysis Page Execution, Analysis Progress Display, Upload .nessus via GUI, & Logs Update.
 * Due: [10/28/24].
-* [Shipped].
+* [Shipped ✅].
   * https://youtu.be/cFGu_UDyXlM
 
 * DEMO #5 - README & GitHub Update, View Analysis Results, Export Analysis Results, Anaysis Scheduling, Filter Results.
 * Due: [11/11/24].
-* [Pending].
+* [Pending ⚠️].
   * https://www.youtube.com/watch?v=t4JFM3Ws0uA
 
 * DEMO #6 - README & GitHub Update, INFILTR8 Installer, All Tech Debt Resolved, Clean GitHub Repo, Final Demo Video.
 * Due: [12/2/24].
-* [Pending].
+* [Pending ⚠️].
   * https://www.youtube.com/watch?v=t4JFM3Ws0uA
