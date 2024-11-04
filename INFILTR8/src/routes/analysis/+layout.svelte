@@ -96,3 +96,72 @@
             { label: "Support", href: "/support", icon: BadgeHelp} 
         ];
     //----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    </script>
+    <!-- Closing the TypeScript portion of the .svelte file. -->
+    
+    <!-- App Shell Portion for when site is opened. -->
+    <AppShell>
+        <!-- Page Header for this page in the top left next to sidebar. "Analysis" -->
+        <svelte:fragment slot="pageHeader">
+            <h1 class="text-2xl font-bold mb-4">Analysis</h1>
+        </svelte:fragment>
+    
+        <!-- Sidebar with Drawer. (The left sidebar we use for the links to the rest of the site) -->
+        <svelte:fragment slot="sidebarLeft">
+            <div class="rounded-md flex flex-col md:flex-row bg-[#111827] w-full flex-1 max-w-7xl mx-auto border border-[#111827] overflow-hidden h-full">
+                <!-- Make it so sidebar can grow. -->
+                <Sidebar class="justify-between gap-10">
+                    <div class="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
+                        <!-- If sidebar is hovered over (open), we show the elements and give the greeting. -->
+                        {#if $vopen}
+                            <a
+                                href="/"
+                                class="font-normal flex space-x-2 items-center text-sm text-white py-1 relative z-20"
+                            >
+                                <div
+                                    class="h-5 w-5 bg-white rounded-br-lg rounded-tr-sm rounded-tl-lg rounded-bl-sm flex-shrink-0"
+                                ></div>
+                                <span class="font-medium text-white whitespace-pre">
+                                    <p>{greeting}{" "}{$user?.username}</p>
+                                </span>
+                            </a>
+                        <!-- Else we hide the elements and no greeting. -->
+                        {:else}
+                            <a
+                                href="/"
+                                class="font-normal flex space-x-2 items-center text-sm text-white py-1 relative z-20"
+                            >
+                                <div
+                                    class="h-5 w-5 bg-white rounded-br-lg rounded-tr-sm rounded-tl-lg rounded-bl-sm flex-shrink-0"
+                                ></div>
+                            </a>
+                        {/if}
+                        <!-- Load each of the links on the sidebar with a small gap between them for formatting. -->
+                        <div class="mt-8 flex flex-col gap-2">
+                            {#each links as link}
+                              <SidebarLink {link} />
+                            {/each}
+                        </div>
+                    </div>
+    
+                    <!-- At bottom of Sidebar have the logout button. -->
+                    <div>
+                        <SidebarLink
+                            link={{
+                              label: "Sign Out",
+                              href: "/Login",
+                              icon: ArrowLeft,
+                            }}
+                        />
+                    </div>    
+                </Sidebar>
+                <!-- End of Sidebar defintion. -->
+            </div>
+            <!-- End of Sidebar class. -->
+        </svelte:fragment>
+        <!-- Total end of Sidebar component. -->
+        <slot/>
+        <!-- End of Analysis Page Content. -->
+    </AppShell>
+    <!-- Total end of App Shell Portion of code. -->
+    <!-- END OF ANALYSIS BACKEND CODE. -->
