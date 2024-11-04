@@ -130,7 +130,9 @@ You must also ensure the database is running so login onto the site is possible.
 
 1. Start Database (In Split Terminal):
     ```bash
-    cd INFILTR8 -> cd server -> run command “node server.js”
+    cd INFILTR8
+    cd server
+    run command “node server.js”
     ```
 
 You can also use the install script if you’ve downloaded the source code from GitHub as a ZIP file.
@@ -141,23 +143,36 @@ You can also use the install script if you’ve downloaded the source code from 
     ```
 
 
-## 🎞️ Video Demonstration.
+## 🎞️ Project Milestones & Video Demonstrations.
 
 Short video archives demonstrating the various vertical slices for INFILTR8 have been recorded to show the software design process.
 
-  
-* DEMO #1 - Non-Functional GUI, Data Storage, GitHub Configuration, & Project Dashboard.
+* [Shipped].
+* DEMO #1 - README & GitHub Update, Non-Functional GUI, Data Storage, GitHub Configuration, DAC Added to GitHub, Stack Foundation & Project Dashboard.
 * Due: [9/16/24]
   * https://youtu.be/wsV8tB8XbOw
-  
-* DEMO #2 - GUI Update, Improved GitHub & Database, Processing Recon Data, Allowed/Off-limit IPs, Entry Point Selection, & Start of Logs.
+
+* [Shipped].
+* DEMO #2 - README & GitHub Update, Improved Database, Processing Recon Data, Allowed/Off-limit IP List, Entry Point Types Selection, & Start of Logs.
 * Due: [9/30/24]
   * https://youtu.be/GIlSGcYOIUc
- 
-* DEMO #3 - GUI Update, Database Update, Improved ReadMe & Github, "AI Algorithm" Integration, & Logs Page Login.
+
+* [Shipped].
+* DEMO #3 - README & GitHub Update, "AI Algorithm" Integration, GUI Update, Database Update, & Logs Update.
 * Due: [10/18/24]
   * https://youtu.be/xTV-pyUmyZs
 
-* DEMO #4 - AI Algorithm Integration, Analysis Page & Progress Display, Upload .nessus via GUI & Logs Update.
+* [Shipped].
+* DEMO #4 - README & GitHub Update, AI Algorithm Integration (Finalized), Analysis Page Execution, Analysis Progress Display, Upload .nessus via GUI, & Logs Update.
 * Due: [10/28/24]
   * https://youtu.be/cFGu_UDyXlM
+
+* [Pending].
+* DEMO #5 - README & GitHub Update, View Analysis Results, Export Analysis Results, Anaysis Scheduling, Filter Results.
+* Due: [11/11/24]
+  * https://www.youtube.com/watch?v=t4JFM3Ws0uA
+
+* [Pending].
+* DEMO #6 - README & GitHub Update, INFILTR8 Installer, All Tech Debt Resolved, Clean GitHub Repo, Final Demo Video.
+* Due: [12/2/24]
+  * https://www.youtube.com/watch?v=t4JFM3Ws0uA
