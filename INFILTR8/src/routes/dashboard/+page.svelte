@@ -3,12 +3,11 @@
   import { writable } from 'svelte/store';
   import { ProgressRadial, FileDropzone, FileButton, popup } from "@skeletonlabs/skeleton";
   import type { PopupSettings } from "@skeletonlabs/skeleton";
-  import { projectFolders } from '$lib/stores/projectFoldersStore'; // Correct import
+  import { projectFolders } from '$lib/stores/projectFoldersStore'; 
   import { createLogEntry } from '../../routes/Logs/logservice';
 
   let button: HTMLButtonElement | null = null;
   let dropdownMenu: HTMLDivElement | null = null;
-  let isProjectFormOpen = false;
   let isDropdownVisible = false;
   let projectName = ''; // Name of the project (folder)
   let selectedProject = ''; // Currently selected project
@@ -52,6 +51,7 @@
       });
       return;
     }
+
     try {
       const response = await fetch('http://localhost:3000/process-csv', {
         method: 'POST',
@@ -69,6 +69,7 @@
     }
   }
 
+  /* Function to upload file */
   async function uploadFile() {
     if (!files || files.length === 0) {
       console.error("No file selected");
@@ -118,6 +119,7 @@
     }
   }
 
+  /* Function to create Project folder to hold future project */
   async function createProjectFolder() {
     if (!projectName) {
       alert("Please enter a project name.");
@@ -159,6 +161,7 @@
     }
   }
 
+  /* Function to delete the selected project */
   async function deleteProjectFolder() {
     if (!selectedProject) {
       alert("Please select a project to delete.");
@@ -194,20 +197,6 @@
       console.error('Error deleting project folder:', error);
     }
   }
-
-  function handleDragOver(event: DragEvent) { 
-    event.preventDefault();
-    isDragOver = true;
-  }
-
-  function handleDragLeave(event: DragEvent) { 
-    isDragOver = false;
-  }
-
-  function handleDrop(event: DragEvent) {
-    event.preventDefault();
-    isDragOver = false;
-  }
 </script>
 
 <div class="container h-full mx-auto flex justify-center items-center py-10">
@@ -218,26 +207,20 @@
       <div class="flex flex-col space-y-2 w-full">
           <button 
             class="w-full p-3 bg-primary-500 text-white rounded-md hover:bg-primary-600 transition-colors" 
-            use:popup={popupSettings}
-          >
+            use:popup={popupSettings}>
             Create Project
           </button>
 
           <!-- Dropdown Menu for Project Creation -->
-          <div 
-            class="card p-4 w-72 shadow-xl" 
-            data-popup="createProjectPopup"
-          >
+          <div class="card p-4 w-72 shadow-xl" data-popup="createProjectPopup">
               <input 
                 type="text" 
                 class="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 text-gray-700" 
                 placeholder="Enter project name" 
-                bind:value={projectName} 
-              />
+                bind:value={projectName} />
               <button 
                 class="w-full p-3 bg-primary-500 text-white rounded-md hover:bg-primary-600 transition-colors mt-2" 
-                on:click={createProjectFolder}
-              >
+                on:click={createProjectFolder}>
                 Create
               </button>
           </div>
@@ -246,9 +229,8 @@
       <!-- Select Project Folder -->
       <div class="w-full">
         <select 
-        class="w-full p-3 border rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 text-gray-700" 
-        bind:value={selectedProject}
-        >
+        class="w-full p-3 border rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 text-gray-700 " 
+        bind:value={selectedProject}>
         <option value="" disabled>Select Project Folder</option>
         {#each $projectFolders as folder}
         <option value={folder}>{folder}</option>
@@ -294,8 +276,7 @@
       <div class="w-full">
           <button 
             class="w-full p-3 bg-primary-500 text-white rounded-md hover:bg-primary-600 transition-colors" 
-            on:click={uploadToNeo4j}
-          >
+            on:click={uploadToNeo4j}>
             Upload CSV to Neo4j
           </button>
       </div>
@@ -304,8 +285,7 @@
       <div class="flex space-x-4 justify-center w-full">
           <button 
             class="w-full p-3 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors" 
-            on:click={deleteProjectFolder}
-          >
+            on:click={deleteProjectFolder}>
             Delete Project
           </button>
 

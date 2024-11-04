@@ -29,7 +29,6 @@
         fontSize += increase ? 1 : -1;
         document.documentElement.style.fontSize = `${fontSize}px`;
         localStorage.setItem('fontSize', fontSize.toString());
-        
         const action = increase ? 'increased' : 'decreased';
         createLogEntry({
             type: 'Information',
@@ -42,6 +41,7 @@
         filter = newFilter;
         document.documentElement.style.filter = filter;
         localStorage.setItem('filter', filter);
+
         
         let filterMessage;
         switch (filter) {
@@ -55,7 +55,6 @@
             type: 'Information',
             message: `Filter changed to: ${filterMessage}`
         });
-    }
 
     //Logs when the LightSwitch (light/dark mode) is toggled
     function logLightSwitch() {
