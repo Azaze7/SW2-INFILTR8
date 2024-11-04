@@ -72,7 +72,7 @@ Special Thanks to All of those who contributed! We could not do it without you!
 * Miriam Olague 	
 
 <p align="center">
-### *Team #6 extends its sincere gratitude to all of our customers and our guidance team! Thank you for believing in us!*
+*Team #6 extends its sincere gratitude to all of our customers and our guidance team! Thank you for believing in us!*
 </p>
 
 ## 🗂️ What Files are Enclosed Here?
