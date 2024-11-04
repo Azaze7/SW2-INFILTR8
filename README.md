@@ -143,7 +143,7 @@ B. In terminal #2.
     node server.js
     ```
 
-***You can also use the install script if you’ve downloaded the source code from GitHub as a ZIP file.***
+***C. You can also use the install script if you’ve downloaded the source code from GitHub as a ZIP file.***
 
 1. Run Install Script for Linux:
     ```bash
