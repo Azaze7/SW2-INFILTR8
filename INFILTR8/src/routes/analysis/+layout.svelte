@@ -148,7 +148,6 @@ function selectProject(folder: string) {
                     </div>
                 </div>
                 <div>
-                    <LightSwitch />
                     <SidebarLink
                         link={{
                           label: "Sign Out",

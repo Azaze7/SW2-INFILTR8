@@ -81,9 +81,9 @@
 </main>
 
 <!-- Footer -->
-<footer class="flex justify-between p-4 bg-gray-200">
+<!---<footer class="flex justify-between p-4 bg-gray-200">
     <p>&copy; 2024 Your Company</p>
-</footer>
+</footer>-->
 </AppShell>
 
 <style>
