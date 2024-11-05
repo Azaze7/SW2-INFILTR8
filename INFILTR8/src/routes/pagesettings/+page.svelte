@@ -1,4 +1,4 @@
-<!--Settings Page Code -- Christian Garcia -->
+<!--Settings Page Code -- Gilbert Guzman & Christian Garcia -->
 <script lang="ts">
     //Import LightSwitch for toggling light/dark mode themes
     import { LightSwitch } from '@skeletonlabs/skeleton';
@@ -55,6 +55,7 @@
             type: 'Information',
             message: `Filter changed to: ${filterMessage}`
         });
+    }
 
     //Logs when the LightSwitch (light/dark mode) is toggled
     function logLightSwitch() {

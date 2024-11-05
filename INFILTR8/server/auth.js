@@ -85,7 +85,7 @@ app.post('/upload-nessus', upload.single('nessusFile'), (req, res) => {
         const scriptPath = path.resolve(__dirname, '../scripts/maing.py');
 
         // Execute the Python script to process the file and generate CSV inside the project folder
-        exec(`python ${scriptPath} ${nessusFilePath} ${projectDir}`, (error, stdout, stderr) => {
+        exec(`python3 ${scriptPath} ${nessusFilePath} ${projectDir}`, (error, stdout, stderr) => {
             if (error) {
                 console.error(`Execution error: ${error}`);
                 return res.status(500).send('Error processing Nessus file');
