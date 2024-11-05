@@ -7,13 +7,25 @@ import { skeleton } from '@skeletonlabs/tw-plugin';
 /** @type {import('tailwindcss').Config} */
 export default {
     darkMode: 'class',
-    content: ['./src/**/*.{html,js,svelte,ts}', join(require.resolve('@skeletonlabs/skeleton'), '../**/*.{html,js,svelte,ts}')],
+    content: [
+        './src/**/*.{html,js,svelte,ts}', 
+        join(require.resolve('@skeletonlabs/skeleton'), '../**/*.{html,js,svelte,ts}')
+    ],
     theme: {
         extend: {
+            colors: {
+                bg: '#1d1b28',
+                'color-main': '#4628e9',
+                'color-main-dark': '#191528',
+                'color-second': '#aaa7b9',
+            },
+            transitionTimingFunction: {
+                'out-expo': 'cubic-bezier(0.16, 1, 0.3, 1)', 
+            },
             animation: {
                 grid: "grid 15s linear infinite",
                 marquee: "marquee var(--duration) linear infinite",
-                "marquee-vertical": "marquee-vertical var(--duration) linear infinite", // Vertical marquee animation
+                "marquee-vertical": "marquee-vertical var(--duration) linear infinite",
             },
             keyframes: {
                 grid: {
@@ -41,8 +53,9 @@ export default {
                         name: 'wintry',
                         enhancements: true,
                     },
-                    {   name: 'modern',
-                        enhancements:true,
+                    {
+                        name: 'modern',
+                        enhancements: true,
                     },
                     {
                         name: 'skeleton',

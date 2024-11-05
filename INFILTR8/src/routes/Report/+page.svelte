@@ -1,6 +1,6 @@
-<h1 class="flex justify-center"></h1>
-
 <script>
+
+
     let folder = {
         name: "Current Folder",
         items: 63,
@@ -13,288 +13,61 @@
         { ip: '192.168.1.20', device: 'Device C', vulnerability: 'CVE-2024-122 {VPN TRAFFIC HIJACK}', status: 'Exploited' },
         { ip: '192.168.1.25', device: 'Device D', vulnerability: 'CVE-2016-14800 {VPN TRAFFIC HIJACK}', status: 'Not Exploited' },
     ];
-    
+
     let selectedFileType = ''; 
-    const fileTypes = ['PDF', 'XML']; 
 
     function exportData() {
-        // Export logic here
+        if (!selectedFileType) {
+            alert("Please select a file type to export.");
+            return;
+        }
+        alert(`Exporting data as ${selectedFileType}`);
     }
 </script>
 
-<div class="grid-container">
-    <main class="main-content">
-        <div class="logo"><a href="#"><span>Lo</span>gs</a></div>
-        <h1>Reports</h1>
-        
-        <div class="folder-card">
-            <div class="folder-icon">
-                <img src="https://img.icons8.com/ios-filled/50/000000/folder-invoices.png" alt="Folder Icon" />
-            </div>
-            <div class="folder-details">
-                <h2>{folder.name}</h2>
-                <p>{folder.items} items | {folder.size}</p>
-            </div>
-            <div class="folder-options">
-                <span>⋮</span>
-            </div>
+<main class="p-8 overflow-y-auto">
+    <h1 class="text-center text-3xl font-semibold mb-4">Reports</h1>
+
+    <div class="flex items-center bg-blue-900 text-white rounded-xl shadow-md p-4 mb-4 w-48 hover:scale-105 hover:shadow-lg transition-transform">
+        <div>
+            <h2 class="text-lg font-semibold text-center">{folder.name}</h2>
+            <p class="text-sm text-gray-400 text-center">{folder.items} items | {folder.size}</p>
+        </div>
+    </div>
+
+    <h2 class="text-xl font-semibold mb-4">IP List</h2>
+    <div class="grid grid-cols-[0.1fr_1fr_1fr_2fr_1fr] p-2 bg-gray-800 text-white rounded-md mb-2">
+        <span>Select</span> 
+        <span>IP Address</span>
+        <span>Device</span>
+        <span>Vulnerability</span>
+        <span>Status</span>
+    </div>
+
+    <ul>
+        {#each ipList as item}
+            <li class="grid grid-cols-[0.1fr_1fr_1fr_2fr_1fr] p-2 bg-gray-900 text-white rounded-md items-center">
+                <span><input type="checkbox" class="mr-2 scale-110"></span>
+                <span>{item.ip}</span>
+                <span>{item.device}</span>
+                <span>{item.vulnerability}</span>
+                <span>{item.status}</span>
+            </li>
+        {/each}
+    </ul>
+
+    <div class="flex items-center justify-between mt-6">
+        <div class="flex flex-col">
+            <label for="fileType" class="text-white mb-2">Select file type:</label>
+            <select id="fileType" class="bg-gray-900 text-white p-2 rounded-md border border-gray-600" on:change="{e => selectedFileType = e.target.value}">
+                <option value="">Select File Type</option>
+                <option value="PDF">PDF</option>
+                <option value="XML">XML</option>
+            </select>
         </div>
 
-        <h2>IP List</h2>
-        <div class="ip-list-container">
-            <div class="ip-header">
-                <span class="ip-header-item"></span> 
-                <span class="ip-header-item">IP Address</span>
-                <span class="ip-header-item">Device</span>
-                <span class="ip-header-item">Vulnerability</span>
-                <span class="ip-header-item">Status</span>
-            </div>
-        
-            <ul class="ip-list">
-                {#each ipList as item}
-                    <li class="ip-item">
-                        <span>
-                            <input type="checkbox">
-                        </span>
-                        <span class="ip-text">{item.ip}</span>
-                        <span class="ip-text">{item.device}</span>
-                        <span class="ip-text">{item.vulnerability}</span>
-                        <span class="ip-text">{item.status}</span>
-                    </li>
-                {/each}
-            </ul>
-        </div>
-
-        <div class="action-container">
-            <div class="file-type-selection">
-                <label for="fileType">Select file type:</label>
-                <select id="fileType" class="select-dropdown" bind:value={selectedFileType}>
-                    <option value="" disabled>Select File Type</option>
-                    {#each fileTypes as fileType}
-                        <option value={fileType}>{fileType}</option> 
-                    {/each}
-                </select>
-            </div>
-        
-            <button on:click={exportData} class="export-button">Export</button>
-        </div>
-    </main>
-</div>
-
-<style>
-    :root {
-        --bg: #1d1b28;
-        --color-main: #4628e9;
-        --color-main-dark: #191528;
-        --color-second: #aaa7b9;
-        --transition: all .3s ease-out;
-    }
-
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-
-    .grid-container {
-        display: grid;
-        grid-template-areas: "sidebar main right";
-        grid-template-columns: 250px 1fr 350px;
-        height: 100vh;
-        font-family: Arial, sans-serif;
-    }
-
-    .sidebar {
-        grid-area: sidebar;
-        background-color: #f1f1f1;
-        color: white;
-        padding: 20px;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .main-content {
-        grid-area: main;
-        padding: 30px;
-        overflow-y: auto;
-        background-color: transparent;
-    }
-
-    .right-side {
-        grid-area: right;
-        background-color: var(--bg);
-        padding: 20px;
-        box-shadow: -2px 0 4px rgba(0, 0, 0, 0.1);
-    }
-
-    @media (max-width: 1024px) {
-        .grid-container {
-            grid-template-areas: "sidebar main";
-            grid-template-columns: 250px 1fr;
-        }
-
-        .right-side {
-            display: none;
-        }
-    }
-
-    @media (max-width: 768px) {
-        .grid-container {
-            grid-template-areas: "main";
-            grid-template-columns: 1fr;
-        }
-
-        .sidebar {
-            display: none;
-        }
-    }
-
-    .action-container {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-top: 20px;
-    }
-
-    .file-type-selection {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .select-dropdown {
-        background-color: #1d1b28;
-        color: #ffffff;
-        padding: 10px;
-        border-radius: 4px;
-        border: 1px solid #3b3b6d;
-        font-size: 14px;
-    }
-
-    .select-dropdown option {
-        background-color: #1d1b28;
-        color: #ffffff;
-    }
-
-    .export-button {
-        background-color: #1d1b28;
-        color: #ffffff;
-        padding: 10px 20px;
-        border: 1px solid #3b3b6d;
-        border-radius: 4px;
-        cursor: pointer;
-        transition: background-color 0.3s ease, border 0.3s ease;
-    }
-
-    .export-button:hover {
-        background-color: #3b3b6d;
-        border: 1px solid #5b5b8d;
-    }
-
-    .folder-card {
-        display: flex;
-        align-items: center;
-        background-color: #174972;
-        border-radius: 16px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-        padding: 10px 20px;
-        width: 320px;
-        height: 80px;
-        margin: 10px;
-        cursor: pointer;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .folder-card:hover {
-        transform: scale(1.02);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    }
-
-    .folder-icon {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 50px;
-        height: 50px;
-    }
-
-    .folder-details {
-        flex-grow: 1;
-        margin-left: 20px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-    }
-
-    .folder-details h2 {
-        font-size: 16px;
-        margin: 0;
-        font-weight: bold;
-        color: #000;
-    }
-
-    .folder-details p {
-        font-size: 12px;
-        margin: 5px 0 0;
-        color: #888;
-    }
-
-    .folder-options {
-        display: flex;
-        align-items: center;
-        font-size: 20px;
-        color: #888;
-    }
-    
-    .ip-header {
-        display: grid;
-        grid-template-columns: 0.1fr 1fr 1fr 2fr 1fr;
-        padding: 10px 0;
-        font-weight: bold;
-        font-size: 16px;
-        color: #fff;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-        margin-bottom: 10px;
-        text-align: left;
-        align-items: center;
-    }
-
-    .ip-header-item {
-        text-align: left;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    .ip-item {
-        display: grid;
-        grid-template-columns: 0.1fr 1fr 1fr 2fr 1fr;
-        align-items: center;
-        padding: 10px 0;
-        font-size: 16px;
-        color: #fff;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .ip-item input[type="checkbox"] {
-        margin-right: 7px;
-        transform: scale(1.0);
-    }
-
-    .ip-text {
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-    }
-
-    .ip-item:hover {
-        background-color: rgba(255, 255, 255, 0.1);
-        border: 1px solid rgb(222, 222, 222);
-    }
-
-    .button-container {
-        display: flex;
-        justify-content: flex-end;
-        margin-top: 20px;
-    }
-
-</style>
+        <button on:click="{exportData}" class="bg-gray-900 text-white px-4 py-2 rounded-md border border-gray-600">
+            Export
+        </button>
+    </div>
+</main>

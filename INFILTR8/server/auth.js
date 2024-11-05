@@ -9,7 +9,7 @@ import csv from 'csv-parser';
 import multer from 'multer';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import session from 'express-session'; // Use only express-session
+import session from 'express-session';
 
 // Define __dirname manually for ES module
 const __filename = fileURLToPath(import.meta.url);
@@ -24,9 +24,9 @@ app.use(express.json());
 
 // Enable CORS for all routes with specific origin
 app.use(cors({
-    origin: 'http://localhost:5173',  // Explicitly specify the allowed origin
-    credentials: true,  // Allow cookies and authorization headers
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],  // Allowed methods
+    origin: 'http://localhost:5173',
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'X-Requested-With', 'Accept'],
 }));
 
@@ -43,9 +43,6 @@ const driver = neo4j.driver(
     process.env.NEO4J_URI,
     neo4j.auth.basic(process.env.NEO4J_USERNAME, process.env.NEO4J_PASSWORD)
 );
-
-// Create a Neo4j session
-const neo4jSession = driver.session();
 
 // Set up multer for file uploads
 const upload = multer({ dest: 'uploads/' }); // Temporary upload folder
@@ -66,17 +63,26 @@ app.post('/upload-nessus', upload.single('nessusFile'), (req, res) => {
         return res.status(400).send('Project name is required');
     }
 
+    // Define the project directory path
     const projectDir = path.join(__dirname, 'data', projectName);
 
-    // Move the .nessus file into the project folder
-    const nessusFilePath = path.join(projectDir, req.file.originalname);
+    // Ensure the project directory exists, create it if it doesn't
+    if (!fs.existsSync(projectDir)) {
+        fs.mkdirSync(projectDir, { recursive: true });
+    }
+
+    // Define the full path for the .nessus file in the target directory
+    const nessusFilePath = path.join(projectDir, req.file.originalname || 'nessus_v_unknown.nessus');
+
+    // Move the .nessus file from the temporary upload location to the target directory
     fs.rename(req.file.path, nessusFilePath, (err) => {
         if (err) {
             console.error('Error moving Nessus file:', err);
             return res.status(500).send('Failed to move Nessus file');
         }
 
-        const scriptPath = path.resolve(__dirname, '../scripts/maing.py'); // Ensure the script path is correct
+        // Define the path to the Python script
+        const scriptPath = path.resolve(__dirname, '../scripts/maing.py');
 
         // Execute the Python script to process the file and generate CSV inside the project folder
         exec(`python3 ${scriptPath} ${nessusFilePath} ${projectDir}`, (error, stdout, stderr) => {
