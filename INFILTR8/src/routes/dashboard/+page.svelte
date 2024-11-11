@@ -47,13 +47,11 @@
    * SRS ONLY SAYS "Shows a list of notifications" which is very vague 
    * Will have to figure out what exactly these types of notifications are so 
    * we can implement the functions below. 
-   * 
+   */
   async function uploadToNeo4j() {} // COMPLETE THIS LATER
   async function uploadFile() {} // COMPLETE THIS LATER
   async function createProjectFolder() {} // COMPLETE THIS LATER
   async function deleteProjectFolder() {} // COMPLETE THIS LATER
-
-  **/
 </script>
 
 <div class="container h-full mx-auto flex justify-center items-start py-10 space-x-10">
@@ -191,7 +189,8 @@
 <style>
   body {
     font-family: Arial, sans-serif;
-    background-color: #f5f5f5;
+    background-color: #1b1f3a;  
+    color: #f5f5f5;  
     margin: 0;
     padding: 20px;
   }
@@ -199,24 +198,31 @@
   .container {
     display: flex;
     flex-direction: row;
+    align-items: center; /* Center vertically */
+    justify-content: center;
+    gap: 30px; /* Increased gap for more spacing */
+    height: 100vh; /* Full viewport height to help with vertical centering */
   }
 
   .notifications-container {
-    max-width: 300px;
-    background-color: white;
+    max-width: 350px; /* Increased width for more space */
+    background-color: #2c2f48;  
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);  
     padding: 20px;
+    color: #ffffff;  
   }
 
   .notifications-header {
-    font-size: 24px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #d1d5db;  
     margin-bottom: 20px;
   }
 
   .notification {
     padding: 15px;
-    border-bottom: 1px solid #e0e0e0;
+    border-bottom: 1px solid #3c3f5c;  
     display: flex;
     flex-direction: column;
   }
@@ -228,32 +234,69 @@
   .notification-title {
     font-size: 16px;
     font-weight: bold;
+    color: #f1f5f9; 
   }
 
   .notification-details {
     font-size: 14px;
-    color: #666;
+    color: #cbd5e1; 
     margin: 5px 0;
   }
 
   .notification-status {
-    color: #d63384;
+    color: #ff4d6d; 
     font-weight: bold;
     margin-top: 5px;
   }
 
   .notification-date {
     font-size: 12px;
-    color: #999;
+    color: #a1a1aa; 
     margin-top: 5px;
   }
 
   .unread {
-    background-color: #f0f8ff;
-    border-left: 4px solid #d63384;
+    background-color: #374151; 
+    border-left: 4px solid #ff4d6d; 
   }
 
-  .space-x-10 > :not([hidden]) ~ :not([hidden]) {
-    margin-left: 10px;
+  .upload-section {
+    max-width: 500px;
+    width: 100%;
+    color: #ffffff; 
+  }
+
+  .text-white-800 {
+    color: #e5e7eb; 
+  }
+
+  button {
+    background-color: #4f46e5; 
+    color: #ffffff; 
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  button:hover {
+    background-color: #4338ca; 
+  }
+
+  .bg-primary-500 {
+    background-color: #3b82f6; 
+  }
+
+  .bg-primary-600 {
+    background-color: #2563eb; 
+  }
+
+  .bg-red-500 {
+    background-color: #ef4444; 
+  }
+
+  .bg-red-600 {
+    background-color: #dc2626; 
   }
 </style>
