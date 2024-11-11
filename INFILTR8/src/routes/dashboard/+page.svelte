@@ -191,7 +191,7 @@
 <style>
   body {
     font-family: Arial, sans-serif;
-    background-color: #f5f5f5;
+    background-color: #000080;
     margin: 0;
     padding: 20px;
   }
