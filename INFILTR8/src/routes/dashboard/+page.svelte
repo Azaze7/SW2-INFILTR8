@@ -39,8 +39,7 @@
     fetchProjectFolders();
   });
 
-  /**
-   * Luis' Section: 
+  /* Luis' Section: 
    * 
    * WILL IMPLEMENT THIS AS SOON AS WE GET THE FRONT END FIGURED OUT. 
    * WE NEED TO ASK THE CUSTOMER HOW THEY WANT THIS TO WORK. 
@@ -57,30 +56,31 @@
   **/
 </script>
 
-<div class="container h-full mx-auto flex justify-center items-center py-10">
+<div class="container h-full mx-auto flex justify-center items-start py-10 space-x-10">
+  <!-- Notifications Section -->
+  <div class="notifications-container">
+    <h2 class="notifications-header">📧 Notifications</h2>
+    <div class="notification unread">
+      <div class="notification-title">Notification error!</div>
+      <div class="notification-details">A target IP "10.0.0.2" was not found!</div>
+      <div class="notification-status">Unread</div>
+      <div class="notification-date">4.6.2019 | 13:44</div>
+    </div>
+    <div class="notification">
+      <div class="notification-title">File updated</div>
+      <div class="notification-details">cyber..Dependencies.pcap</div>
+      <div class="notification-date">4.6.2019 | 13:44</div>
+    </div>
+    <div class="notification">
+      <div class="notification-title">Error message!</div>
+      <div class="notification-details">Target Files are missing!</div>
+      <div class="notification-date">4.6.2019 | 13:44</div>
+    </div>
+  </div>
+
+  <!-- Upload Section -->
   <div class="space-y-8 w-full max-w-md text-center flex flex-col items-center rounded-lg shadow-md">
     <h2 class="text-2xl font-bold text-white-800">Welcome to INFILTR8</h2>
-
-    <!-- Notifications Section -->
-    <div class="notifications-container">
-      <h2 class="notifications-header">📧 Notifications</h2>
-      <div class="notification unread">
-        <div class="notification-title">Notification error!</div>
-        <div class="notification-details">A target IP "10.0.0.2" was not found!</div>
-        <div class="notification-status">Unread</div>
-        <div class="notification-date">4.6.2019 | 13:44</div>
-      </div>
-      <div class="notification">
-        <div class="notification-title">File updated</div>
-        <div class="notification-details">cyber..Dependencies.pcap</div>
-        <div class="notification-date">4.6.2019 | 13:44</div>
-      </div>
-      <div class="notification">
-        <div class="notification-title">Error message!</div>
-        <div class="notification-details">Target Files are missing!</div>
-        <div class="notification-date">4.6.2019 | 13:44</div>
-      </div>
-    </div>
 
     <!-- Project Name Input -->
     <div class="flex flex-col space-y-2 w-full">
@@ -191,14 +191,18 @@
 <style>
   body {
     font-family: Arial, sans-serif;
-    background-color: #000080;
+    background-color: #f5f5f5;
     margin: 0;
     padding: 20px;
   }
 
+  .container {
+    display: flex;
+    flex-direction: row;
+  }
+
   .notifications-container {
-    max-width: 600px;
-    margin: auto;
+    max-width: 300px;
     background-color: white;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -247,5 +251,9 @@
   .unread {
     background-color: #f0f8ff;
     border-left: 4px solid #d63384;
+  }
+
+  .space-x-10 > :not([hidden]) ~ :not([hidden]) {
+    margin-left: 10px;
   }
 </style>
