@@ -198,19 +198,24 @@
   .container {
     display: flex;
     flex-direction: row;
-    align-items: center; /* Center vertically */
+    align-items: center; 
     justify-content: center;
-    gap: 30px; /* Increased gap for more spacing */
-    height: 100vh; /* Full viewport height to help with vertical centering */
+    /* Below, Space between notifications and upload section */
+    gap: 30px; 
+    height: 100vh; 
   }
 
-  .notifications-container {
-    max-width: 350px; /* Increased width for more space */
+  .notifications-container,
+  .upload-section {
+    width: 450px; 
     background-color: #2c2f48;  
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);  
     padding: 20px;
     color: #ffffff;  
+    overflow-wrap: break-word;
+    word-wrap: break-word; 
+    word-break: break-word;
   }
 
   .notifications-header {
@@ -241,6 +246,7 @@
     font-size: 14px;
     color: #cbd5e1; 
     margin: 5px 0;
+    white-space: normal;
   }
 
   .notification-status {
@@ -258,12 +264,6 @@
   .unread {
     background-color: #374151; 
     border-left: 4px solid #ff4d6d; 
-  }
-
-  .upload-section {
-    max-width: 500px;
-    width: 100%;
-    color: #ffffff; 
   }
 
   .text-white-800 {
