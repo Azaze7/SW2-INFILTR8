@@ -19,11 +19,21 @@
         pluginName: string;
         pluginFamily: string;
     }
+    interface RankedEntry {
+        ip: string;
+        port: number;
+        severity_score: number;
+        exploit_score: number;
+        distinct_vulnerabilities: number;
+        combined_score: number;
+    }
 
     let exploits: Writable<ExploitData[]> = writable([]);
     let projectFolders: Writable<string[]> = writable([]);
     let selectedProject: Writable<string> = writable('');
-    let ipList: Writable<{ ip: string; device: string; vulnerability: string; status: string }[]> = writable([]);
+    let rankedEntries: Writable<RankedEntry[]> = writable([]);
+    let loading = writable(false);
+    let error = writable<string | null>(null);
 
     onMount(fetchProjectFolders);
 
@@ -36,12 +46,6 @@
             console.error(err);
         }
     }
-
-    let folder = {
-        name: "Current Folder",
-        items: 63,
-        size: "621 MB"
-    };
 
     const exploitColumns = [
         { key: 'file', label: 'File' },
@@ -58,20 +62,14 @@
         { key: 'pluginFamily', label: 'Plugin Family' }
     ];
 
-    $: if ($selectedProject) {
-        fetchIpList($selectedProject);
-    }
-
-    async function fetchIpList(project: string) {
-        try {
-            const ipListData = await fetchData<{ ip: string; device: string; vulnerability: string; status: string }[]>(
-                `http://localhost:3000/ip-list/${project}`
-            );
-            ipList.set(ipListData);
-        } catch (err) {
-            console.error('Error fetching IP list:', err);
-        }
-    }
+    const rankedEntryColumns = [
+        { key: 'ip', label: 'IP Address' },
+        { key: 'port', label: 'Port' },
+        { key: 'severity_score', label: 'Severity Score' },
+        { key: 'exploit_score', label: 'Exploit Score' },
+        { key: 'distinct_vulnerabilities', label: 'Distinct Vulnerabilities' },
+        { key: 'combined_score', label: 'Combined Score' }
+    ];
 
     async function fetchProjectData(project: string) {
         loading.set(true);
@@ -81,6 +79,7 @@
         try {
             await Promise.all([
                 fetchAndParse<ExploitData>(`${basePath}/data_with_exploits.csv`, exploits),
+                fetchAndParse<RankedEntry>(`${basePath}/ranked_entry_points.csv`, rankedEntries)
             ]);
         } catch (err) {
             error.set(`Failed to load data for project: ${project}`);
@@ -105,72 +104,74 @@
         }
     }
 
+    $: {
+      if ($selectedProject) {
+          fetchProjectData($selectedProject);
+      }
+    }
+
     let selectedFileType = ''; 
 
     function exportData() {
         if (!selectedFileType) {
-            alert("Please select a file type to export.");
+            alert("No file type selected! Please select one from the drop down menu.");
             return;
         }
-        alert(`Exporting data as ${selectedFileType}`);
+        alert(`Exporting report for ${selectedProject} to ${selectedFileType}`);
     }
 </script>
 
 <main class="p-8 overflow-y-auto">
     <h1 class="text-center text-3xl font-semibold mb-4">Reports</h1>
-
-    <!-- Project Selection -->
-    <div class="flex flex-col items-center bg-blue-900 text-white rounded-xl shadow-md p-4 mb-4 w-full max-w-xs mx-auto hover:scale-105 hover:shadow-lg transition-transform">
-        <h2 class="text-lg font-semibold text-center">Select a Project</h2>
-        <select
-            class="bg-gray-900 text-white p-2 rounded-md border border-gray-600 w-full mt-4"
-            on:change="{e => selectedProject.set(e.target.value)}"
-            bind:value="{$selectedProject}"
-        >
-            {#each $projectFolders as folder}
-                <option value="{folder}">{folder}</option>
+  
+    <section>
+        <h3>Projects</h3>
+        <div class="flex gap-4 overflow-x-auto px-4 py-2">
+            {#each $projectFolders as folder, index}
+                <button
+                    id={`project-${index}`}
+                    name={`project-${index}`}
+                    class="card p-4 text-1xl"
+                    on:click={() => selectedProject.set(folder)}
+                >
+                    {folder}
+                </button>
             {/each}
-        </select>
-    </div>
-
-    <!-- IP List Header -->
+        </div>
+    </section>
+  
     <h2 class="text-xl font-semibold mb-4 text-blue-800">IP List</h2>
-
-    <!-- Table Header -->
-    <div class="grid grid-cols-[0.1fr_1fr_1fr_2fr_1fr] p-2 bg-gray-800 text-white rounded-md mb-4">
-        <span>Select</span>
-        <span>IP Address</span>
-        <span>Device</span>
-        <span>Vulnerability</span>
-        <span>Status</span>
-    </div>
-
-    <!-- IP List Items -->
-    <ul class="space-y-2">
-        {#each $ipList as item}
-            <li class="grid grid-cols-[0.1fr_1fr_1fr_2fr_1fr] p-2 bg-gray-900 text-white rounded-md items-center">
-                <span><input type="checkbox" class="mr-2 scale-110"></span>
-                <span>{item.ip}</span>
-                <span>{item.device}</span>
-                <span>{item.vulnerability}</span>
-                <span>{item.status}</span>
-            </li>
+  
+    <table class="min-w-full table-auto border-collapse border border-gray-700">
+      <thead class="bg-gray-800 text-white">
+        <tr>
+          <th class="border border-gray-600 px-4 py-2">IP Address</th>
+          <th class="border border-gray-600 px-4 py-2">Exploit Score</th>
+        </tr>
+      </thead>
+      <tbody>
+        {#each $rankedEntries as entry}
+          <tr class="bg-gray-700 text-white">
+            <td class="border border-gray-600 px-4 py-2">{entry.ip}</td>
+            <td class="border border-gray-600 px-4 py-2">{entry.exploit_score}</td>
+          </tr>
         {/each}
-    </ul>
+      </tbody>
+    </table>
 
-    <!-- Export Controls -->
     <div class="flex items-center justify-between mt-6">
         <div class="flex flex-col w-1/3">
             <label for="fileType" class="text-gray-700 mb-2">Select file type:</label>
-            <select id="fileType" class="bg-gray-900 text-white p-2 rounded-md border border-gray-600" on:change="{e => selectedFileType = e.target.value}">
+            <select id="fileType" class="bg-gray-900 text-white p-2 rounded-md border border-gray-600" bind:value="{selectedFileType}">
                 <option value="">Select File Type</option>
                 <option value="PDF">PDF</option>
                 <option value="XML">XML</option>
             </select>
         </div>
-
+    
         <button on:click="{exportData}" class="bg-gray-900 text-white px-6 py-2 rounded-md border border-gray-600 hover:bg-gray-700">
             Export
         </button>
     </div>
-</main>
+
+  </main>
