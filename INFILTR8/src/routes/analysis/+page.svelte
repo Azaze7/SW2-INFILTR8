@@ -574,7 +574,7 @@
                     <div class="file-type-selection"> 
                         <div class="mt-4 flex items-center gap-2 "> 
                             <span class="mr-2 text-gray-400">Select File Type:</span> 
-                            <select id="fileType" class="select-dropdown" bind:value={selectedFileType}> 
+                            <select id="fileType" class="select-dropdown text-gray-400" bind:value={selectedFileType}> 
                                 <option value="" disabled>Select File Type</option> 
                                 {#each fileTypes as fileType} 
                                     <option value={fileType}>{fileType}</option> 
