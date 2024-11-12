@@ -573,7 +573,7 @@
                 <div class="action-container"> 
                     <div class="file-type-selection"> 
                         <div class="mt-4 flex items-center gap-2 "> 
-                            <span class="mr-2 text-gray-400">Select File Type:</span> 
+                            <!-- Removed the "Select File Type:" text -->
                             <select id="fileType" class="select-dropdown" bind:value={selectedFileType}> 
                                 <option value="" disabled>Select File Type</option> 
                                 {#each fileTypes as fileType} 
@@ -585,14 +585,14 @@
                             <button class="bg-indigo-500 text-white px-4 py-2 rounded" on:click={exportData}>Export</button> 
                         </div> 
                     </div> 
-                </div> 
+                </div>
             </div> 
         </main> 
     </div>
     <!-- Closing the TypeScript portion of the .svelte file. -->
     
     <!-- Style Guide Code for Analysis Page. -->
-    <style> 
+    <style>
         .grid-container {
             display: grid;
             grid-template-columns: 1fr;
@@ -646,6 +646,30 @@
         
         .scrollable-column h2, .scrollable-column h3, .scrollable-column span, .scrollable-column li, .scrollable-column ul {
             color: purple;
+        }
+    
+        .select-dropdown,
+        #fileType {
+            background-color: #6466f1; 
+            transition: background-color 0.3s ease;
+            color: white;
+            padding: 10px 40px 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    
+        .select-dropdown:hover,
+        #fileType:hover {
+            background-color: #4a4bc1; /*Slightly darker purple on hover */
+        }
+    
+        .non-dropdown-button {
+            padding: 8px 16px; /*padding for non-dropdown buttons */
+        }
+    
+        button:hover {
+            background-color: #4a4bc1; /*Slightly darker purple on hover */
         }
     </style>
     <!-- End of Styleguide code. -->
