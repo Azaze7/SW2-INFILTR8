@@ -117,10 +117,10 @@
 </div>
 
 <!-- Date filters -->
-<div class="date-filter">
-  <div class="date-input">
-    <label for="start-date">Start Date:</label>
-    <input id="start-date" type="date" class="filter-date" bind:value={startDate} on:change={filterLogsBy} />
+<div class="flex items-center space-x-4 mb-4">
+  <div>
+    <label for="start-date" class="font-bold">Start Date:</label>
+    <input id="start-date" type="date" class="p-2 text-base border border-gray-300 rounded-md w-36" bind:value={startDate} on:change={filterLogsBy} />
   </div>
   
   <div class="date-input">
