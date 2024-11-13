@@ -70,6 +70,7 @@
             combined_score: number;
         }
     //----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        //Various Stores, Variables, & Arrays we need. 
         //Create Writable Stores for the various Data Types.
         //Store Exploit Data.
         let exploits: Writable<ExploitData[]> = writable([]);
@@ -89,8 +90,6 @@
         let selectedProject: string = '';
         //Variable to hold the selected file type.
         let selectedFileType = '';
-        //Variable to hold the selected attack type.
-        let selectedAttackType = ''
         //Variable to hold the selected time.
         let selectedTime = '';
         //Variable to hold whether the time is AM/PM.
@@ -108,6 +107,30 @@
         const timeOptions: string[] = [];
         //Array to hold the AM/PM options for the dropdown menu.
         const ampmOptions: string[] = ['AM', 'PM'];
+        //Writable store to hold ExploitData for what has been Analyzed.
+        const filteredExploits = writable<ExploitData[]>([]);
+
+        //Have first selectedAttackType set to All to start.
+        let selectedAttackType: AttackType = '*All';
+
+        //Have all AttackTypes from the SRS.
+        type AttackType =
+            | '*All'
+            | 'Unauthenticated Port Bypass'
+            | 'Default Credentials'
+            | 'Unpatched Software Exploits'
+            | 'Missing Encryption Protocols'
+            | 'Weak Passwords (Brute Force)';
+
+        //Make a map since the AttackType string in the .csvs is not exactly the same.
+        const attackTypeMapping: { [key in AttackType]: string } = {
+        '*All': '*All',
+        'Unauthenticated Port Bypass': 'Unauthenticated port bypass',
+        'Default Credentials': 'default credentials',
+        'Unpatched Software Exploits': 'unpatched software exploits',
+        'Missing Encryption Protocols': 'missing encryption protocols',
+        'Weak Passwords (Brute Force)': 'weak passwords (brute force)'
+        };
     //----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         //Functions for code. 
         //Make Dropdown for time.
@@ -119,34 +142,69 @@
             });
         }
         
-        //Function to get CSV for a specific project. (Shows if it is 100% Processed)
+        //Get CSV for a specific project. (Shows if it is 100% Processed)
         async function fetchCsvData(project: string) {
             //Try to get file based on the name and path.
             try {
                 const basePath = `/server/data/${project}`;
-                //Set Progress to 10 if project is present but no CSVs present.
+                //Set Progress to 10 if project is present but no CSVs are found.
                 progress.set(10);
-                await Promise.all([
-                    fetchAndParse<ExploitData>(`${basePath}/data_with_exploits.csv`, exploits),
-                    fetchAndParse<EntryPoint>(`${basePath}/entrypoint_most_info.csv`, entryPoints),
-                    fetchAndParse<RankedEntry>(`${basePath}/ranked_entry_points.csv`, rankedEntries)
-                ]);
-                //Set scopIPs based on the entrypoints.
+
+                //File paths for the .csv files.
+                const files = [
+                    `${basePath}/data_with_exploits.csv`,
+                    `${basePath}/entrypoint_most_info.csv`,
+                    `${basePath}/ranked_entry_points.csv`
+                ];
+
+                //Check to see if all csv files were generated and update progress if they are.
+                const progressValues = [40, 70, 100];
+                let foundAnyFile = false;
+
+                //For all files. (Check for each one).
+                for (let i = 0; i < files.length; i++) {
+                    const response = await fetch(files[i]);
+                    if (response.ok) {
+                        foundAnyFile = true;
+                        switch (i) {
+                            case 0:
+                                await fetchAndParse<ExploitData>(files[i], exploits);
+                                break;
+                            case 1:
+                                await fetchAndParse<EntryPoint>(files[i], entryPoints);
+                                break;
+                            case 2:
+                                await fetchAndParse<RankedEntry>(files[i], rankedEntries);
+                                break;
+                        }
+                        
+                        //Short pause while we are updating the progress.
+                        await new Promise(resolve => setTimeout(resolve, 1000));
+                        progress.set(progressValues[i]);
+                    } else {
+                        //error since one of the files not found, lets you know via terminal.
+                        console.log(`File not found: ${files[i]}`);
+                    }
+                }
+
+                //If no files were found, keep the progress at 10. (10 since we have the project, but no csv's were made.)
+                if (!foundAnyFile) {
+                    progress.set(10);
+                }
+
+                //Set scopeIPs based on the entryPoints.
                 scopeIPs.set($entryPoints.map((entry) => entry.ip));
                 //Set availableAnalyses based on ranked entries by port and score.
                 availableAnalyses.set($rankedEntries.map((entry) => `Port ${entry.port} - Score ${entry.combined_score}`));
-                //Set to 40 and t0 100 if all files are present.
-                progress.set(40);
-                progress.set(100);
-            //Else it fails, print error while fetching or parsing CSV.
             } catch (error) {
+                //Else it fails, print error while fetching or parsing CSV.
                 console.error('Error fetching or parsing CSV:', error);
             }
         }
-    
+
         //Function to fetch and parse file. (use url for file and store here.)
         async function fetchAndParse<T>(url: string, store: Writable<T[]>) {
-            //response is based on fetching url.
+            //Response is based on fetching url.
             const response = await fetch(url);
             //If unable to get url, throw error.
             if (!response.ok) throw new Error(`Failed to fetch ${url}`);
@@ -171,9 +229,9 @@
             }
         }
     
-        //Function to General export data as a PDF or a CSV. 
-            //Use this as base for more streamlined exports.
-        function exportData() {
+        //Function to export analyzed data as a PDF or a CSV. 
+        function exportDataAnalyzed() 
+        {
             //if no selected file type (CSV or PDF), print error message.
             if (!selectedFileType) {
                 console.log('No file type selected');
@@ -182,7 +240,40 @@
                     type: 'Warning',
                     message: `No file type selected for export of project: ${selectedProject}`
                 });
-                //return since no expor.t 
+                //return since no export.
+                return;
+            }
+            //Export the data as a list that has selected Project, exploits, entryPoiints, and rankedEntries.
+            console.log(`Exporting as ${selectedFileType}`);
+            const data = {
+                selectedProject,
+                exploits: $exploits,
+                entryPoints: $entryPoints,
+                rankedEntries: $rankedEntries
+            };
+    
+            //If selectedFileType is pdf, use analyzed pdf function.
+            if (selectedFileType === 'PDF') {
+                exportAnalyzedExploitsToPDF();
+            //If slectedFileType is xml, use analyzed xml function.
+            } else if (selectedFileType === 'XML') {
+                exportAnalyzedExploitsToXML();
+            }
+        }
+
+        //Function to general export data as a PDF or a CSV. 
+        //Use this for quick export functionality.
+        function exportData() 
+        {
+            //if no selected file type (CSV or PDF), print error message.
+            if (!selectedFileType) {
+                console.log('No file type selected');
+                //Create log entry if no file type selected for export. 
+                createLogEntry({
+                    type: 'Warning',
+                    message: `No file type selected for export of project: ${selectedProject}`
+                });
+                //return since no export. 
                 return;
             }
             //Export the data as a list that has selected Project, exploits, entryPoiints, and rankedEntries.
@@ -202,204 +293,517 @@
                 exportToXML(data);
             }
         }
-    
-        //TO DO. (ADD THIS! UNFINISHED).
-        //Once analysis is confimed, we want to make sure that we make a log for it. 
-        function confirmAnalysis(){
-            fullTime = selectedTime + selectedAMPM;
-            console.log('Analysis Appointment Confirmed:', fullTime);
-            if (fullTime === '' || selectedProject === '') {
-                createLogEntry({
-                    type: 'Warning',
-                    message: `No project or time was selected when confirming the analysis time`
-                });
-            } else {
+
+    //Function to run analysis.
+    //Use this for logging and to filter which exploit we're analyzing.
+    function runAnalysis(attackType: AttackType): string {
+        console.log(`Running analysis for: ${attackType}`);
+        //Switch for all attackTypes.
+        switch (attackType) {
+            //Case for all.
+            case '*All':
+                console.log(`Analyzing (*All) Attacks for Project: ${selectedProject}`);
                 createLogEntry({
                     type: 'Information',
-                    message: `${fullTime} is confirmed as Appointment Time for Project ${selectedProject}`
+                    message: `Analyzing (*All) Attacks for Project: ${selectedProject}`
                 });
-            }
+                filterExploits('*All');
+                return 'Executing all attacks!';
+
+            //Case for Unauthenticated Port Bypass.
+            case 'Unauthenticated Port Bypass':
+                console.log(`Analyzing (Unauthenticated Port Bypass) for Project: ${selectedProject}`);
+                createLogEntry({
+                    type: 'Information',
+                    message: `Analyzing (Unauthenticated Port Bypass) for Project: ${selectedProject}`
+                });
+                filterExploits('Unauthenticated Port Bypass');
+                return 'Executing Unauthenticated Port Bypass attack!';
+
+            //Case for Default Credentials.
+            case 'Default Credentials':
+                console.log(`Analyzing (Default Credentials) for Project: ${selectedProject}`);
+                createLogEntry({
+                    type: 'Information',
+                    message: `Analyzing (Default Credentials) for Project: ${selectedProject}`
+                });
+                filterExploits('Default Credentials');
+                return 'Executing Default Credentials attack!';
+
+            //Case for Unpatched Software Exploits.
+            case 'Unpatched Software Exploits':
+                console.log(`Analyzing (Unpatched Software Exploits) for Project: ${selectedProject}`);
+                createLogEntry({
+                    type: 'Information',
+                    message: `Analyzing (Unpatched Software Exploits) for Project: ${selectedProject}`
+                });
+                filterExploits('Unpatched Software Exploits');
+                return 'Executing Unpatched Software Exploits attack!';
+
+            //Case for Missing Encryption Protocols.
+            case 'Missing Encryption Protocols':
+                console.log(`Analyzing (Missing Encryption Protocols) for Project: ${selectedProject}`);
+                createLogEntry({
+                    type: 'Information',
+                    message: `Analyzing (Missing Encryption Protocols) for Project: ${selectedProject}`
+                });
+                filterExploits('Missing Encryption Protocols');
+                return 'Executing Missing Encryption Protocols attack!';
+
+            //Case for Weak Passwords.
+            case 'Weak Passwords (Brute Force)':
+                console.log(`Analyzing (Weak Passwords (Brute Force)) for Project: ${selectedProject}`);
+                createLogEntry({
+                    type: 'Information',
+                    message: `Analyzing (Weak Passwords (Brute Force)) for Project: ${selectedProject}`
+                });
+                filterExploits('Weak Passwords (Brute Force)');
+                return 'Executing Weak Passwords (Brute Force) attack!';
+
+            //Default just in case but this shouldnt happen. (*All is default.)
+            default:
+                return 'Unknown attack type! We have no idea how.';
+        }
+    }
+
+    //Define a writable store for progressAnalysis bar, set to 0. 
+    const progressAnalysis = writable(0);
+
+    //Handles when we click the button to run an Analysis with the selected attack type.
+    function handleRunAnalysis() {
+        //DONT DELETE THIS LINE NEED IT TO RUN ANALYSIS.
+        runAnalysis(selectedAttackType);
+
+        progressAnalysis.set(0); 
+        let value = 0; 
+        const interval = setInterval(() => { 
+            value += 1; 
+            if (value <= 100) { 
+                progressAnalysis.set(value); 
+            } else { 
+                clearInterval(interval); 
+            } 
+        }, 20); // Adjust the speed as necessary
+    }
+    
+    //Function to quick export to pdf.
+        //Just gives all the data we have.
+    function exportToPDF(data: any) {
+        //Log if exporting project to PDF.
+        console.log('Exporting Project Folder to PDF:', selectedProject);
+        //If no project selected while export, print warning log.
+        if (selectedProject === "") {
+            //Give popup alert if no project was selected for exporting.
+            alert(`No project was selected for exporting! [(As PDF)]`);
+            //Make Failed Project PDF log.
+            createLogEntry({
+                type: 'Warning',
+                message: `No project was selected for exporting! [(As PDF)]`
+            });
+            //Exit since we failed export.
+            return;
+            //Else print log for successful PDF export.
+        } else {
+            //Make successful Project PDF log.
+            createLogEntry({
+                type: 'Information',
+                message: `Project ${selectedProject} was quick exported as a PDF!`
+            });
         }
     
-        //Function to export to pdf.
-        function exportToPDF(data: any) {
-            //Log if exporting project to PDF.
-            console.log('Exporting Project Folder to PDF:', selectedProject);
-            //If no project selected while export, print warning log.
-            if (selectedProject === "") {
-                //Give popup alert if no project was selected for exporting.
-                alert(`No project was selected for exporting! [(As PDF)]`);
-                //Make Failed Project PDF log.
-                createLogEntry({
-                    type: 'Warning',
-                    message: `No project was selected for exporting! [(As PDF)]`
-                });
-                //Exit since we failed export.
-                return;
-            //Else print log for successful PDF export.
-            } else {
-                //Make successful Project PDF log.
-                createLogEntry({
-                    type: 'Information',
-                    message: `Project ${selectedProject} was exported as a PDF!`
-                });
-            }
+        //Make a new jsPDF document. (doc).
+        const doc = new jsPDF();
+        //Add title to top of PDF with name.
+        doc.text(`INFILTR8 REPORT`, 10, 10);
+        //Get the current date and time for the document title.
+        const now = new Date();
+        const formattedDateTime = now.toLocaleString();
     
-            //Make a new jsPDF document. (doc).
-            const doc = new jsPDF();
-            //Add title to top of PDF with name.
-            doc.text(`INFILTR8 REPORT`, 10, 10);
-            //Get the current date and time for the document title.
-            const now = new Date();
-            const formattedDateTime = now.toLocaleString();
+        //Add generated time for title on report.
+        doc.text(`GENERATED: ${formattedDateTime}`, 10, 20);
+        //Add team number and name for report. 
+        doc.text(`Team: TEAM #6 - The Nine Bytes`, 10, 30);
+        //if the selectedProject is null (Shouldnt happen but here as error handler).
+        if(selectedProject == null){
+            doc.text(`Project: null`, 10, 10);
+            doc.text(`Exoloits: null`, 10, 10);
+            doc.text(`Entry Points: null`, 10, 10);
+            doc.text(`Ranked Entries: null`, 10, 10);
+            return;
+        }
+        //Put Project title on document. 
+        doc.text(`Project: ${data.selectedProject}`, 10, 40);
+        //Say its a quick export.
+        doc.text(`*Quick Export of All Data*`, 10, 50);
+        //Set vertical offset for entries.
+        let yOffset = 20;
+        //Set maxiumum number of entries per page.
+        const maxEntriesPerPage = 40;
+        //Ensure font size for pdf is small to not cut off anything.
+        doc.setFontSize(10);
     
-            //Add generated time for title on report.
-            doc.text(`GENERATED: ${formattedDateTime}`, 10, 20);
-            //Add team number and name for report. 
-            doc.text(`Team: TEAM #6 - The Nine Bytes`, 10, 30);
-            //if the selectedProject is null (Shouldnt happen but here as error handler).
-            if(selectedProject == null){
-                doc.text(`Project: null`, 10, 10);
-                doc.text(`Exoloits: null`, 10, 10);
-                doc.text(`Entry Points: null`, 10, 10);
-                doc.text(`Ranked Entries: null`, 10, 10);
-                return;
-            }
-            //Put Project title on document. 
-            doc.text(`Project: ${data.selectedProject}`, 10, 40);
-            //Set vertical offset for entries.
-            let yOffset = 20;
-            //Set maxiumum number of entries per page.
-            const maxEntriesPerPage = 40;
-            //Ensure font size for pdf is small to not cut off anything.
-            doc.setFontSize(10);
-    
-            //Function to add entries to page. (Title, entries)
-            const addEntriesToPage = (title: string, entries: string[]) => {
-                let pageCount = 1;
-                let entryCount = 0;
-                //Add a new page.
-                doc.addPage();
-                yOffset = 20;
-                //Add title for the page.
-                doc.text(`${title}:`, 10, yOffset);
-                yOffset += 10;
-                //Loop through the entries and add them to the pdf one by one.
-                entries.forEach((entry, index) => {
-                    //If the page has max entries:
-                    if (index % maxEntriesPerPage === 0 && index !== 0) {
-                        //Add another page, then pagecount++.
-                        doc.addPage();
-                        pageCount++;
-                        yOffset = 20;
-                        //Then add title (Continued) to the new page.
-                        doc.text(`${title} (Continued): Page ${pageCount}`, 10, yOffset);
-                        yOffset += 10;
-                    }
-                    //Now the entry text to the PDF.
-                    doc.text(entry, 10, yOffset);
+        //Function to add entries to page. (Title, entries)
+        const addEntriesToPage = (title: string, entries: string[]) => {
+            let pageCount = 1;
+            let entryCount = 0;
+            //Add a new page.
+            doc.addPage();
+            yOffset = 20;
+            //Add title for the page.
+            doc.text(`${title}:`, 10, yOffset);
+            yOffset += 10;
+            //Loop through the entries and add them to the pdf one by one.
+            entries.forEach((entry, index) => {
+                //If the page has max entries:
+                if (index % maxEntriesPerPage === 0 && index !== 0) {
+                    //Add another page, then pagecount++.
+                    doc.addPage();
+                    pageCount++;
+                    yOffset = 20;
+                    //Then add title (Continued) to the new page.
+                    doc.text(`${title} (Continued): Page ${pageCount}`, 10, yOffset);
                     yOffset += 10;
-                    entryCount++;
-                });
-            };
+                }
+                //Now the entry text to the PDF.
+                doc.text(entry, 10, yOffset);
+                yOffset += 10;
+                entryCount++;
+            });
+        };
     
-            //Write exploits to pdf.
-            const exploitEntries = data.exploits.map((exploit: ExploitData, index: number) => `${index + 1}. ${exploit.name} - ${exploit.viable_exploit}`);
-            addEntriesToPage("Exploits", exploitEntries);
+        //Write exploits to pdf.
+        const exploitEntries = data.exploits.map((exploit: ExploitData, index: number) => `${index + 1}. ${exploit.name} - ${exploit.viable_exploit}`);
+        addEntriesToPage("Exploits", exploitEntries);
     
-            //Write entrypoints to pdf.
-            const entryPointEntries = data.entryPoints.map((entry: EntryPoint, index: number) => `${index + 1}. ${entry.ip}:${entry.port} - Vulnerabilities: ${entry.vulnerability_count}`);
-            addEntriesToPage("Entry Points", entryPointEntries);
+        //Write entrypoints to pdf.
+        const entryPointEntries = data.entryPoints.map((entry: EntryPoint, index: number) => `${index + 1}. ${entry.ip}:${entry.port} - Vulnerabilities: ${entry.vulnerability_count}`);
+        addEntriesToPage("Entry Points", entryPointEntries);
     
-            //Write rankedEntries to pdf.
-            const rankedEntries = data.rankedEntries.map((entry: RankedEntry, index: number) => `${index + 1}. ${entry.ip}:${entry.port} - Score: ${entry.combined_score}`);
-            addEntriesToPage("Ranked Entries", rankedEntries);
+        //Write rankedEntries to pdf.
+        const rankedEntries = data.rankedEntries.map((entry: RankedEntry, index: number) => `${index + 1}. ${entry.ip}:${entry.port} - Score: ${entry.combined_score}`);
+        addEntriesToPage("Ranked Entries", rankedEntries);
     
-            //Get the filename based on the selectedProject to add to .pdf
-            const fileName = `${data.selectedProject}.pdf`;
-            //Save the document with the filename.
-            doc.save(fileName);
+        //Get the filename based on the selectedProject to add to .pdf
+        const fileName = `${data.selectedProject}_QuickExport.pdf`;
+        //Save the document with the filename.
+        doc.save(fileName);
+    }
+
+    //Function to export analyzed project to pdf.
+        //Just gives only the specific data we asked for.
+    function exportAnalyzedExploitsToPDF() {
+        //Log if exporting filtered exploits to PDF.
+        console.log('Analyzed Report PDF being generated for project:', selectedProject);
+        //If no project selected while export, print warning log.
+        if (selectedProject === "") {
+            //Give popup alert if no project was selected for exporting.
+            alert(`No project was selected for exporting! [(As PDF)]`);
+            //Make Failed Project PDF log.
+            createLogEntry({
+                type: 'Warning',
+                message: `No project was selected for exporting! [(As PDF)]`
+            });
+            //Exit since we failed export.
+            return;
+        } else {
+            //Make successful Analyzed Project PDF log.
+            createLogEntry({
+                type: 'Information',
+                message: `Analyzed Report for project ${selectedProject} was exported as a PDF!`
+            });
         }
-    
-    
-        function exportToXML(data: any) {
-            //Log if exporting project to XML.
-            console.log('Exporting Project Folder to XML:', selectedProject);
-            //If no project selected while export, print warning log.
-            if (selectedProject === "") {
-                //Give popup alert if no project was selected for exporting.
-                alert(`No project was selected for exporting! [(As XML)]`);
-                //Make Failed Project XML log.
-                createLogEntry({
-                    type: 'Warning',
-                    message: `No project was selected for exporting! [(As XML)]`
-                });
-                return;
-            //Else print log for successful PDF export.
-            } else {
-                //Make successful Project XML log.
-                createLogEntry({
-                    type: 'Information',
-                    message: `Project ${selectedProject} was exported as a XML!`
-                });
-            }
-    
-            const xmlContent = jsonToXML(data);
-            const blob = new Blob([xmlContent], { type: 'application/xml' });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = `${data.selectedProject}.xml`;
-            link.click();
+
+        //Make a new jsPDF document. (doc).
+        const doc = new jsPDF();
+        //Add title to top of PDF with name.
+        doc.text(`INFILTR8 REPORT`, 10, 10);
+        //Get the current date and time for the document title.
+        const now = new Date();
+        const formattedDateTime = now.toLocaleString();
+
+        //Add generated time for title on report.
+        doc.text(`GENERATED: ${formattedDateTime}`, 10, 20);
+        //Add team number and name for report. 
+        doc.text(`Team: TEAM #6 - The Nine Bytes`, 10, 30);
+        //if the selectedProject is null (Shouldn't happen but here as error handler).
+        if (selectedProject == null) {
+            doc.text(`Project: null`, 10, 40);
+            doc.text(`Filtered Exploits: null`, 10, 50);
+            return;
         }
-    
-        function jsonToXML(json: any, root = true) {
-            let xml = '';
-            for (const key in json) {
-                if (json.hasOwnProperty(key)) {
-                    const value = json[key];
-                    if (Array.isArray(value)) {
-                        value.forEach((item) => {
-                            xml += `<${key}>${jsonToXML(item, false)}</${key}>`;
-                        });
-                    } else if (typeof value === 'object' && value !== null) {
-                        xml += `<${key}>${jsonToXML(value, false)}</${key}>`;
-                    } else {
-                        xml += `<${key}>${value}</${key}>`;
-                    }
+        //Put Project title on document.
+        doc.text(`Analyzed Project: ${selectedProject}`, 10, 40);
+        doc.text(`Selected Analysis: ${selectedAttackType}`, 10, 50);
+        //Set vertical offset for entries.
+        let yOffset = 50;
+        //Set maximum number of entries per page.
+        const maxEntriesPerPage = 40;
+        //Ensure font size for pdf is small to not cut off anything.
+        doc.setFontSize(10);
+
+        //Function to add entries to page. (Title, entries)
+        const addEntriesToPage = (title: string, entries: string[]) => {
+            let pageCount = 1;
+            let entryCount = 0;
+            //Add a new page.
+            doc.addPage();
+            yOffset = 20;
+            //Add title for the page.
+            doc.text(`${title}:`, 10, yOffset);
+            yOffset += 10;
+            //Loop through the entries and add them to the pdf one by one.
+            entries.forEach((entry, index) => {
+                //If the page has max entries:
+                if (index % maxEntriesPerPage === 0 && index !== 0) {
+                    //Add another page, then pagecount++.
+                    doc.addPage();
+                    pageCount++;
+                    yOffset = 20;
+                    //Then add title (Continued) to the new page.
+                    doc.text(`${title} (Continued): Page ${pageCount}`, 10, yOffset);
+                    yOffset += 10;
+                }
+                //Now the entry text to the PDF.
+                doc.text(entry, 10, yOffset);
+                yOffset += 10;
+                entryCount++;
+            });
+        };
+
+        //Write our filtered exploits to pdf.
+        const filteredExploitEntries = $filteredExploits.map((exploit: ExploitData, index: number) => `${index + 1}. ${exploit.name} - ${exploit.viable_exploit}`);
+        addEntriesToPage("Analyzed Exploits", filteredExploitEntries);
+
+        //Get the filename based on the selectedProject and selectedattacktype to add to .pdf. (for naming)
+        const fileName = `${selectedProject}_Analyzed_${selectedAttackType}.pdf`;
+        //Save the document with the new filename.
+        doc.save(fileName);
+    }
+
+    //Function to quick export to xml.
+        //Just gives all the data we have.
+    function exportToXML(data: any) {
+        //Log if exporting project to XML.
+        console.log('Exporting Project Folder to XML:', selectedProject);
+
+        //If no project selected while export, print warning log.
+        if (selectedProject === "") {
+            //Give popup alert if no project was selected for exporting.
+            alert(`No project was selected for exporting! [(As XML)]`);
+            //Make Failed Project XML log.
+            createLogEntry({
+                type: 'Warning',
+                message: `No project was selected for exporting! [(As XML)]`
+            });
+            return;
+        } else {
+            //Make successful Project XML log.
+            createLogEntry({
+                type: 'Information',
+                message: `Project ${selectedProject} was quick exported as a XML!`
+            });
+        }
+
+        //Get current date for timestamp.
+        const now = new Date();
+        //get current time in correct format.
+        const formattedDateTime = now.toLocaleString();
+        //Add custom team header information as XML comment at the top.
+        let xmlHeader = `<!-- INFILTR8 REPORT
+        GENERATED: ${formattedDateTime}
+        Team: TEAM #6 - The Nine Bytes
+        Project: ${selectedProject}
+        *Quick Export of All Data* -->\n\n`;
+
+        //Convert data to XML content
+        const xmlContent = jsonToXML(data);
+
+        //Combine header and XML content for the complete set so we can write it all at once.
+        const completeXmlContent = `${xmlHeader}${xmlContent}`;
+
+        //Create blob and initiate download of the xml.
+        const blob = new Blob([completeXmlContent], { type: 'application/xml' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `${data.selectedProject}_QuickExport.xml`;
+        link.click();
+    }
+
+    //Function to export analyzed project to XML.
+        //Just gives only the specific data we asked for.
+    function exportAnalyzedExploitsToXML() {
+        //Log if exporting project to XML.
+        console.log('Exporting filtered exploits to XML:', selectedProject);
+
+        //If no project selected while export, print warning log.
+        if (selectedProject === "") {
+            //Give popup alert if no project was selected for exporting.
+            alert(`No project was selected for exporting! [(As XML)]`);
+            //Make Failed Project XML log.
+            createLogEntry({
+                type: 'Warning',
+                message: `No project was selected for exporting! [(As XML)]`
+            });
+            return;
+        } else {
+            //Make successful Project XML log.
+            createLogEntry({
+                type: 'Information',
+                message: `Project ${selectedProject} was quick exported as a XML!`
+            });
+        }
+
+        //Add header information as XML comment at the top of the document.
+        //Get current date.
+        const now = new Date();
+        //Get current date and time in correct format.
+        const formattedDateTime = now.toLocaleString();
+        //Make header comment.
+        let xmlHeader = `<!-- INFILTR8 REPORT
+        GENERATED: ${formattedDateTime}
+        Team: TEAM #6 - The Nine Bytes
+        Analyzed Project: ${selectedProject}
+        Selected Analysis: ${selectedAttackType} -->\n\n`;
+
+        //Get filtered exploits from the store
+        let filteredExploitsData: ExploitData[] = [];
+        filteredExploits.subscribe(data => {
+            filteredExploitsData = data;
+        })();
+
+        //Only include filtered exploits in the XML content
+        const filteredData = {
+            selectedProject: selectedProject,
+            exploits: filteredExploitsData
+        };
+
+        //Convert filtered data to XML content
+        const xmlContent = jsonToXML(filteredData);
+
+        //Combine header and XML content into one thing to write at the same time.
+        const completeXmlContent = `${xmlHeader}${xmlContent}`;
+
+        //Create blob and initiate download of the xml.
+        const blob = new Blob([completeXmlContent], { type: 'application/xml' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `${selectedProject}_Analyzed_${selectedAttackType}.xml`;
+        link.click();
+    }
+
+    //Helper code for both XML file exports.
+        //Allows us to convert the data we have to xml.
+    function jsonToXML(json: any, root = true) {
+        //make xml and keep it empty for now.
+        let xml = '';
+        //Iterate over each variable in the data.
+        for (const key in json) {
+            //ensure the key belongs to the object itself.
+            if (json.hasOwnProperty(key)) {
+                //if so, we keep the value.
+                const value = json[key];
+                //check that the array is an array
+                if (Array.isArray(value)) {
+                    //if so, get each value and add each item to the xml.
+                    value.forEach((item) => {
+                        xml += `<${key}>${jsonToXML(item, false)}</${key}>`;
+                    });
+                //else if its a non null object and has data, add that to the xml.
+                } else if (typeof value === 'object' && value !== null) {
+                    xml += `<${key}>${jsonToXML(value, false)}</${key}>`;
+                //else, if the value is just a normal value (lol), wrap it in a key so it then can be added to the xml.
+                } else {
+                    xml += `<${key}>${value}</${key}>`;
                 }
             }
-            return root ? `<root>${xml}</root>` : xml;
         }
-    
-        function moveUp<T>(list: Writable<T[]>, index: number) {
-            list.update(arr => {
-                if (index > 0) [arr[index], arr[index - 1]] = [arr[index - 1], arr[index]];
-                return arr;
+        //If its the root, then just put XML in the root.
+        return root ? `<root>${xml}</root>` : xml;
+    }
+
+    //Once analysis is confimed, we want to make sure that we make a log for it. 
+    function confirmAnalysis(){
+        //Make full time based on the time itself and whether its in the morning or afternoon.
+        fullTime = selectedTime + selectedAMPM;
+        //make a log with the analysis appointment time.
+        console.log('Analysis Appointment Confirmed:', fullTime);
+        //If we messed up while making the appointment, make a log for it.
+        if (fullTime === '' || selectedProject === '') {
+            createLogEntry({
+                type: 'Warning',
+                message: `No project or time was selected when confirming the analysis time`
+            });
+        } else {
+            //else successful, make a successful log entry.
+            createLogEntry({
+                type: 'Information',
+                message: `${fullTime} is confirmed as Appointment Time for Project ${selectedProject}`
             });
         }
+    }
     
-        function moveDown<T>(list: Writable<T[]>, index: number) {
-            list.update(arr => {
-                if (index < arr.length - 1) [arr[index], arr[index + 1]] = [arr[index + 1], arr[index]];
-                return arr;
-            });
+    //Allows us to move an entry up in the list of priority.
+    function moveUp<T>(list: Writable<T[]>, index: number) {
+        //use update so the list changes.
+        list.update(arr => {
+            if (index > 0) [arr[index], arr[index - 1]] = [arr[index - 1], arr[index]];
+            //return the updated array.
+            return arr;
+        });
+    }
+    
+    //Allows us to move an entry down in the list of priority.
+    function moveDown<T>(list: Writable<T[]>, index: number) {
+        //use update so the list changes.
+        list.update(arr => {
+            if (index < arr.length - 1) [arr[index], arr[index + 1]] = [arr[index + 1], arr[index]];
+            //return the updated array.
+            return arr;
+        });
+    }
+    
+    //React when we slect a project, so we can fetch all its csv data to populate the first scrolling list.
+    $: if (selectedProject) fetchCsvData(selectedProject);
+    //When we first start the analysis portion of the site, fetch all the project folders.
+    onMount(fetchProjectFolders);
+    //Hide the reports until a button of the file is pushed. (false default)
+    let showReport = false;
+    
+    //Shows the reports if we click a folder that is a project.
+    function toggleReport(folder: string) {
+        //Set progress to 0 when first opening, then update as load it up.
+        if (selectedProject === folder && showReport) {
+            showReport = false;
+            selectedProject = null as unknown as string;
+            progress.set(0);
+        //else if showing report but files are mssing, keep it at 10%
+        } else {
+            selectedProject = folder;
+            showReport = true;
+            progress.set(10);
         }
-    
-        $: if (selectedProject) fetchCsvData(selectedProject);
-        onMount(fetchProjectFolders);
-        let showReport = false;
-    
-        function toggleReport(folder: string) {
-            if (selectedProject === folder && showReport) {
-                showReport = false;
-                selectedProject = null as unknown as string;
-                progress.set(0);
-            } else {
-                selectedProject = folder;
-                showReport = true;
-                progress.set(10);
-            }
-        }
+    }
+
+    //Filter/Analyze exploits based on attack type 
+    function filterExploits(attackType: AttackType) { 
+        //Use the mapped attacktype list since the .csv use different strings than the ones that are official in its data.
+        const mappedType = attackTypeMapping[attackType];
+        //Subscribe to the exploit store so we get the current exploits. (SRS).
+        exploits.subscribe(currentExploits => { 
+            //Either show all or the current selected mappedType.
+            const filtered = currentExploits.filter(exploit => mappedType === '*All' || exploit.archetype === mappedType); 
+            //Log that we have filtered exploits for the selected attack type.
+            console.log(`Filtered exploits for ${attackType}:`, filtered); 
+            //Update the filteredupdatestore since we chose what we wanted.
+            filteredExploits.set(filtered); 
+        });
+    }
+
+    //On mount (starting analysis page), fetch the csvs for the selected project. 
+    onMount(() => {
+        fetchCsvData(selectedProject);
+    });
+
     //----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     </script>
     <!-- Closing the TypeScript portion of the .svelte file. -->
@@ -435,7 +839,7 @@
                 </div> 
             </div> 
             <div class="report"> 
-                <h2>Report for {selectedProject}</h2> 
+                <h2>All Data Report for {selectedProject}</h2> 
                 <div class="scrollable-column"> 
                     <h2>IP List</h2> 
                     <div class="ip-list-container"> 
@@ -482,7 +886,16 @@
                         {/each} 
                     </ul> 
                 </div> 
-            </div> 
+                <div class="scrollable-column report-section"> 
+                    <h2>Filtered Exploit Data for {selectedAttackType}</h2> 
+                    <ul> 
+                        {#each $filteredExploits as exploit} 
+                            <li>{exploit.name} - {exploit.viable_exploit}</li> 
+                        {/each} 
+                    </ul> 
+                </div>
+            </div>
+            
             {/if} 
             <div class="space-y-10 text-center flex flex-col items-center"> 
                 
@@ -543,7 +956,7 @@
                     </select> 
                 </div> 
                 <div class="mt-4 flex items-center gap-4"> 
-                    <span class="text-gray-400">Schedule A Analysis:</span> 
+                    <span class="text-gray-400">Schedule An Analysis:</span> 
                     <div class="time-dropdown">
                         <select id="time" class="bg-indigo-500 text-white px-4 py-2 rounded select-dropdown" bind:value={selectedTime}>
                             <option value="" disabled>Select Time</option>
@@ -582,9 +995,12 @@
                                 {/each} 
                             </select> 
                         </div> 
-                        <div class="flex justify-center mt-4"> 
-                            <button class="bg-indigo-500 text-white px-4 py-2 rounded" on:click={exportData}>Export</button> 
+                        <div class="flex justify-center mt-4 gap-2"> 
+                            <button class="bg-indigo-500 text-white px-4 py-2 rounded" on:click={exportData}>Quick Export All Data</button> 
+                            <button class="bg-green-500 text-white px-4 py-2 rounded" on:click={handleRunAnalysis}>Run Selected Analysis!</button> 
+                            <button class="bg-blue-500 text-white px-4 py-2 rounded" on:click={exportDataAnalyzed}>Export Analyzed Report</button>
                         </div> 
+                        <div class="progress-bar-container"> <div class="progress-bar" style="width: {$progressAnalysis}%"> </div>
                     </div> 
                 </div>
             </div> 
@@ -594,6 +1010,32 @@
     
     <!-- Style Guide Code for Analysis Page. -->
     <style>
+        .report {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .report-section {
+            margin-top: 20px;
+        }
+
+        .progress-bar-container { 
+            width: 100%; 
+            background-color: #e0e0e0; 
+            border-radius: 5px; 
+            overflow: hidden; 
+            margin: 20px 0; 
+        }
+        
+        .progress-bar { 
+            height: 30px; 
+            background-color: #76c7c0; 
+            text-align: center; 
+            line-height: 30px; 
+            color: white; 
+            border-radius: 5px; 
+        }
+
         .grid-container {
             display: grid;
             grid-template-columns: 1fr;
