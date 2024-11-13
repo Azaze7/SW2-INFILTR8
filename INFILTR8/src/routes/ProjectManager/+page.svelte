@@ -89,17 +89,18 @@
             console.error(err);
         }
     }
-
+    //Automatically fetch project data when a project is selected
     $: if (selectedProject) {
         fetchProjectData(selectedProject);
     }
-
+    //Fetches and parses various CSV files related to a specific project
     async function fetchProjectData(project: string) {
         loading.set(true);
         error.set(null);
         const basePath = `/server/data/${project}`;
 
         try {
+            //Fetch and parse multiple datasets simultaneously
             await Promise.all([
                 fetchAndParse<ExploitData>(`${basePath}/data_with_exploits.csv`, exploits),
                 fetchAndParse<EntryPoint>(`${basePath}/entrypoint_most_info.csv`, entryPoints),
@@ -110,18 +111,18 @@
             error.set(`Failed to load data for project: ${project}`);
             console.error(err);
         } finally {
-            loading.set(false);
+            loading.set(false);//stop loading after data fetch
         }
     }
-
+    //Helper function to fetch CSV files and parse them into Svelte stores
     async function fetchAndParse<T>(url: string, store: Writable<T[]>) {
         try {
             const response = await fetch(url);
             if (!response.ok) throw new Error(`Failed to fetch ${url}`);
             const text = await response.text();
             Papa.parse(text, {
-                header: true,
-                skipEmptyLines: true,
+                header: true, //uses the first row as column headers
+                skipEmptyLines: true, //ingornes empty rows
                 complete: (results) => store.set(results.data as T[])
             });
         } catch (err) {
@@ -151,7 +152,7 @@
             {/each}
         </div>
     </section>
-
+    <!-- Show loading, error messages, or data tables based on current state -->
     {#if $loading}
         <p>Loading data...</p>
     {:else if $error}
