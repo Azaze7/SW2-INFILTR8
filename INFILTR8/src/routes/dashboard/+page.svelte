@@ -229,7 +229,7 @@
       <!-- Select Project Folder -->
       <div class="w-full">
         <select 
-        class="w-full p-3 border rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 text-gray-700 " 
+        class="w-full p-3 border rounded-md shadow-sm shadow-sm bg-gray-100 focus:ring-primary-500 focus:border-primary-500 text-gray-700 " 
         bind:value={selectedProject}>
         <option value="" disabled>Select Project Folder</option>
         {#each $projectFolders as folder}
@@ -239,7 +239,7 @@
     </div>
     
       <!-- File Upload Section -->
-      <figure class="w-full bg-white border border-gray-200 p-4 rounded-md shadow-sm">
+      <figure class="w-full bg-gray-100 border border-gray-200 p-4 rounded-md shadow-sm">
           <FileDropzone bind:files={files} name="files">
               <svelte:fragment slot="lead"></svelte:fragment>
               <svelte:fragment slot="message">Drag & Drop files here or click to upload</svelte:fragment>
