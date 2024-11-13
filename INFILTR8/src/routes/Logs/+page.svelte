@@ -107,9 +107,9 @@
   }
 </script>
 
-<div class="filter-section">
-  <label for="filter-by">Filter logs by:</label>
-  <select id="filter-by" class="filter-select" bind:value={defaultOption} on:change={filterLogsBy}>
+<div class="flex items-center space-x-4 mb-4">
+  <label for="filter-by" class="font-bold">Filter logs by:</label>
+  <select id="filter-by" class="p-2 text-base border border-gray-300 rounded-md bg-white" bind:value={defaultOption} on:change={filterLogsBy}>
     {#each logType as type}
       <option value={type}>{type}</option>
     {/each}
