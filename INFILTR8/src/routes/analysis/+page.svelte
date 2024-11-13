@@ -89,6 +89,8 @@
         let selectedProject: string = '';
         //Variable to hold the selected file type.
         let selectedFileType = '';
+        //Variable to hold the selected attack type.
+        let selectedAttackType = ''
         //Variable to hold the selected time.
         let selectedTime = '';
         //Variable to hold whether the time is AM/PM.
@@ -533,8 +535,8 @@
                 <img src="src/Brain.png" alt="Wireframe Brain" class="w-80 h-80 absolute top-2 right-2 breathing"> 
                 <div class="mt-4 flex items-center gap-4"> 
                     <span class="text-gray-400">Select Analysis Type:</span> 
-                    <select id="fileType" class="bg-indigo-500 text-white px-4 py-2 roundedselect-dropdown" bind:value={selectedFileType}> 
-                        <option value="" disabled>Attack Type</option> 
+                    <select id="attackTypeSelect" class="bg-indigo-500 text-white px-4 py-2 rounded select-dropdown" bind:value={selectedAttackType}> 
+                        <option value="" disabled>Select Attack Type</option> 
                         {#each attackTypes as attackType} 
                             <option value={attackType}>{attackType}</option> 
                         {/each}
@@ -573,8 +575,7 @@
                 <div class="action-container"> 
                     <div class="file-type-selection"> 
                         <div class="mt-4 flex items-center gap-2 "> 
-                            <span class="mr-2 text-gray-400">Select File Type:</span> 
-                            <select id="fileType" class="select-dropdown" bind:value={selectedFileType}> 
+                            <select id="fileTypeSelect" class="select-dropdown" bind:value={selectedFileType}> 
                                 <option value="" disabled>Select File Type</option> 
                                 {#each fileTypes as fileType} 
                                     <option value={fileType}>{fileType}</option> 
@@ -585,14 +586,14 @@
                             <button class="bg-indigo-500 text-white px-4 py-2 rounded" on:click={exportData}>Export</button> 
                         </div> 
                     </div> 
-                </div> 
+                </div>
             </div> 
         </main> 
     </div>
     <!-- Closing the TypeScript portion of the .svelte file. -->
     
     <!-- Style Guide Code for Analysis Page. -->
-    <style> 
+    <style>
         .grid-container {
             display: grid;
             grid-template-columns: 1fr;
@@ -646,6 +647,30 @@
         
         .scrollable-column h2, .scrollable-column h3, .scrollable-column span, .scrollable-column li, .scrollable-column ul {
             color: purple;
+        }
+    
+        .select-dropdown,
+        #fileType {
+            background-color: #6466f1; 
+            transition: background-color 0.3s ease;
+            color: white;
+            padding: 10px 40px 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    
+        .select-dropdown:hover,
+        #fileType:hover {
+            background-color: #4a4bc1; /*Slightly darker purple on hover */
+        }
+    
+        .non-dropdown-button {
+            padding: 8px 16px; /*padding for non-dropdown buttons */
+        }
+    
+        button:hover {
+            background-color: #4a4bc1; /*Slightly darker purple on hover */
         }
     </style>
     <!-- End of Styleguide code. -->
