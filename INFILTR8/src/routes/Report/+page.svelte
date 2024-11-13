@@ -141,23 +141,11 @@
     </section>
   
     <h2 class="text-xl font-semibold mb-4 text-blue-800">IP List</h2>
-  
-    <table class="min-w-full table-auto border-collapse border border-gray-700">
-      <thead class="bg-gray-800 text-white">
-        <tr>
-          <th class="border border-gray-600 px-4 py-2">IP Address</th>
-          <th class="border border-gray-600 px-4 py-2">Exploit Score</th>
-        </tr>
-      </thead>
-      <tbody>
-        {#each $rankedEntries as entry}
-          <tr class="bg-gray-700 text-white">
-            <td class="border border-gray-600 px-4 py-2">{entry.ip}</td>
-            <td class="border border-gray-600 px-4 py-2">{entry.exploit_score}</td>
-          </tr>
-        {/each}
-      </tbody>
-    </table>
+
+    <section>
+        <h3>Data with Exploits</h3>
+        <Datatable data={$rankedEntries} columns={rankedEntryColumns} />
+    </section>
 
     <div class="flex items-center justify-between mt-6">
         <div class="flex flex-col w-1/3">
