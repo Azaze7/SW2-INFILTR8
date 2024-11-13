@@ -12,7 +12,7 @@
     import Sidebar from '$lib/components/AceternityUI/Sidebar/Sidebar.svelte';
     import SidebarLink from '$lib/components/AceternityUI/Sidebar/SidebarLink.svelte';
     import { vopen } from '$lib/stores/svelteContent';
-    
+
     // Highlight JS imports
     import 'highlight.js/styles/github-dark.css';
     import hljs from 'highlight.js/lib/core';
@@ -89,12 +89,6 @@
     const AccountPopup: PopupSettings = {
         event: 'click',
         target: 'AccountPopup',
-        placement: 'bottom',
-    };
-
-    const NotificationPopup: PopupSettings = {
-        event: 'click',
-        target: 'NotificationPopup',
         placement: 'bottom',
     };
 
@@ -195,6 +189,7 @@
         </div>
     {/if}
 
+    <!-- Sidebar and Project Folder Section -->
     <svelte:fragment slot="sidebarRight">
         <h1 class="text-2xl font-bold mb-4">Current Project Folder</h1>
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 px-4 py-2 rounded-md shadow-sm">
