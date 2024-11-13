@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { writable } from 'svelte/store';
-  import { ProgressRadial, FileDropzone, FileButton, popup } from "@skeletonlabs/skeleton";
+  import { ProgressRadial, FileDropzone, FileButton, popup, filter } from "@skeletonlabs/skeleton";
   import type { PopupSettings } from "@skeletonlabs/skeleton";
   import { projectFolders } from '$lib/stores/projectFoldersStore'; 
   import { createLogEntry, fetchLogs } from '../../routes/Logs/logservice';
@@ -195,6 +195,11 @@
         </button>
       </div>
     </div>
+
+    <!-- Select Project Folder -->
+    <div class="w-full">
+      <select 
+        class="w-full p-3 border rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 text-gray-700" 
         bind:value={selectedProject}>
         <option value="" disabled>Select Project Folder</option>
         {#each $projectFolders as folder}
