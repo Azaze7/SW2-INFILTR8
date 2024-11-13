@@ -130,9 +130,9 @@
 </div>
 
 <!-- Input to allow users to specify logs per page -->
-<div class="pagination-controls">
-  <label for="logs-per-page">Logs per page:</label>
-  <input id="logs-per-page" type="number" min="1" class="logs-selection" bind:value={customLogsPerPage} on:input={updateLogsPerPage} />
+<div class="flex items-center space-x-4 mb-4">
+  <label for="logs-per-page" class="font-bold">Logs per page:</label>
+  <input id="logs-per-page" type="number" min="1" class="p-2 text-base border border-gray-300 rounded-md w-20" bind:value={customLogsPerPage} on:input={updateLogsPerPage} />
 </div>
 
 <div class="total-logs">
