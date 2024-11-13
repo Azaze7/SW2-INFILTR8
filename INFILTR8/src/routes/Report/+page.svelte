@@ -4,6 +4,8 @@
     import Papa from 'papaparse';
     import Datatable from '$lib/components/datatable/Datatable.svelte';
     import { fetchData } from '$lib/api';
+    import { createLogEntry } from '../../routes/Logs/logservice';
+    import jsPDF from 'jspdf';
 
     interface ExploitData {
         file: string;
@@ -28,10 +30,12 @@
         combined_score: number;
     }
 
+
     let exploits: Writable<ExploitData[]> = writable([]);
     let projectFolders: Writable<string[]> = writable([]);
     let selectedProject: Writable<string> = writable('');
     let rankedEntries: Writable<RankedEntry[]> = writable([]);
+    let entriesForReport: Writable<RankedEntry[]> = writable([]);
     let loading = writable(false);
     let error = writable<string | null>(null);
 
@@ -65,11 +69,17 @@
     const rankedEntryColumns = [
         { key: 'ip', label: 'IP Address' },
         { key: 'port', label: 'Port' },
+        { key: 'combined_score', label: 'Combined Score' }
+    ];
+
+    const rankedEntryForReport = [
+        { key: 'ip', label: 'IP Address' },
+        { key: 'port', label: 'Port' },
         { key: 'severity_score', label: 'Severity Score' },
         { key: 'exploit_score', label: 'Exploit Score' },
         { key: 'distinct_vulnerabilities', label: 'Distinct Vulnerabilities' },
         { key: 'combined_score', label: 'Combined Score' }
-    ];
+    ]
 
     async function fetchProjectData(project: string) {
         loading.set(true);
@@ -79,7 +89,8 @@
         try {
             await Promise.all([
                 fetchAndParse<ExploitData>(`${basePath}/data_with_exploits.csv`, exploits),
-                fetchAndParse<RankedEntry>(`${basePath}/ranked_entry_points.csv`, rankedEntries)
+                fetchAndParse<RankedEntry>(`${basePath}/ranked_entry_points.csv`, rankedEntries),
+                fetchAndParse<RankedEntry>(`${basePath}/ranked_entry_points.csv`, entriesForReport)
             ]);
         } catch (err) {
             error.set(`Failed to load data for project: ${project}`);
@@ -111,14 +122,130 @@
     }
 
     let selectedFileType = ''; 
+    let selectedProjectName = '';
 
     function exportData() {
-        if (!selectedFileType) {
-            alert("No file type selected! Please select one from the drop down menu.");
-            return;
-        }
-        alert(`Exporting report for ${selectedProject} to ${selectedFileType}`);
+            //if no selected file type (CSV or PDF), print error message.
+            if (!selectedFileType) {
+                console.log('No file type selected');
+                //Create log entry if no file type selected for export. 
+                createLogEntry({
+                    type: 'Warning',
+                    message: `No file type selected for export of project: ${selectedProject}`
+                });
+                //return since no expor.t 
+                return;
+            }
+            //Export the data as a list that has selected Project, exploits, entryPoiints, and rankedEntries.
+            console.log(`Exporting as ${selectedFileType}`);
+            const data = {
+                selectedProject,
+                rankedEntries: $rankedEntries,
+                entriesForReport: $entriesForReport
+            };
+    
+            //If selectedFileType is pdf, use pdf function.
+            if (selectedFileType === 'PDF') {
+                exportToPDF(data);
+            //If slectedFileType is xml, use xml function.
+            } else if (selectedFileType === 'XML') {
+                alert('XML exporting not yet supported')
+                console.log('XML exporting not yet supported');
+            }
     }
+
+    //Function to export to pdf.
+    function exportToPDF(data: any) {
+            //Log if exporting project to PDF.
+            console.log('Exporting Project Folder to PDF:', selectedProject);
+            //If no project selected while export, print warning log.
+            if (selectedProjectName === "") {
+                //Give popup alert if no project was selected for exporting.
+                alert(`No project was selected for exporting! [(As PDF)]`);
+                //Make Failed Project PDF log.
+                createLogEntry({
+                    type: 'Warning',
+                    message: `No project was selected for exporting! [(As PDF)]`
+                });
+                //Exit since we failed export.
+                return;
+            //Else print log for successful PDF export.
+            } else {
+                //Make successful Project PDF log.
+                createLogEntry({
+                    type: 'Information',
+                    message: `Project ${selectedProjectName} was exported as a PDF!`
+                });
+            }
+    
+            //Make a new jsPDF document. (doc).
+            const doc = new jsPDF();
+            //Add title to top of PDF with name.
+            doc.text(`INFILTR8 REPORT`, 10, 10);
+            //Get the current date and time for the document title.
+            const now = new Date();
+            const formattedDateTime = now.toLocaleString();
+    
+            //Add generated time for title on report.
+            doc.text(`GENERATED: ${formattedDateTime}`, 10, 20);
+            //Add team number and name for report. 
+            doc.text(`Team: TEAM #6 - The Nine Bytes`, 10, 30);
+            //if the selectedProject is null (Shouldnt happen but here as error handler).
+            if(selectedProject == null){
+                doc.text(`Project: null`, 10, 10);
+                doc.text(`Entry Points: null`, 10, 10);
+                return;
+            }
+            //Put Project title on document. 
+            doc.text(`Project: ${selectedProjectName}`, 10, 40);
+            //Set vertical offset for entries.
+            let yOffset = 20;
+            //Set maxiumum number of entries per page.
+            const maxEntriesPerPage = 40;
+            //Ensure font size for pdf is small to not cut off anything.
+            doc.setFontSize(10);
+    
+            //Function to add entries to page. (Title, entries)
+            const addEntriesToPage = (title: string, entries: string[]) => {
+                let pageCount = 1;
+                let entryCount = 0;
+                //Add a new page.
+                doc.addPage();
+                yOffset = 20;
+                //Add title for the page.
+                doc.text(`${title}:`, 10, yOffset);
+                yOffset += 10;
+                //Loop through the entries and add them to the pdf one by one.
+                entries.forEach((entry, index) => {
+                    const lines = entry.split('\n'); // Split to account for the new description of score calculation
+                    lines.forEach(line => {
+                    if (yOffset > 280) { 
+                        doc.addPage();
+                        pageCount++;
+                        yOffset = 20;
+                        doc.text(`${title} (Continued): Page ${pageCount}`, 10, yOffset);
+                        yOffset += 10;
+                    }
+                
+                    // Add the line to the PDF
+                    doc.text(line, 10, yOffset);
+                    yOffset += 10; // Move the Y offset down for the next line
+                    entryCount++;
+                    });
+                });
+            };
+    
+            //Write rankedEntries to pdf.
+            const rankedEntries = data.entriesForReport.map((entry: RankedEntry, index: number) => `${index + 1}. ${entry.ip}:${entry.port} - Score: ${entry.combined_score}\n` +
+            `Breakdown of Combined Score:\n` +
+            `50% from Severity Score of ${entry.severity_score}\n` +
+            `30% from Exploit Score of ${entry.exploit_score}\n` +
+            `20% from Distinct Vulnerabilities count of ${entry.distinct_vulnerabilities}\n\n`);
+            addEntriesToPage("Ranked Entries", rankedEntries);
+            const fileName = `${selectedProjectName}.pdf`;
+            doc.save(fileName);
+        }
+
 </script>
 
 <main class="p-8 overflow-y-auto">
@@ -132,7 +259,10 @@
                     id={`project-${index}`}
                     name={`project-${index}`}
                     class="card p-4 text-1xl"
-                    on:click={() => selectedProject.set(folder)}
+                    on:click={() => {
+                        selectedProject.set(folder);           
+                        selectedProjectName = folder;           
+                    }}
                 >
                     {folder}
                 </button>
@@ -140,10 +270,10 @@
         </div>
     </section>
   
-    <h2 class="text-xl font-semibold mb-4 text-blue-800">IP List</h2>
+    <h2 class="text-xl font-semibold mb-4 text-blue-800">Report</h2>
 
     <section>
-        <h3>Data with Exploits</h3>
+        <h3></h3>
         <Datatable data={$rankedEntries} columns={rankedEntryColumns} />
     </section>
 
