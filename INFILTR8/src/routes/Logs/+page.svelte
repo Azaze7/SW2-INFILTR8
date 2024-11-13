@@ -143,10 +143,14 @@
 <Table source={tableSource} />
 
 <!-- Pagination controls -->
-<div class="pagination-controls">
-  <button on:click={goToPreviousPage} disabled={currentPage === 1}>Previous</button>
-  <span>Page {currentPage} of {totalPages}</span>
-  <button on:click={goToNextPage} disabled={currentPage === totalPages}>Next</button>
+<div class="flex items-center space-x-4 mt-4">
+  <button on:click={goToPreviousPage} disabled={currentPage === 1} class="p-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed">
+    Previous
+  </button>
+  <span class="font-bold text-lg">Page {currentPage} of {totalPages}</span>
+  <button on:click={goToNextPage} disabled={currentPage === totalPages} class="p-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed">
+    Next
+  </button>
 </div>
 
 <style>
