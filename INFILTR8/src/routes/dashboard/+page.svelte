@@ -5,6 +5,7 @@
   import type { PopupSettings } from "@skeletonlabs/skeleton";
   import { projectFolders } from '$lib/stores/projectFoldersStore'; 
   import { createLogEntry, fetchLogs } from '../../routes/Logs/logservice';
+  import { user } from "$lib/components/loginUI/userStore";
 
   let button: HTMLButtonElement | null = null;
   let dropdownMenu: HTMLDivElement | null = null;
@@ -171,7 +172,7 @@
 
   <!-- Upload Section -->
   <div class="space-y-8 w-full max-w-md text-center flex flex-col items-center rounded-lg shadow-md">
-    <h2 class="text-2xl font-bold text-white-800">Welcome to INFILTR8</h2>
+    <h2 class="text-2xl font-bold text-white-800">Welcome {$user?.username} to INFILTR8</h2>
 
     <!-- Project Name Input -->
     <div class="flex flex-col space-y-2 w-full">

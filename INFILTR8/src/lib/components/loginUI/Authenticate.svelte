@@ -3,22 +3,7 @@
     import { goto } from '$app/navigation';
     import { user } from './userStore'; 
     import RetroGrid from '$lib/components/AceternityUI/RetroGrid/RetroGrid.svelte';
-    import { onMount } from "svelte";
-    import { tweened } from "svelte/motion";
-    import { cubicInOut, elasticOut, sineOut } from "svelte/easing";
-    import { draw, fade } from "svelte/transition";
-    import { fly } from "svelte/transition";
-    import { Key, Lock, LockKeyholeOpen } from "lucide-svelte";
-	import EncryptButton from '../Buttons/EncryptButton.svelte';
-	import ShimmerButton from '../Buttons/ShimmerButton.svelte';
     import { createLogEntry } from '../../../routes/Logs/logservice';
-
-    let intervalRef: string | number | NodeJS.Timeout | undefined;
-    let text = "Framework ?";
-    const TARGET_TEXT = "Svelte is Vibe";
-    const CYCLES_PER_LETTER = 2;
-    const SHUFFLE_TIME = 50;
-    const CHARS = "!@#$%^&*():{};|,.<>/?";
 
     const SERVER_URL = 'http://localhost:3000';
     let username = '';
@@ -29,35 +14,21 @@
     let errorMessage = '';
     let loading = false;
 
-    function scramble() {
-        let pos = 0;
+    // Password validation function
+    function isPasswordValid(password: string): boolean {
+        const minLength = /.{15,}/;
+        const hasUpperCase = /[A-Z]/;
+        const hasLowerCase = /[a-z]/;
+        const hasNumber = /[0-9]/;
+        const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/;
 
-        intervalRef = setInterval(() => {
-            const scrambled = TARGET_TEXT.split("")
-            .map((char, index) => {
-                if (pos / CYCLES_PER_LETTER > index) {
-                    return char;
-                }
-
-                const randomCharIndex = Math.floor(Math.random() * CHARS.length);
-                const randomChar = CHARS[randomCharIndex];
-
-                return randomChar;
-            })
-            .join("");
-
-            text = scrambled;
-            pos++;
-
-            if (pos >= TARGET_TEXT.length * CYCLES_PER_LETTER) {
-            stopScramble();
-        }
-        }, SHUFFLE_TIME);
-    }
-
-    function stopScramble() {
-        clearInterval(intervalRef);
-        text = TARGET_TEXT;
+        return (
+            minLength.test(password) &&
+            hasUpperCase.test(password) &&
+            hasLowerCase.test(password) &&
+            hasNumber.test(password) &&
+            hasSpecialChar.test(password)
+        );
     }
 
     const login = async (): Promise<void> => {
@@ -69,6 +40,7 @@
                 body: JSON.stringify({ username, password }),
                 credentials: 'include'
             });
+
             if (response.ok) {
                 const data = await response.json();
                 localStorage.setItem('user', JSON.stringify(data.user));
@@ -81,15 +53,23 @@
 
                 goto('/dashboard');
             } else {
+                const data = await response.json();
+                if (data.locked) {
+                    errorMessage = "Your account is locked due to multiple failed attempts.";
+                } else if (data.attemptsLeft !== undefined) {
+                    errorMessage = `Invalid username or password. You have ${data.attemptsLeft} login attempt(s) remaining.`;
+                } else {
+                    errorMessage = "Invalid username or password.";
+                }
+                error = true;
+
                 await createLogEntry({
                     type: 'Warning',
                     message: `Failed login attempt using username: ${username}`
                 });
-
-                throw new Error(await response.text());
             }
         } catch (err) {
-            errorMessage = typeof err === 'string' ? err : 'An error occurred during login';
+            errorMessage = `Invalid username or password. Please try again.`;
             error = true;
             await createLogEntry({
                 type: 'Error',
@@ -147,6 +127,12 @@
         }
         if (register && password !== confirmPass) {
             errorMessage = 'Passwords do not match.';
+            error = true;
+            loading = false;
+            return;
+        }
+        if (register && !isPasswordValid(password)) {
+            errorMessage = 'Password must be at least 15 characters long and include an uppercase letter, a lowercase letter, a number, and a special character.';
             error = true;
             loading = false;
             return;
@@ -258,21 +244,6 @@
                         </span>
                     </label>
                 {/if}
-
-                <!--<ShimmerButton/>
-
-                <div class="z-10 flex min-h-[16rem] items-center justify-center">
-                    <ShimmerButton class="shadow-2xl">
-                      <span
-                        class="whitespace-pre-wrap text-center text-sm font-medium leading-none tracking-tight text-white dark:from-white dark:to-slate-900/10 lg:text-lg"
-                      >
-                        Shimmer Button
-                      </span>
-                    </ShimmerButton>
-                  </div>
-                -->
-
-                <!--<EncryptButton/>-->
 
                 <button 
                     type='submit'
