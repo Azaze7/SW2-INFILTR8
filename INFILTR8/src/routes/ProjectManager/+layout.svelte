@@ -1,14 +1,15 @@
 <script lang="ts">
-    import '/src/app.postcss';
-    import { writable } from 'svelte/store';
-    import { goto } from '$app/navigation';
-    import { user } from "$lib/components/loginUI/userStore";
-    import { projectFolders } from '$lib/stores/projectFoldersStore';
-    import Sidebar from '$lib/components/AceternityUI/Sidebar/Sidebar.svelte';
-    import SidebarLink from '$lib/components/AceternityUI/Sidebar/SidebarLink.svelte';
+    //import necessary styles and modules
+    import '/src/app.postcss'; //custom postCSS styles
+    import { writable } from 'svelte/store'; //writable store for reactive variables
+    import { goto } from '$app/navigation'; //navigation helper for routing
+    import { user } from "$lib/components/loginUI/userStore"; //user store for user details
+    import { projectFolders } from '$lib/stores/projectFoldersStore'; //store for proj folders
+    import Sidebar from '$lib/components/AceternityUI/Sidebar/Sidebar.svelte'; //sidebar component
+    import SidebarLink from '$lib/components/AceternityUI/Sidebar/SidebarLink.svelte'; //sidebar link component
     import { AppShell } from '@skeletonlabs/skeleton';
-    import { ArrowLeft, Home, FolderRoot, FlaskConical, Clipboard, Scroll, Settings, BadgeHelp } from 'lucide-svelte';
-
+    import { ArrowLeft, Home, FolderRoot, FlaskConical, Clipboard, Scroll, Settings, BadgeHelp } from 'lucide-svelte'; //icon imports
+    //greeting for time of day
     let greeting = '';
     let currentHour = new Date().getHours();
     let selectedProject = writable('');
