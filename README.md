@@ -13,29 +13,29 @@
 3. What Files are Enclosed Here?
 4. Tech Stack Foundation.
 5. Install Instructions.
-6. Vieo Demonstration.
+6. Project Milestones & Video Demonstrations.
 
-## 🎏 Team Composition [The Nine-Bytes]
+## 🎏 Team Composition. [The Nine-Bytes]
 
 **This Project was completed through the cooperation of *nine* team members!**
 
-[Gilbert I. Guzman](https://github.com/Azaze7 "Gilbert's Github") - *Team Lead/Analyst/Repo Master*: Created GitHub Repo, Communicated with Staff, Bugfixed code, Programmmed Colorblind Filters, Programmed Universal Fonts, Wrote Manual, Programmed Settings Page, Programmed Support Page.
+[Gilbert I. Guzman](https://github.com/Azaze7 "Gilbert's Github") - *Team Lead/Analyst/Repo Master*: Created GitHub Repo, Communicated with Staff, Bugfixed code, Programmmed Colorblind Filters, Programmed Universal Fonts, Wrote Manual, Programmed Settings Page, Programmed Support Page, Programmed Analysis Page, Recorded Demo Videos.
 
-[Alberto Villegas](https://github.com/bertvillegas "Alberto's Github") - *Quality Manager/Programmer*: Assisted In Creation of all UX, Bugfixed code, Collaborated on Reports UI, Assisted with Project Manager Frontend.
+[Alberto Villegas](https://github.com/bertvillegas "Alberto's Github") - *Quality Manager/Programmer*: Assisted In Creation of all UX, Bugfixed code, Collaborated on Reports UI, Assisted with Project Manager Frontend, Report Frontend.
 
-[Brian Mata](https://github.com/donburgers "Brian's Github") - *Dataflow & Business Manager/Programmer*: Assisted In Creation of all UX, Bugfixed code, Created Database, Programmed Darkmode, Programmed Backend for login, Programmed Pulling/Pusing of data to database.
+[Brian Mata](https://github.com/donburgers "Brian's Github") - *Dataflow & Business Manager/Programmer*: Assisted In Creation of all UX, Bugfixed code, Created Database, Programmed Darkmode, Programmed Backend for login, Programmed Pulling/Pusing of data to database, Bugfixing for Sprint #4.
 
-[Christian Garcia](https://github.com/chris-garcia01 "Christian G.'s Github") - *Quality Manager/V&V*: Assisted In Creation of all UX, Bugfixed code, Readme Assistance and Commentation, Assisted in settings UI.
+[Christian Garcia](https://github.com/chris-garcia01 "Christian G.'s Github") - *Quality Manager/V&V*: Assisted In Creation of all UX, Bugfixed code, Readme Assistance and Commentation, Assisted in settings UI, Analysis Page Backend.
 
-[Christian Revilla ](https://github.com/carevilla "Christian R.'s Github") - *Analysis Manager/Programmer*: Assisted In Creation of all UX, Bugfixed code, Programmed Frontend for login, Programmed Routing of svelte pages, Taught teammates tailwind.
+[Christian Revilla ](https://github.com/carevilla "Christian R.'s Github") - *Analysis Manager/Programmer*: Assisted In Creation of all UX, Bugfixed code, Programmed Frontend for login, Programmed Routing of svelte pages, Taught teammates tailwind, Bugfixing for Sprint #4.
 
-[Janelle Guzman](https://github.com/jbguzman "Janelle's Github") - *Customer Interface Manager/Designer*: Assisted In Creation of all UX, Bugfixed code, Assisted in backend logs, assisted with website design aethetics.
+[Janelle Guzman](https://github.com/jbguzman "Janelle's Github") - *Customer Interface Manager/Designer*: Assisted In Creation of all UX, Bugfixed code, Assisted in backend logs, assisted with website design aethetics, Logs Page Frontend.
 
-[Jose Luis Rojas](https://github.com/joseluisrojas21 "Jose's Github") - *Bahavioral Model Manager/Designer*: Assisted In Creation of UX, Bugfixed code, Assisted in frontend logs, assisted with initial database prototyping.
+[Jose Luis Rojas](https://github.com/joseluisrojas21 "Jose's Github") - *Bahavioral Model Manager/Designer*: Assisted In Creation of UX, Bugfixed code, Assisted in frontend logs, assisted with initial database prototyping, Logs Page Backend.
 
-[Kimberly Kocian](https://github.com/kkocian7 "Kimberly's Github") - *Support Manager/V&V*: Assisted In Creation of all UX, Bugfixed code, Assisted with Project Manager frontend, assisted with svelte routing. 
+[Kimberly Kocian](https://github.com/kkocian7 "Kimberly's Github") - *Support Manager/V&V*: Assisted In Creation of all UX, Bugfixed code, Assisted with Project Manager frontend, assisted with svelte routing, Project Manager fixing. 
 
-[Luis Sanchez](https://github.com/ldsanchez3 "Luis's Github") - *Planning Manager/Analyst*: Assisted In Creation of all UX, Bugfixed code, Assisted with Project Manager Backend, general formatting. 
+[Luis Sanchez](https://github.com/ldsanchez3 "Luis's Github") - *Planning Manager/Analyst*: Assisted In Creation of all UX, Bugfixed code, Assisted with Project Manager Backend, general formatting, Reports Backend. 
 
 <p align="center">
 <img src="https://github.com/Azaze7/SW2-INFILTR8/blob/main/Initial-Dependencies-And-Resources/The%20Nine-Bytes-Logo.png" height="200px"> 
@@ -45,7 +45,7 @@
 Special Thanks to All of those who contributed! We could not do it without you!
 </p>
 
-## 🎖️ Guidance Team & Customer Information [DEVCOM] 
+## 🎖️ Guidance Team & Customer Information. [DEVCOM] 
 
 **The following individuals are the guidance team for the development of INFILTR8. They are:**
 
@@ -72,47 +72,59 @@ Special Thanks to All of those who contributed! We could not do it without you!
 * Miriam Olague 	
 
 <p align="center">
-Team #6 extends its sincere gratitude to all of our customers and our guidance team! Thank you for believing in us!
+*Team #6 extends its sincere gratitude to all of our customers and our guidance team! Thank you for believing in us!*
 </p>
 
 ## 🗂️ What Files are Enclosed Here?
 
+**The following table shows the files currently stored on this repo, which have been used for the development and use of INFILTR8.**
+
 | Filename | Type | Description | 
 | --------------- | --------------- | --------------- |
-| Gil-Test-Resources | 🗂️ | Contains Pre-fixed files to run the .nessus file. maing.py has been modified to handle new inputs and get a sample output. This is not the final version, and exists only for testing backend! |
-| Initial-Dependecies-And-Resources | 🗂️ | Contains main source code, sample *broken* .nessus file, the finalized SRS, and some diagrams. These files will help kickstart development. |
+| .vscode | 🗂️ | settings.json for use in VSCode.  |
+| Gil-Test-Resources | 📦 | [Depricated]. Contained early pre-fixed files to run the .nessus file. maing.py has been modified to handle new inputs and get a sample output. This is not the final version, and existed only for testing backend! |
 | INFILTR8 | 🗂️ | Contains files necessary to build and run INFILTR8, including its backend and GUI. |
+| Initial-Dependecies-And-Resources | 🗂️ | Contains main source code, sample *broken* .nessus file, the finalized SRS, and some diagrams. These files will help kickstart development. |
+| my-app | 📦 | [Depricated]. Contained files necessary to build and run earlier versions of INFILTR8, on the old naming scheme so no longer used. |
+| .gitignore | .txt | File that contains what should be ignored when committing to GitHub. We dont carry logs or .env, for example. |
 | README | .md | All of the text that you are currently reading. |
-| install | .sh | Shell-script that installs the system for you. |
-| .DS_Store | - | Stores folder customization options (MacOS Only). |
+| install | .sh | Shell-script that installs the system for you. (Linux Only) |
+| .package-lock | .json | Contains a snapshot of your entire dependency tree for Node.js. |
+| .package | .json | Contains the snapshot of the Node.js databse. |
 
-## 🖥️ Tech Stack Foundation
+## 🖥️ Tech Stack Foundation.
 
 **The following table shows the technology to be used to develop INFILTR8, taken explicitly from the given SRS document.**
 
-| Name | Type | Description | 
-| --------------- | --------------- | --------------- |
-| Github | Version Control | A web-based platform for version control and collaboration, using Git for managing code repositories. Will be used to store INFILTR8 as it develops. |
-| JS | Language | JavaScript, a versatile scripting language primarily used for web development to create interactive effects within web browsers. [Used for Site].|
-| Neo4j | Database | Graph database management system designed to store and query complex relationships between data. [Used for Backend].|
-| Python | Langauge | High-level, interpreted programming language known for its readability and versatility. [Used for Code].|
-| Tailwind | Library | Utility-first CSS framework for rapidly building custom user interfaces. [Used for Frontend].|
+| Name | Type | Version | Description | 
+| --------------- | --------------- | --------------- | --------------- |
+| Github | Version Control | - | A web-based platform for version control and collaboration, using Git for managing code repositories. Will be used to store INFILTR8 as it develops. |
+| Neo4j Aura | Database | v3.5 | Cloud Based graph database management system designed to store and query complex relationships between data. [Used for Backend]. |
+| Node.js/JS | Runtime Environment | v20.17.0 |  Chrome based runtime environment built on JavaScript, versatile scripting language primarily used for web development to create interactive effects within web browsers. [Used for Site]. |
+| npm | Package Manager | v10.9.0 | Package manager for Node.js. [Used for Code]. |
+| Python | Langauge | v3.12.7 | High-level, interpreted programming language known for its readability and versatility. [Used for Code]. |
+| Svelte | Framework/Library | v5.0 | Front-end framwork for building web applications compiling components to highly efficient JavaScript. [Used for making Site Contents]. |
+| Tailwind | CSS Framework | v3.0 | Utility-first CSS framework for rapidly building custom user interfaces. [Used for Frontend]. |
+| Typescript | Language | - | Superset of JavaScrpt that adds static types. |
+| Vite | Build Tool | - | A build tool that provides a fast environemnt for web projects. |
+| XML | Language | - | Markup language designed for storing and transporting data in configuration files. |
 
-## 💾 Install Instructions
-1. After pulling GitHub code (via your preferred method), open the terminal.
+## 💾 Install Instructions.
+* After pulling GitHub code (via your preferred method), open the terminal in Split Terminal.
 
-2. `cd` into the folder called "INFILTR8":
+A. In terminal #1.
+1. `cd` into the folder called "INFILTR8":
     ```bash
     cd INFILTR8
     ```
 
-3. Install dependencies:
+2. Install dependencies
     ```bash
     npm i
     ```
 
-4. Fund if prompted to:
-     ```bash
+3. Fund if prompted to:
+    ```bash
     npm fund
     ```
 
@@ -126,34 +138,59 @@ Team #6 extends its sincere gratitude to all of our customers and our guidance t
     npm run dev
     ```
 
-You must also ensure the database is running so login onto the site is possible.
-
-1. Start Database (In Split Terminal):
+B. In terminal #2.
+1. `cd` into the folder called "INFILTR8":
     ```bash
-    cd INFILTR8 -> cd server -> run command “node server.js”
+    cd INFILTR8
+    ```
+    
+2. `cd` into the folder called "server":
+    ```bash
+    cd server
+    ```
+    
+3. Run the database:
+    ```bash
+    node server.js
     ```
 
-You can also use the install script if you’ve downloaded the source code from GitHub as a ZIP file.
+***C. You can also use the install script if you’ve downloaded the source code from GitHub as a ZIP file.***
 
-1. Run Install Script:
+1. Run Install Script for Linux:
     ```bash
     ./install.sh
     ```
 
-
-## 🎞️ Video Demonstration.
+## 🎞️ Project Milestones & Video Demonstrations.
 
 Short video archives demonstrating the various vertical slices for INFILTR8 have been recorded to show the software design process.
 
-  
-* DEMO #1 - Non-Functional GUI, Data Storage, GitHub Configuration, & Project Dashboard.
-* Due: [9/16/24]
+* DEMO #1 - README & GitHub Update, Non-Functional GUI, Data Storage, GitHub Configuration, DAC Added to GitHub, Stack Foundation & Project Dashboard.
+* Due: [9/16/24].
+* [Shipped ✅].
   * https://youtu.be/wsV8tB8XbOw
-  
-* DEMO #2 - GUI Update, Improved GitHub & Database, Processing Recon Data, Allowed/Off-limit IPs, Entry Point Selection, & Start of Logs.
-* Due: [9/30/24]
+
+* DEMO #2 - README & GitHub Update, Improved Database, Processing Recon Data, Allowed/Off-limit IP List, Entry Point Types Selection, & Start of Logs.
+* Due: [9/30/24].
+* [Shipped ✅].
   * https://youtu.be/GIlSGcYOIUc
- 
-* DEMO #3 - GUI Update, Database Update, Improved ReadMe & Github, "AI Algorithm" Integration, & Logs Page Login.
-* Due: [10/18/24]
-  * https://www.youtube.com/watch?v=jpO2zd9zbng
+
+* DEMO #3 - README & GitHub Update, "AI Algorithm" Integration, GUI Update, Database Update, & Logs Update.
+* Due: [10/18/24].
+* [Shipped ✅].
+  * https://youtu.be/xTV-pyUmyZs
+
+* DEMO #4 - README & GitHub Update, AI Algorithm Integration (Finalized), Analysis Page Execution, Analysis Progress Display, Upload .nessus via GUI, & Logs Update.
+* Due: [10/28/24].
+* [Shipped ✅].
+  * https://youtu.be/cFGu_UDyXlM
+
+* DEMO #5 - README & GitHub Update, View Analysis Results, Export Analysis Results, Anaysis Scheduling, Filter Results.
+* Due: [11/11/24].
+* [Pending ⚠️].
+  * https://www.youtube.com/watch?v=t4JFM3Ws0uA
+
+* DEMO #6 - README & GitHub Update, INFILTR8 Installer, All Tech Debt Resolved, Clean GitHub Repo, Final Demo Video.
+* Due: [12/2/24].
+* [Pending ⚠️].
+  * https://www.youtube.com/watch?v=t4JFM3Ws0uA

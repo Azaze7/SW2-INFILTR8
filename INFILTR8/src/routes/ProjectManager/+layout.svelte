@@ -1,13 +1,15 @@
 <script lang="ts">
-    import '/src/app.postcss';
-    import { writable } from 'svelte/store';
-    import { goto } from '$app/navigation';
-    import { projectFolders } from '$lib/stores/projectFoldersStore';
-    import Sidebar from '$lib/components/AceternityUI/Sidebar/Sidebar.svelte';
-    import SidebarLink from '$lib/components/AceternityUI/Sidebar/SidebarLink.svelte';
+    //import necessary styles and modules
+    import '/src/app.postcss'; //custom postCSS styles
+    import { writable } from 'svelte/store'; //writable store for reactive variables
+    import { goto } from '$app/navigation'; //navigation helper for routing
+    import { user } from "$lib/components/loginUI/userStore"; //user store for user details
+    import { projectFolders } from '$lib/stores/projectFoldersStore'; //store for proj folders
+    import Sidebar from '$lib/components/AceternityUI/Sidebar/Sidebar.svelte'; //sidebar component
+    import SidebarLink from '$lib/components/AceternityUI/Sidebar/SidebarLink.svelte'; //sidebar link component
     import { AppShell } from '@skeletonlabs/skeleton';
-    import { ArrowLeft, Home, FolderRoot, FlaskConical, Clipboard, Scroll, Settings, BadgeHelp } from 'lucide-svelte';
-
+    import { ArrowLeft, Home, FolderRoot, FlaskConical, Clipboard, Scroll, Settings, BadgeHelp } from 'lucide-svelte'; //icon imports
+    //greeting for time of day
     let greeting = '';
     let currentHour = new Date().getHours();
     let selectedProject = writable('');
@@ -43,17 +45,23 @@
 </script>
 
 <AppShell>
+    <!-- Page Header -->
     <svelte:fragment slot="pageHeader">
-        <h1 class="text-2xl font-bold mb-4">Current Project</h1>
+        <header class="flex justify-between p-4">
+            <h1 class="text-2xl font-bold mb-4">Current Project</h1>
+        </header>
     </svelte:fragment>
 
+    <!-- Sidebar -->
     <svelte:fragment slot="sidebarLeft">
         <div class="rounded-md flex flex-col md:flex-row bg-[#111827] w-full flex-1 max-w-7xl mx-auto border border-[#111827] overflow-hidden h-full">
             <Sidebar class="justify-between gap-10">
                 <div class="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
                     <div class="font-normal flex space-x-2 items-center text-sm text-white py-1">
                         <div class="h-5 w-5 bg-white rounded-br-lg rounded-tr-sm rounded-tl-lg rounded-bl-sm"></div>
-                        <span class="font-medium text-white">{greeting}</span>
+                        <span class="font-medium text-white whitespace-pre">
+                            <p>{greeting}{" "}{$user?.username}</p>
+                        </span>
                     </div>
 
                     <div class="mt-8 flex flex-col gap-2">
@@ -68,6 +76,20 @@
         </div>
     </svelte:fragment>
 
+ <!-- Main Content Slot -->
+ <main class="overflow-x-auto space-y-4 p-4">
     <slot />
+</main>
+
+<!-- Footer -->
+<!---<footer class="flex justify-between p-4 bg-gray-200">
+    <p>&copy; 2024 Your Company</p>
+</footer>-->
 </AppShell>
+
+<style>
+    /* Style adjustments for unified appearance */
+    .text-2xl { font-size: 1.5rem; }
+    .rounded-md { border-radius: 8px; }
+</style>
 

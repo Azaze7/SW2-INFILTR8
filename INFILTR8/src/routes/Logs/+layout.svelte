@@ -59,7 +59,6 @@
     let files: File[] = [];
     let uploadProgress = writable(0); // Store to track the upload progress percentage
 
-    // Function to handle file uploads
     // Function to handle file uploads using XMLHttpRequest to track progress
     async function uploadFiles() {
         if (files.length === 0) {
@@ -97,14 +96,8 @@
     xhr.send(formData);
 }
 
-
-
-    
-    
-	
-
-        // Function to handle project selection
-        function selectProject(folder: string) {
+    // Function to handle project selection
+    function selectProject(folder: string) {
         console.log('Selected Project:', folder);
     }
 
@@ -128,14 +121,7 @@
         
     ];
   
-
-
-
 </script>
-
-
-
-
 
 <AppShell>
 
@@ -147,17 +133,17 @@
     <!-- Sidebar with Drawer -->
     <svelte:fragment slot="sidebarLeft">
         <div
-            class="rounded-md flex flex-col md:flex-row bg-[#111827] w-full flex-1 max-w-7xl mx-auto border border-[#111827] overflow-hidden h-full"
+            class="flex flex-col md:flex-row bg-[#111827] w-full max-w-7xl mx-auto border border-[#111827] overflow-hidden h-full rounded-md"
         >
             <Sidebar class="justify-between gap-10">
                 <div class="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
                     {#if $vopen}
                         <a
                             href="/"
-                            class="font-normal flex space-x-2 items-center text-sm text-white py-1 relative z-20"
+                            class="flex items-center space-x-2 text-sm font-normal text-white py-1 relative z-20"
                         >
                             <div
-                                class="h-5 w-5 bg-white rounded-br-lg rounded-tr-sm rounded-tl-lg rounded-bl-sm flex-shrink-0"
+                                class="h-5 w-5 bg-white rounded-br-lg rounded-tr-sm rounded-tl-lg rounded-bl-sm"
                             ></div>
                             <span class="font-medium text-white whitespace-pre">
                                 <p>{greeting}{" "}{$user?.username}</p>
@@ -179,7 +165,14 @@
                         {/each}
                     </div>
                 </div>
-                <div>
+                <div class="flex flex-col items-center space-y-4 p-4 bg-[#111827]">
+                    <button class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+                        Button 1
+                    </button>
+                    <button class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+                        Button 2
+                    </button>
+                
                     <!--<LightSwitch />-->
                     <SidebarLink
                         link={{
@@ -192,10 +185,6 @@
             </Sidebar>
         </div>
     </svelte:fragment>
-
-
-
-
 
     <!-- Page Route Content -->
     <slot />
