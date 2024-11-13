@@ -383,7 +383,7 @@
             } else { 
                 clearInterval(interval); 
             } 
-        }, 10); // Adjust the speed as necessary }
+        }, 20); // Adjust the speed as necessary
     }
     
     //Function to quick export to pdf.
@@ -1000,9 +1000,7 @@
                             <button class="bg-green-500 text-white px-4 py-2 rounded" on:click={handleRunAnalysis}>Run Selected Analysis!</button> 
                             <button class="bg-blue-500 text-white px-4 py-2 rounded" on:click={exportDataAnalyzed}>Export Analyzed Report</button>
                         </div> 
-                        <div class="progress-bar-container"> <div class="progress-bar" style="width: {progressAnalysis}%"> 
-                            {progress}% 
-                        </div>
+                        <div class="progress-bar-container"> <div class="progress-bar" style="width: {$progressAnalysis}%"> </div>
                     </div> 
                 </div>
             </div> 
