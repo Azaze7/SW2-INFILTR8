@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { writable } from 'svelte/store';
-  import { ProgressRadial, FileDropzone, FileButton, popup } from "@skeletonlabs/skeleton";
+  import { ProgressRadial, FileDropzone, FileButton, popup, filter } from "@skeletonlabs/skeleton";
   import type { PopupSettings } from "@skeletonlabs/skeleton";
   import { projectFolders } from '$lib/stores/projectFoldersStore'; 
   import { createLogEntry, fetchLogs } from '../../routes/Logs/logservice';
