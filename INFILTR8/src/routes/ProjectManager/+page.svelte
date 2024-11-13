@@ -1,10 +1,11 @@
 <script lang="ts">
+    //Import writable stores from Svelte and other required libraries and components
     import { writable, type Writable } from 'svelte/store';
     import { onMount } from 'svelte';
     import Papa from 'papaparse';
     import Datatable from '$lib/components/datatable/Datatable.svelte';
     import { fetchData } from '$lib/api';
-
+    //Define the structure for exploit data, entry points, and ranked entries
     interface ExploitData {
         file: string;
         name: string;
@@ -34,7 +35,7 @@
         distinct_vulnerabilities: number;
         combined_score: number;
     }
-
+    //Declare writable stores for data and UI states
     let exploits: Writable<ExploitData[]> = writable([]);
     let entryPoints: Writable<EntryPoint[]> = writable([]);
     let rankedEntries: Writable<RankedEntry[]> = writable([]);
@@ -42,8 +43,8 @@
     let projectFolders: Writable<string[]> = writable([]);
     let selectedProject: string = '';
 
-    let loading = writable(false);
-    let error = writable<string | null>(null);
+    let loading = writable(false); //tracks loading state
+    let error = writable<string | null>(null); //hold error messages, if any
 
     // Column Definitions
     const exploitColumns = [
@@ -76,9 +77,9 @@
         { key: 'combined_score', label: 'Combined Score' }
     ];
 
-    // Fetch project folders on mount
+    //Fetch project folders on mount
     onMount(fetchProjectFolders);
-
+    //Fetches list of project folders from an API and updates the store
     async function fetchProjectFolders() {
         try {
             const folders = await fetchData<string[]>('http://localhost:3000/projects');
