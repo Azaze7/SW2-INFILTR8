@@ -52,6 +52,97 @@
 
     filteredLogs = logs.slice(0, 5);
     console.log(filteredLogs);
+    renderNotifications(filteredLogs);
+  }
+
+  function renderNotifications(filteredLogs: any[]) {
+    const notificationsContainer = document.querySelector('.notifications-container');
+
+    if (!notificationsContainer) {
+      console.error('Notifications container not found!');
+      return;
+    }
+
+    // Clear existing notifications
+    notificationsContainer.innerHTML = '';
+
+    const header = document.createElement('h2');
+    header.textContent = '📧 Notifications';
+
+    notificationsContainer.appendChild(header);
+
+    const styleTag = document.createElement('style');
+      styleTag.textContent = `
+        .notifications-container {
+          width: 450px;
+          background-color: #2c2f48;
+          border-radius: 8px;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+          padding: 20px;
+          color: #ffffff;
+          overflow-wrap: break-word;
+          word-wrap: break-word;
+          word-break: break-word;
+        }
+        .notifications-header {
+          font-size: 20px;
+          font-weight: bold;
+          color: #d1d5db;
+          margin-bottom: 20px;
+        }
+        .notification {
+          padding: 15px;
+          border-bottom: 1px solid #3c3f5c;
+          display: flex;
+          flex-direction: column;
+        }
+        .notification:last-child {
+          border-bottom: none;
+        }
+        .notification-title {
+          font-size: 16px;
+          font-weight: bold;
+          color: #f1f5f9;
+        }
+        .notification-details {
+          font-size: 14px;
+          color: #cbd5e1;
+          margin: 5px 0;
+          white-space: normal;
+        }
+        .notification-date {
+          font-size: 12px;
+          color: #a1a1aa;
+          margin-top: 5px;
+        }
+      `;
+    document.head.appendChild(styleTag);
+
+    filteredLogs.forEach(log => {
+      const notificationElement = document.createElement('div');
+      notificationElement.classList.add('notification');
+
+      // Build the notification content
+      const titleElement = document.createElement('div');
+      titleElement.textContent = log.type;
+      titleElement.classList.add('notification-title');
+
+      const detailsElement = document.createElement('div');
+      detailsElement.textContent = log.message;
+      detailsElement.classList.add('notification-details');
+
+      const dateElement = document.createElement('div');
+      dateElement.textContent = log.date;
+      dateElement.classList.add('notification-date');
+
+      // Append the elements to the notification
+      notificationElement.appendChild(titleElement);
+      notificationElement.appendChild(detailsElement);
+      notificationElement.appendChild(dateElement);
+
+      // Append the notification to the container
+      notificationsContainer.appendChild(notificationElement);
+    });
   }
 
   onMount(() => {
@@ -75,7 +166,8 @@
 </script>
 
 <div class="container h-full mx-auto flex justify-center items-start py-10 space-x-10">
-  <!-- Removed Notifications Section -->
+  <!-- Notifications Section -->
+  <div class="notifications-container"></div>
 
   <!-- Upload Section -->
   <div class="space-y-8 w-full max-w-md text-center flex flex-col items-center rounded-lg shadow-md">
@@ -188,5 +280,116 @@
 </div>
 
 <style>
-  /* Add your styles here */
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #1b1f3a;  
+    color: #f5f5f5;  
+    margin: 0;
+    padding: 20px;
+  }
+
+  .container {
+    display: flex;
+    flex-direction: row;
+    align-items: center; 
+    justify-content: center;
+    /* Below, Space between notifications and upload section */
+    gap: 30px; 
+    height: 100vh; 
+  }
+
+  .notifications-container,
+  .upload-section {
+    width: 450px; 
+    background-color: #2c2f48;  
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);  
+    padding: 20px;
+    color: #ffffff;  
+    overflow-wrap: break-word;
+    word-wrap: break-word; 
+    word-break: break-word;
+  }
+
+  .notifications-header {
+    font-size: 20px;
+    font-weight: bold;
+    color: #d1d5db;  
+    margin-bottom: 20px;
+  }
+
+  .notification {
+    padding: 15px;
+    border-bottom: 1px solid #3c3f5c;  
+    display: flex;
+    flex-direction: column;
+  }
+
+  .notification:last-child {
+    border-bottom: none;
+  }
+
+  .notification-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #f1f5f9; 
+  }
+
+  .notification-details {
+    font-size: 14px;
+    color: #cbd5e1; 
+    margin: 5px 0;
+    white-space: normal;
+  }
+
+  .notification-status {
+    color: #ff4d6d; 
+    font-weight: bold;
+    margin-top: 5px;
+  }
+
+  .notification-date {
+    font-size: 12px;
+    color: #a1a1aa; 
+    margin-top: 5px;
+  }
+
+  .unread {
+    background-color: #374151; 
+    border-left: 4px solid #ff4d6d; 
+  }
+
+  .text-white-800 {
+    color: #e5e7eb; 
+  }
+
+  button {
+    background-color: #4f46e5; 
+    color: #ffffff; 
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  button:hover {
+    background-color: #4338ca; 
+  }
+
+  .bg-primary-500 {
+    background-color: #3b82f6; 
+  }
+
+  .bg-primary-600 {
+    background-color: #2563eb; 
+  }
+
+  .bg-red-500 {
+    background-color: #ef4444; 
+  }
+
+  .bg-red-600 {
+    background-color: #dc2626; 
+  }
 </style>
