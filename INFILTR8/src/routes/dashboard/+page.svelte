@@ -4,7 +4,7 @@
   import { ProgressRadial, FileDropzone, FileButton, popup } from "@skeletonlabs/skeleton";
   import type { PopupSettings } from "@skeletonlabs/skeleton";
   import { projectFolders } from '$lib/stores/projectFoldersStore'; 
-  import { createLogEntry } from '../../routes/Logs/logservice';
+  import { createLogEntry, fetchLogs } from '../../routes/Logs/logservice';
 
   let button: HTMLButtonElement | null = null;
   let dropdownMenu: HTMLDivElement | null = null;
@@ -13,7 +13,10 @@
   let selectedProject = ''; 
   let files: FileList | undefined; 
   let uploadProgress = writable<number>(0); 
-  let isDragOver = false; 
+  let isDragOver = false;
+
+  let logs: any[] = [];
+  let filteredLogs: any[] = [];
 
   const popupSettings: PopupSettings = {
     event: 'click',
@@ -35,8 +38,25 @@
     }
   }
 
+  async function fetchUserLogs() {
+    const fetchedLogs = await fetchLogs();
+
+    if (fetchedLogs !== undefined && fetchedLogs !== null) {
+      logs = fetchedLogs;
+    } else {
+      logs = [];
+    }
+
+    // Sort logs by date, newest first
+    logs.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+    filteredLogs = logs.slice(0, 5);
+    console.log(filteredLogs);
+  }
+
   onMount(() => {
     fetchProjectFolders();
+    fetchUserLogs();
   });
 
   /* Luis' Section: 
