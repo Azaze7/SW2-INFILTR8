@@ -1,438 +1,269 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-	import { writable } from 'svelte/store';
-	import { ProgressRadial, FileDropzone, FileButton, popup, filter } from '@skeletonlabs/skeleton';
-	import type { PopupSettings } from '@skeletonlabs/skeleton';
-	import { projectFolders } from '$lib/stores/projectFoldersStore';
-	import { createLogEntry, fetchLogs } from '../../routes/Logs/logservice';
-	import { user } from '$lib/components/loginUI/userStore';
+  import { onMount } from 'svelte';
+  import { writable } from 'svelte/store';
+  import { ProgressRadial, FileDropzone, FileButton, popup } from "@skeletonlabs/skeleton";
+  import type { PopupSettings } from "@skeletonlabs/skeleton";
+  import { projectFolders } from '$lib/stores/projectFoldersStore'; 
+  import { createLogEntry } from '../../routes/Logs/logservice';
 
-	let button: HTMLButtonElement | null = null;
-	let dropdownMenu: HTMLDivElement | null = null;
-	let isDropdownVisible = false;
-	let projectName = '';
-	let selectedProject = '';
-	let files: FileList | undefined;
-	let uploadProgress = writable<number>(0);
-	let isDragOver = false;
+  let button: HTMLButtonElement | null = null;
+  let dropdownMenu: HTMLDivElement | null = null;
+  let isDropdownVisible = false;
+  let projectName = ''; // Name of the project (folder)
+  let selectedProject = ''; // Currently selected project
+  let files: FileList | undefined; // Fix: use undefined instead of null
+  let uploadProgress = writable<number>(0); // Store to track upload progress
+  let isDragOver = false; // State for drag-over detection
+  let uploadStarted = false; // State to track if upload has started
 
-	let logs: any[] = [];
-	let filteredLogs: any[] = [];
+  // Define popup settings for the create project dropdown
+  const popupSettings: PopupSettings = {
+    event: 'click',
+    target: 'createProjectPopup',
+    placement: 'bottom',
+  };
 
-	const popupSettings: PopupSettings = {
-		event: 'click',
-		target: 'createProjectPopup',
-		placement: 'bottom'
-	};
+  // Fetch project folders on mount
+  async function fetchProjectFolders() {
+    try {
+      const response = await fetch('http://localhost:3000/projects');
+      if (response.ok) {
+        const folders = await response.json();
+        projectFolders.set(folders); // Update the store with fetched project folders
+      } else {
+        console.error('Failed to fetch project folders');
+      }
+    } catch (error) {
+      console.error('Error fetching project folders:', error);
+    }
+  }
 
-	async function fetchProjectFolders() {
-		try {
-			const response = await fetch('http://localhost:3000/projects');
-			if (response.ok) {
-				const folders = await response.json();
-				projectFolders.set(folders);
-			} else {
-				console.error('Failed to fetch project folders');
-			}
-		} catch (error) {
-			console.error('Error fetching project folders:', error);
-		}
-	}
+  onMount(() => {
+    fetchProjectFolders();
+  });
 
-	async function fetchUserLogs() {
-		const fetchedLogs = await fetchLogs();
+  // Function to trigger CSV upload to Neo4j
+  async function uploadToNeo4j() {
+    if (!selectedProject) {
+      alert('Please select a project to upload CSVs to Neo4j.');
+      await createLogEntry({
+        type: 'Warning',
+        message: `No project folder specified while attempting to upload files to the database`
+      });
+      return;
+    }
 
-		if (fetchedLogs !== undefined && fetchedLogs !== null) {
-			logs = fetchedLogs;
-		} else {
-			logs = [];
-		}
+    try {
+      const response = await fetch('http://localhost:3000/process-csv', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ projectName: selectedProject }),
+      });
+      if (response.ok) {
+        console.log('CSV data uploaded to Neo4j successfully');
+        uploadProgress.set(100); // Set progress to 100% after successful upload
+      } else {
+        console.error('Failed to upload CSV data to Neo4j');
+      }
+    } catch (error) {
+      console.error('Error uploading CSV data to Neo4j:', error);
+    }
+  }
 
-		// Sort logs by date, newest first
-		logs.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-
-		filteredLogs = logs.slice(0, 5);
-		console.log(filteredLogs);
-		renderNotifications(filteredLogs);
-	}
-
-	function renderNotifications(filteredLogs: any[]) {
-		const notificationsContainer = document.querySelector('.notifications-container');
-
-		if (!notificationsContainer) {
-			console.error('Notifications container not found!');
-			return;
-		}
-
-		// Clear existing notifications
-		notificationsContainer.innerHTML = '';
-
-		const header = document.createElement('h2');
-		header.textContent = '📧 Notifications';
-
-		notificationsContainer.appendChild(header);
-
-		const styleTag = document.createElement('style');
-		styleTag.textContent = `
-        .notifications-container {
-          width: 450px;
-          background-color: #2c2f48;
-          border-radius: 8px;
-          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-          padding: 20px;
-          color: #ffffff;
-          overflow-wrap: break-word;
-          word-wrap: break-word;
-          word-break: break-word;
+  async function uploadFile() {
+    try {
+        if (!files || files.length === 0) {
+            throw new Error('No file selected');
         }
-        .notifications-header {
-          font-size: 20px;
-          font-weight: bold;
-          color: #d1d5db;
-          margin-bottom: 20px;
+
+        if (!selectedProject) {
+            throw new Error('No project selected');
         }
-        .notification {
-          padding: 15px;
-          border-bottom: 1px solid #3c3f5c;
-          display: flex;
-          flex-direction: column;
+
+        uploadStarted = true; // Set this to true when upload starts
+        uploadProgress.set(0); // Reset progress when starting
+
+        const formData = new FormData();
+        formData.append('nessusFile', files[0]);
+        formData.append('projectName', selectedProject);
+
+        const response = await fetch('http://localhost:3000/upload-nessus', {
+            method: 'POST',
+            body: formData,
+            credentials: 'include'
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(errorText);
         }
-        .notification:last-child {
-          border-bottom: none;
-        }
-        .notification-title {
-          font-size: 16px;
-          font-weight: bold;
-          color: #f1f5f9;
-        }
-        .notification-details {
-          font-size: 14px;
-          color: #cbd5e1;
-          margin: 5px 0;
-          white-space: normal;
-        }
-        .notification-date {
-          font-size: 12px;
-          color: #a1a1aa;
-          margin-top: 5px;
-        }
-      `;
-		document.head.appendChild(styleTag);
 
-		filteredLogs.forEach((log) => {
-			const notificationElement = document.createElement('div');
-			notificationElement.classList.add('notification');
+        console.log('File uploaded successfully');
+        uploadProgress.set(100);
+        await createLogEntry({
+            type: 'Information',
+            message: `File uploaded successfully for project: ${selectedProject}`
+        });
 
-			// Build the notification content
-			const titleElement = document.createElement('div');
-			titleElement.textContent = log.type;
-			titleElement.classList.add('notification-title');
+    } catch (error) {
+        console.error('Upload failed:', error);
+        await createLogEntry({
+            type: 'Error',
+            message: `Failed to upload file for project: ${selectedProject}`
+        });
+        uploadStarted = false; // Reset on error
+    }
+}
 
-			const detailsElement = document.createElement('div');
-			detailsElement.textContent = log.message;
-			detailsElement.classList.add('notification-details');
 
-			const dateElement = document.createElement('div');
-			dateElement.textContent = log.date;
-			dateElement.classList.add('notification-date');
+  /* Function to create Project folder to hold future project */
+  async function createProjectFolder() {
+    if (!projectName) {
+      alert("Please enter a project name.");
+      return;
+    }
+    try {
+      const response = await fetch('http://localhost:3000/create-project', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ projectName }),
+      });
+      if (response.ok) {
+        console.log('Project folder created successfully');
+        fetchProjectFolders(); // Refresh project list
+      } else {
+        console.error('Failed to create project folder');
+      }
+    } catch (error) {
+      console.error('Error creating project folder:', error);
+    }
+  }
 
-			// Append the elements to the notification
-			notificationElement.appendChild(titleElement);
-			notificationElement.appendChild(detailsElement);
-			notificationElement.appendChild(dateElement);
+  /* Function to delete the selected project */
+  async function deleteProjectFolder() {
+    if (!selectedProject) {
+      alert("Please select a project to delete.");
+      await createLogEntry({
+        type: 'Warning',
+        message: `No project folder was selected for deletion`
+      });
+      return;
+    }
 
-			// Append the notification to the container
-			notificationsContainer.appendChild(notificationElement);
-		});
-	}
+    try {
+      const response = await fetch('http://localhost:3000/delete-project', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ projectName: selectedProject }),
+      });
 
-	onMount(() => {
-		fetchProjectFolders();
-		fetchUserLogs();
-	});
-
-	async function uploadToNeo4j() {
-		if (!selectedProject) {
-			alert('Please select a project to upload CSVs to Neo4j.');
-			await createLogEntry({
-				type: 'Warning',
-				message: `No project folder specified while attempting to upload files to the database`
-			});
-			return;
-		}
-
-		try {
-			const response = await fetch('http://localhost:3000/process-csv', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ projectName: selectedProject })
-			});
-			if (response.ok) {
-				console.log('CSV data uploaded to Neo4j successfully');
-				uploadProgress.set(100); // Set progress to 100% after successful upload
-			} else {
-				console.error('Failed to upload CSV data to Neo4j');
-			}
-		} catch (error) {
-			console.error('Error uploading CSV data to Neo4j:', error);
-		}
-	}
-
-	/* Function to upload file */
-	async function uploadFile() {
-		if (!files || files.length === 0) {
-			console.error('No file selected');
-			await createLogEntry({
-				type: 'Warning',
-				message: `No files selected for upload to INFILTR8`
-			});
-			return;
-		}
-
-		if (!selectedProject) {
-			alert('Please select a project folder.');
-			await createLogEntry({
-				type: 'Warning',
-				message: `No project folder specified while attempting to upload files to INFILTR8`
-			});
-			return;
-		}
-
-		try {
-			const formData = new FormData();
-			formData.append('nessusFile', files[0]); // Add the Nessus file
-			formData.append('projectName', selectedProject); // Add the selected project name
-
-			const response = await fetch('http://localhost:3000/upload-nessus', {
-				method: 'POST',
-				body: formData
-			});
-
-			if (response.ok) {
-				console.log('File uploaded and processed successfully');
-				uploadProgress.set(100); // Set progress to 100% after successful upload
-				await createLogEntry({
-					type: 'Information',
-					message: `File uploaded and processed successfully for project: ${selectedProject}`
-				});
-			} else {
-				const errorText = await response.text();
-				console.error('Failed to upload file:', errorText);
-				await createLogEntry({
-					type: 'Error',
-					message: `Failed to upload file for project: ${selectedProject}`
-				});
-			}
-		} catch (error) {
-			console.error('Error uploading file:', error);
-		}
-	}
-
-	async function createProjectFolder() {
-		if (!projectName) {
-			alert('Please enter a project name.');
-			await createLogEntry({
-				type: 'Warning',
-				message: `No project folder name specified while attempting to create a new folder`
-			});
-			return;
-		}
-
-		try {
-			const response = await fetch('http://localhost:3000/create-project', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ projectName })
-			});
-
-			if (response.ok) {
-				console.log('Project folder created successfully');
-
-				await createLogEntry({
-					type: 'Information',
-					message: `Project folder: ${projectName} was created`
-				});
-
-				projectName = ''; // Clear input
-				fetchProjectFolders(); // Refresh project list
-			} else {
-				await createLogEntry({
-					type: 'Error',
-					message: `Project folder: ${projectName} could not be created}`
-				});
-
-				console.error('Failed to create project folder');
-			}
-		} catch (error) {
-			console.error('Error creating project folder:', error);
-		}
-	}
-	async function deleteProjectFolder() {
-		if (!selectedProject) {
-			alert('Please select a project to delete.');
-			await createLogEntry({
-				type: 'Warning',
-				message: `No project folder was selected for deletion`
-			});
-			return;
-		}
-
-		try {
-			const response = await fetch('http://localhost:3000/delete-project', {
-				method: 'DELETE',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ projectName: selectedProject })
-			});
-
-			if (response.ok) {
-				console.log('Project folder deleted successfully');
-				await createLogEntry({
-					type: 'Information',
-					message: `Project folder: ${selectedProject} was deleted`
-				});
-				fetchProjectFolders(); // Refresh project list
-			} else {
-				console.error('Failed to delete project folder');
-				await createLogEntry({
-					type: 'Error',
-					message: `Failed to delete project folder: ${selectedProject}`
-				});
-			}
-		} catch (error) {
-			console.error('Error deleting project folder:', error);
-		}
-	}
+      if (response.ok) {
+        console.log('Project folder deleted successfully');
+        await createLogEntry({
+          type: 'Information',
+          message: `Project folder: ${selectedProject} was deleted`
+        });
+        fetchProjectFolders(); // Refresh project list
+      } else {
+        console.error('Failed to delete project folder');
+        await createLogEntry({
+          type: 'Error',
+          message: `Failed to delete project folder: ${selectedProject}`
+        });
+      }
+    } catch (error) {
+      console.error('Error deleting project folder:', error);
+    }
+  }
 </script>
 
-<div class="container h-full mx-auto flex justify-center items-start py-10 space-x-10">
-	<!-- Notifications Section -->
-	<div class="notifications-container"></div>
+<div class="container h-full mx-auto flex justify-center items-center py-10">
+  <div class="space-y-8 w-full max-w-5xl text-center flex flex-wrap justify-between items-start">
+      <h2 class="text-2xl font-bold text-white-800 w-full">Welcome to INFILTR8</h2>
 
-	<!-- Upload Section -->
-	<div
-		class="space-y-8 w-full max-w-md text-center flex flex-col items-center rounded-lg shadow-md"
-	>
-		<h2 class="text-2xl font-bold text-white-800">Welcome {$user?.username} to INFILTR8</h2>
+      <!-- Left Side -->
+      <div class="w-[45%]">
+          <!-- Project Name Input -->
+          <div class="flex flex-col space-y-2 w-full">
+              <button 
+                class="w-full p-3 bg-primary-500 text-white rounded-md hover:bg-primary-600 transition-colors" 
+                use:popup={popupSettings}>
+                Create Project
+              </button>
 
-		<!-- Project Name Input -->
-		<div class="flex flex-col space-y-2 w-full">
-			<button
-				class="w-full p-3 bg-primary-500 text-white rounded-md hover:bg-primary-600 transition-colors"
-				use:popup={popupSettings}
-			>
-				Create Project
-			</button>
+              <!-- Dropdown Menu for Project Creation -->
+              <div class="card p-4 w-72 shadow-xl" data-popup="createProjectPopup">
+                  <input 
+                    type="text" 
+                    class="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 text-gray-700" 
+                    placeholder="Enter project name" 
+                    bind:value={projectName} />
+                  <button 
+                    class="w-full p-3 bg-primary-500 text-white rounded-md hover:bg-primary-600 transition-colors mt-2" 
+                    on:click={createProjectFolder}>
+                    Create
+                  </button>
+              </div>
+          </div>
 
-			<!-- Dropdown Menu for Project Creation -->
-			<div class="card p-4 w-72 shadow-xl" data-popup="createProjectPopup">
-				<input
-					type="text"
-					class="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 text-gray-700"
-					placeholder="Enter project name"
-					bind:value={projectName}
-				/>
-				<button
-					class="w-full p-3 bg-primary-500 text-white rounded-md hover:bg-primary-600 transition-colors mt-2"
-					on:click={createProjectFolder}
-				>
-					Create
-				</button>
-			</div>
-		</div>
 
-		<!-- Select Project Folder -->
-		<div class="w-full">
-			<select
-				class="w-full p-3 border rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 text-gray-700"
-				bind:value={selectedProject}
-			>
-				<option value="" disabled>Select Project Folder</option>
-				{#each $projectFolders as folder}
-					<option value={folder}>{folder}</option>
-				{/each}
-			</select>
-		</div>
 
-		<!-- File Upload Section -->
-		<figure class="w-full bg-white border border-gray-200 p-4 rounded-md shadow-sm">
-			<FileDropzone bind:files name="files">
-				<svelte:fragment slot="lead"></svelte:fragment>
-				<svelte:fragment slot="message">Drag & Drop files here or click to upload</svelte:fragment>
-				<svelte:fragment slot="meta"></svelte:fragment>
-			</FileDropzone>
+          <!-- Delete Project -->
+          <button 
+            class="w-full p-3 mt-4 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors" 
+            on:click={deleteProjectFolder}>
+            Delete Project
+          </button>
+      </div>
 
-			<FileButton
-				bind:files
-				name="files"
-				button="w-full p-3 bg-primary-100 text-primary-600 rounded-md hover:bg-primary-200 transition-colors text-gray-700"
-			>
-				Upload
-			</FileButton>
+      <!-- Right Side -->
+      <div class="w-[45%]">
+                  <!-- Select Project Folder -->
+                  <div class="w-full mt-4">
+                    <select 
+                      class="w-full p-3 border rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 text-gray-700" 
+                      bind:value={selectedProject}>
+                      <option value="" disabled>Select Project Folder</option>
+                      {#each $projectFolders as folder}
+                        <option value={folder}>{folder}</option>
+                      {/each}
+                    </select>
+                  </div>
+          <!-- File Upload Section -->
+          <figure class="w-full bg-white border border-gray-200 p-4 rounded-md shadow-sm">
+              <FileDropzone bind:files={files} name="files">
+                  <svelte:fragment slot="lead"></svelte:fragment>
+                  <svelte:fragment slot="message">Drag & Drop files here or click to upload</svelte:fragment>
+                  <svelte:fragment slot="meta"></svelte:fragment>
+              </FileDropzone>
 
-			<footer class="mt-4 flex flex-col items-center space-y-2">
-				{#if files && files.length > 0}
-					<button
-						on:click={uploadFile}
-						class="w-full p-3 bg-primary-500 text-white rounded-md hover:bg-primary-600 transition-colors"
-					>
-						Upload Selected File
-					</button>
-				{/if}
-				<ProgressRadial
-					value={$uploadProgress}
-					stroke={100}
-					meter="stroke-primary-500"
-					track="stroke-primary-500/30"
-				/>
-			</footer>
-		</figure>
+              <FileButton 
+                bind:files={files} 
+                name="files" 
+                button="w-full p-3 bg-primary-100 text-primary-600 rounded-md hover:bg-primary-200 transition-colors text-gray-700"
+              >
+                Upload
+              </FileButton>
 
-		<!-- Button to trigger CSV Upload to Neo4j -->
-		<div class="w-full">
-			<button
-				class="w-full p-3 bg-primary-500 text-white rounded-md hover:bg-primary-600 transition-colors"
-				on:click={uploadToNeo4j}
-			>
-				Upload CSV to Neo4j
-			</button>
-		</div>
-
-		<!-- Export and Delete Project -->
-		<div class="flex space-x-4 justify-center w-full">
-			<button
-				class="w-full p-3 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors"
-				on:click={deleteProjectFolder}
-			>
-				Delete Project
-			</button>
-
-			<!-- Export Button with Dropdown -->
-			<div class="relative w-full">
-				<button
-					class="w-full p-3 bg-primary-500 text-white rounded-md hover:bg-primary-600 transition-colors"
-					bind:this={button}
-				>
-					Export Options
-				</button>
-				{#if isDropdownVisible}
-					<div
-						class="absolute mt-2 w-full bg-white border border-gray-200 rounded-md shadow-lg z-10"
-						bind:this={dropdownMenu}
-						role="menu"
-						aria-label="Export Options"
-					>
-						<button class="block w-full px-4 py-2 text-gray-700 hover:bg-gray-100"
-							>Export Project</button
-						>
-						<button class="block w-full px-4 py-2 text-gray-700 hover:bg-gray-100"
-							>Export as PDF</button
-						>
-						<button class="block w-full px-4 py-2 text-gray-700 hover:bg-gray-100"
-							>Export as Excel</button
-						>
-					</div>
-				{/if}
-			</div>
-		</div>
-	</div>
+              <footer class="mt-4 flex flex-col items-center space-y-2">
+                  {#if files && files.length > 0}
+                      <button 
+                        on:click={uploadFile} 
+                        class="w-full p-3 bg-primary-500 text-white rounded-md hover:bg-primary-600 transition-colors"
+                      >
+                        Upload Selected File
+                      </button>
+                      {#if uploadStarted}
+                          <ProgressRadial 
+                              value={$uploadProgress} 
+                              stroke={100} 
+                              meter="stroke-primary-500" 
+                              track="stroke-primary-500/30" 
+                          />
+                      {/if}
+                  {/if}
+              </footer>
+          </figure>
+      </div>
+  </div>
 </div>
