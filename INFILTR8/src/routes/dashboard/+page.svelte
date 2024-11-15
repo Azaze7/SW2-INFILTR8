@@ -5,6 +5,9 @@
   import type { PopupSettings } from "@skeletonlabs/skeleton";
   import { projectFolders } from '$lib/stores/projectFoldersStore'; 
   import { createLogEntry } from '../../routes/Logs/logservice';
+  import { createLogEntry, fetchLogs } from '../../routes/Logs/logservice';
+  import { user } from "$lib/components/loginUI/userStore";
+
 
   let button: HTMLButtonElement | null = null;
   let dropdownMenu: HTMLDivElement | null = null;
@@ -139,6 +142,7 @@
     }
   }
 
+
   /* Function to delete the selected project */
   async function deleteProjectFolder() {
     if (!selectedProject) {
@@ -149,6 +153,35 @@
       });
       return;
     }
+
+  onMount(() => {
+    fetchProjectFolders();
+    fetchUserLogs();
+  });
+
+  /* Luis' Section: 
+   * 
+   * WILL IMPLEMENT THIS AS SOON AS WE GET THE FRONT END FIGURED OUT. 
+   * WE NEED TO ASK THE CUSTOMER HOW THEY WANT THIS TO WORK. 
+   * 
+   * SRS ONLY SAYS "Shows a list of notifications" which is very vague 
+   * Will have to figure out what exactly these types of notifications are so 
+   * we can implement the functions below. 
+   */
+  async function uploadToNeo4j() {} // COMPLETE THIS LATER
+  async function uploadFile() {} // COMPLETE THIS LATER
+  async function createProjectFolder() {} // COMPLETE THIS LATER
+  async function deleteProjectFolder() {} // COMPLETE THIS LATER
+</script>
+
+<div class="container h-full mx-auto flex justify-center items-start py-10 space-x-10">
+  <!-- Notifications Section -->
+  <div class="notifications-container"></div>
+
+  <!-- Upload Section -->
+  <div class="space-y-8 w-full max-w-md text-center flex flex-col items-center rounded-lg shadow-md">
+    <h2 class="text-2xl font-bold text-white-800">Welcome {$user?.username} to INFILTR8</h2>
+
 
     try {
       const response = await fetch('http://localhost:3000/delete-project', {
