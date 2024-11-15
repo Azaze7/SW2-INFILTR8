@@ -186,8 +186,9 @@ Short video archives demonstrating the various vertical slices for INFILTR8 have
   * https://youtu.be/cFGu_UDyXlM
 
 * DEMO #5 - README & GitHub Update, View Analysis Results, Export Analysis Results, Anaysis Scheduling, Filter Results.
-* Due: [11/11/24].
-* [Pending ⚠️].
+* Due: [11/13/24]. 
+* LIVE DEMO: [11/13/24].
+* [Shipped ✅].
   * https://youtu.be/QIqKvX47Tqg
 
 * DEMO #6 - README & GitHub Update, INFILTR8 Installer, All Tech Debt Resolved, Clean GitHub Repo, Final Demo Video.
