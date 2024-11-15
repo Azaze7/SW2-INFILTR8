@@ -4,10 +4,8 @@
   import { ProgressRadial, FileDropzone, FileButton, popup } from "@skeletonlabs/skeleton";
   import type { PopupSettings } from "@skeletonlabs/skeleton";
   import { projectFolders } from '$lib/stores/projectFoldersStore'; 
-  import { createLogEntry } from '../../routes/Logs/logservice';
   import { createLogEntry, fetchLogs } from '../../routes/Logs/logservice';
   import { user } from "$lib/components/loginUI/userStore";
-
 
   let button: HTMLButtonElement | null = null;
   let dropdownMenu: HTMLDivElement | null = null;
@@ -41,8 +39,17 @@
     }
   }
 
+  async function fetchUserLogs() {
+    try {
+      await fetchLogs();
+    } catch (error) {
+      console.error('Error fetching logs:', error);
+    }
+  }
+
   onMount(() => {
     fetchProjectFolders();
+    fetchUserLogs();
   });
 
   // Function to trigger CSV upload to Neo4j
@@ -64,7 +71,7 @@
       });
       if (response.ok) {
         console.log('CSV data uploaded to Neo4j successfully');
-        uploadProgress.set(100); // Set progress to 100% after successful upload
+        uploadProgress.set(100);
       } else {
         console.error('Failed to upload CSV data to Neo4j');
       }
@@ -75,51 +82,49 @@
 
   async function uploadFile() {
     try {
-        if (!files || files.length === 0) {
-            throw new Error('No file selected');
-        }
+      if (!files || files.length === 0) {
+        throw new Error('No file selected');
+      }
 
-        if (!selectedProject) {
-            throw new Error('No project selected');
-        }
+      if (!selectedProject) {
+        throw new Error('No project selected');
+      }
 
-        uploadStarted = true; // Set this to true when upload starts
-        uploadProgress.set(0); // Reset progress when starting
+      uploadStarted = true;
+      uploadProgress.set(0);
 
-        const formData = new FormData();
-        formData.append('nessusFile', files[0]);
-        formData.append('projectName', selectedProject);
+      const formData = new FormData();
+      formData.append('nessusFile', files[0]);
+      formData.append('projectName', selectedProject);
 
-        const response = await fetch('http://localhost:3000/upload-nessus', {
-            method: 'POST',
-            body: formData,
-            credentials: 'include'
-        });
+      const response = await fetch('http://localhost:3000/upload-nessus', {
+        method: 'POST',
+        body: formData,
+        credentials: 'include'
+      });
 
-        if (!response.ok) {
-            const errorText = await response.text();
-            throw new Error(errorText);
-        }
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText);
+      }
 
-        console.log('File uploaded successfully');
-        uploadProgress.set(100);
-        await createLogEntry({
-            type: 'Information',
-            message: `File uploaded successfully for project: ${selectedProject}`
-        });
+      console.log('File uploaded successfully');
+      uploadProgress.set(100);
+      await createLogEntry({
+        type: 'Information',
+        message: `File uploaded successfully for project: ${selectedProject}`
+      });
 
     } catch (error) {
-        console.error('Upload failed:', error);
-        await createLogEntry({
-            type: 'Error',
-            message: `Failed to upload file for project: ${selectedProject}`
-        });
-        uploadStarted = false; // Reset on error
+      console.error('Upload failed:', error);
+      await createLogEntry({
+        type: 'Error',
+        message: `Failed to upload file for project: ${selectedProject}`
+      });
+      uploadStarted = false;
     }
-}
+  }
 
-
-  /* Function to create Project folder to hold future project */
   async function createProjectFolder() {
     if (!projectName) {
       alert("Please enter a project name.");
@@ -133,7 +138,7 @@
       });
       if (response.ok) {
         console.log('Project folder created successfully');
-        fetchProjectFolders(); // Refresh project list
+        fetchProjectFolders();
       } else {
         console.error('Failed to create project folder');
       }
@@ -142,8 +147,6 @@
     }
   }
 
-
-  /* Function to delete the selected project */
   async function deleteProjectFolder() {
     if (!selectedProject) {
       alert("Please select a project to delete.");
@@ -153,35 +156,6 @@
       });
       return;
     }
-
-  onMount(() => {
-    fetchProjectFolders();
-    fetchUserLogs();
-  });
-
-  /* Luis' Section: 
-   * 
-   * WILL IMPLEMENT THIS AS SOON AS WE GET THE FRONT END FIGURED OUT. 
-   * WE NEED TO ASK THE CUSTOMER HOW THEY WANT THIS TO WORK. 
-   * 
-   * SRS ONLY SAYS "Shows a list of notifications" which is very vague 
-   * Will have to figure out what exactly these types of notifications are so 
-   * we can implement the functions below. 
-   */
-  async function uploadToNeo4j() {} // COMPLETE THIS LATER
-  async function uploadFile() {} // COMPLETE THIS LATER
-  async function createProjectFolder() {} // COMPLETE THIS LATER
-  async function deleteProjectFolder() {} // COMPLETE THIS LATER
-</script>
-
-<div class="container h-full mx-auto flex justify-center items-start py-10 space-x-10">
-  <!-- Notifications Section -->
-  <div class="notifications-container"></div>
-
-  <!-- Upload Section -->
-  <div class="space-y-8 w-full max-w-md text-center flex flex-col items-center rounded-lg shadow-md">
-    <h2 class="text-2xl font-bold text-white-800">Welcome {$user?.username} to INFILTR8</h2>
-
 
     try {
       const response = await fetch('http://localhost:3000/delete-project', {
@@ -196,7 +170,7 @@
           type: 'Information',
           message: `Project folder: ${selectedProject} was deleted`
         });
-        fetchProjectFolders(); // Refresh project list
+        fetchProjectFolders();
       } else {
         console.error('Failed to delete project folder');
         await createLogEntry({
@@ -210,93 +184,98 @@
   }
 </script>
 
-<div class="container h-full mx-auto flex justify-center items-center py-10">
+<div class="container h-full mx-auto flex justify-center items-start py-10 space-x-10">
+  <!-- Notifications Section -->
+  <div class="notifications-container"></div>
+
+  <!-- Main Content -->
   <div class="space-y-8 w-full max-w-5xl text-center flex flex-wrap justify-between items-start">
-      <h2 class="text-2xl font-bold text-white-800 w-full">Welcome to INFILTR8</h2>
+    <h2 class="text-2xl font-bold text-white-800 w-full">
+      Welcome {$user?.username || ''} to INFILTR8
+    </h2>
 
-      <!-- Left Side -->
-      <div class="w-[45%]">
-          <!-- Project Name Input -->
-          <div class="flex flex-col space-y-2 w-full">
-              <button 
-                class="w-full p-3 bg-primary-500 text-white rounded-md hover:bg-primary-600 transition-colors" 
-                use:popup={popupSettings}>
-                Create Project
-              </button>
+    <!-- Left Side -->
+    <div class="w-[45%]">
+      <!-- Project Name Input -->
+      <div class="flex flex-col space-y-2 w-full">
+        <button 
+          class="w-full p-3 bg-primary-500 text-white rounded-md hover:bg-primary-600 transition-colors" 
+          use:popup={popupSettings}>
+          Create Project
+        </button>
 
-              <!-- Dropdown Menu for Project Creation -->
-              <div class="card p-4 w-72 shadow-xl" data-popup="createProjectPopup">
-                  <input 
-                    type="text" 
-                    class="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 text-gray-700" 
-                    placeholder="Enter project name" 
-                    bind:value={projectName} />
-                  <button 
-                    class="w-full p-3 bg-primary-500 text-white rounded-md hover:bg-primary-600 transition-colors mt-2" 
-                    on:click={createProjectFolder}>
-                    Create
-                  </button>
-              </div>
-          </div>
-
-
-
-          <!-- Delete Project -->
+        <!-- Dropdown Menu for Project Creation -->
+        <div class="card p-4 w-72 shadow-xl" data-popup="createProjectPopup">
+          <input 
+            type="text" 
+            class="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 text-gray-700" 
+            placeholder="Enter project name" 
+            bind:value={projectName} />
           <button 
-            class="w-full p-3 mt-4 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors" 
-            on:click={deleteProjectFolder}>
-            Delete Project
+            class="w-full p-3 bg-primary-500 text-white rounded-md hover:bg-primary-600 transition-colors mt-2" 
+            on:click={createProjectFolder}>
+            Create
           </button>
+        </div>
       </div>
 
-      <!-- Right Side -->
-      <div class="w-[45%]">
-                  <!-- Select Project Folder -->
-                  <div class="w-full mt-4">
-                    <select 
-                      class="w-full p-3 border rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 text-gray-700" 
-                      bind:value={selectedProject}>
-                      <option value="" disabled>Select Project Folder</option>
-                      {#each $projectFolders as folder}
-                        <option value={folder}>{folder}</option>
-                      {/each}
-                    </select>
-                  </div>
-          <!-- File Upload Section -->
-          <figure class="w-full bg-white border border-gray-200 p-4 rounded-md shadow-sm">
-              <FileDropzone bind:files={files} name="files">
-                  <svelte:fragment slot="lead"></svelte:fragment>
-                  <svelte:fragment slot="message">Drag & Drop files here or click to upload</svelte:fragment>
-                  <svelte:fragment slot="meta"></svelte:fragment>
-              </FileDropzone>
+      <!-- Delete Project -->
+      <button 
+        class="w-full p-3 mt-4 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors" 
+        on:click={deleteProjectFolder}>
+        Delete Project
+      </button>
+    </div>
 
-              <FileButton 
-                bind:files={files} 
-                name="files" 
-                button="w-full p-3 bg-primary-100 text-primary-600 rounded-md hover:bg-primary-200 transition-colors text-gray-700"
-              >
-                Upload
-              </FileButton>
-
-              <footer class="mt-4 flex flex-col items-center space-y-2">
-                  {#if files && files.length > 0}
-                      <button 
-                        on:click={uploadFile} 
-                        class="w-full p-3 bg-primary-500 text-white rounded-md hover:bg-primary-600 transition-colors"
-                      >
-                        Upload Selected File
-                      </button>
-                      {#if uploadStarted}
-                          <ProgressRadial 
-                              value={$uploadProgress} 
-                              stroke={100} 
-                              meter="stroke-primary-500" 
-                              track="stroke-primary-500/30" 
-                          />
-                      {/if}
-                  {/if}
-              </footer>
-          </figure>
+    <!-- Right Side -->
+    <div class="w-[45%]">
+      <!-- Select Project Folder -->
+      <div class="w-full mt-4">
+        <select 
+          class="w-full p-3 border rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 text-gray-700" 
+          bind:value={selectedProject}>
+          <option value="" disabled>Select Project Folder</option>
+          {#each $projectFolders as folder}
+            <option value={folder}>{folder}</option>
+          {/each}
+        </select>
       </div>
+
+      <!-- File Upload Section -->
+      <figure class="w-full bg-white border border-gray-200 p-4 rounded-md shadow-sm mt-4">
+        <FileDropzone bind:files={files} name="files">
+          <svelte:fragment slot="lead"></svelte:fragment>
+          <svelte:fragment slot="message">Drag & Drop files here or click to upload</svelte:fragment>
+          <svelte:fragment slot="meta"></svelte:fragment>
+        </FileDropzone>
+
+        <FileButton 
+          bind:files={files} 
+          name="files" 
+          button="w-full p-3 bg-primary-100 text-primary-600 rounded-md hover:bg-primary-200 transition-colors text-gray-700"
+        >
+          Upload
+        </FileButton>
+
+        <footer class="mt-4 flex flex-col items-center space-y-2">
+          {#if files && files.length > 0}
+            <button 
+              on:click={uploadFile} 
+              class="w-full p-3 bg-primary-500 text-white rounded-md hover:bg-primary-600 transition-colors"
+            >
+              Upload Selected File
+            </button>
+            {#if uploadStarted}
+              <ProgressRadial 
+                value={$uploadProgress} 
+                stroke={100} 
+                meter="stroke-primary-500" 
+                track="stroke-primary-500/30" 
+              />
+            {/if}
+          {/if}
+        </footer>
+      </figure>
+    </div>
   </div>
 </div>
