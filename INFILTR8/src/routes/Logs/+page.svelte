@@ -1,3 +1,8 @@
+<!-- The Frontend Logs Page provides an interactive interface for viewing,
+  filtering, and managing application logs. It includes features for filtering 
+  logs by type (e.g., Information, Warning, Error) and by date range, enabling 
+  users to quickly find relevant log entries. Logs are displayed in a paginated 
+  table, with customizable entries per page, and controls for navigating between pages. Users can dynamically adjust the number of logs displayed per page and view the total number of logs. The page integrates Skeleton UI's `Table` component for displaying logs, and a clean, responsive design ensures accessibility and ease of use for monitoring and analyzing application logs. -->
 <script lang="ts">
   import { Table } from "@skeletonlabs/skeleton";
   import { fetchLogs } from './logservice';
