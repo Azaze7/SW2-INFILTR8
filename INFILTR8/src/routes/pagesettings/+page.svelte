@@ -1,3 +1,11 @@
+<!-- The Frontend Settings Page provides a user-friendly interface for personalizing
+  the application's appearance and accessibility features. It allows users to adjust 
+  font size, toggle light/dark mode themes using a `LightSwitch`, and apply colorblind 
+  filters (None, Red, Green, Blue) for enhanced accessibility. The page includes 
+  responsive buttons for these customizations and logs all user actions for tracking. 
+  It also features a button to access the project's GitHub repository. The design 
+  incorporates animations and a clean layout for a visually engaging user experience 
+  while ensuring accessibility and customization options are easily accessible. -->
 <!--Settings Page Code -- Gilbert Guzman & Christian Garcia -->
 <script lang="ts">
     //Import LightSwitch for toggling light/dark mode themes
