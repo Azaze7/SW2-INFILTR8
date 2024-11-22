@@ -1,3 +1,10 @@
+<!-- The frontend report page provides users with a dynamic and interactive interface to view, manage, and export project reports. 
+It allows users to select specific projects, fetch data from the backend, and display ranked entries and exploit data in a tabular format. 
+The page supports exporting reports in multiple formats, including PDF, while dynamically adjusting based on the selected project. 
+Leveraging tools like PapaParse for CSV parsing and jsPDF for PDF generation, it ensures seamless data handling and 
+customized report generation. Additionally, the integration of user logs tracks export actions and enhances accountability 
+through real-time notifications. This streamlined interface supports intuitive navigation and robust data visualization. -->
+
 <script lang="ts">
 	import { writable, type Writable } from 'svelte/store';
     import { onMount } from 'svelte';
