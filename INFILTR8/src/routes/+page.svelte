@@ -1,3 +1,9 @@
+<!-- The frontend support page serves as the landing page for the INFILTR8 platform, offering an engaging and interactive 
+introduction. The page features a dynamic particle background, providing a visually appealing design that captures 
+the user's attention. A central highlight is the "INFILTR8" title, styled with a gradient effect, creating a modern 
+and immersive experience. Users are prompted with a "Get Started" button, which redirects them to the login page. 
+This minimalist and interactive design ensures ease of navigation while maintaining a professional aesthetic for 
+new and returning users.-->
 <script>
     import { goto } from '$app/navigation';
     import Particles from '$lib/components/MagicUI/Particles/Particles.svelte';
