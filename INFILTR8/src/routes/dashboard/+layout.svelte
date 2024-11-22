@@ -1,4 +1,4 @@
-<!-- The Project Manager Backend Layout Page integrates key functionalities 
+<!-- The Dashboard Backend Layout Page integrates key functionalities 
  for managing project folders and user interactions within the application. 
  It provides a responsive and interactive UI with a dual-sidebar layout, 
  enabling navigation through different sections such as Dashboard, Analysis, 

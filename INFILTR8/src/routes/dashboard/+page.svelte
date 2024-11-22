@@ -1,4 +1,4 @@
-<!-- The Project Manager Frontend Page offers a user-friendly interface
+<!-- The Dashboard Frontend Page offers a user-friendly interface
   for managing projects and handling file uploads in the INFILTR8 application. 
   It allows users to create, delete, and select project folders while displaying 
   the available folders dynamically. The page integrates features such as 

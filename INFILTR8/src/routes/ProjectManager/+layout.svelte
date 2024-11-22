@@ -1,3 +1,11 @@
+<!-- The Backend Project Manager Page provides a centralized interface for 
+ managing project folders. It features a sidebar for navigation between key 
+ application sections like Dashboard, Analysis, and Logs. The page dynamically 
+ fetches and displays project folders, allowing users to select a project and 
+ navigate to its details. A user-specific greeting, based on the time of day, 
+ is displayed in the sidebar. The layout uses Skeleton UI's `AppShell` for consistency 
+ and includes responsive design elements to enhance user experience. The page 
+ integrates navigation and state management for seamless interaction. -->
 <script lang="ts">
     //import necessary styles and modules
     import '/src/app.postcss'; //custom postCSS styles
