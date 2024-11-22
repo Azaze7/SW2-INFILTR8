@@ -1,4 +1,12 @@
 <!--Analysis Backend Layout Page Code -- Gilbert Guzman & Christian Garcia -->
+<!-- The Analysis Backend Layout Page is responsible for setting up the layout 
+ and structure of the "Analysis" section of the application. It integrates the 
+ global styles, sidebar navigation, and page-specific features like greeting 
+ messages based on the time of day. This layout uses various components and 
+ libraries to manage dark mode, animations, and interactive elements. 
+ The sidebar provides navigation to other sections of the site with icons 
+ and a user-friendly design. Additionally, the layout incorporates syntax 
+ highlighting for code and initializes settings for popups and stores for smooth functionality. -->
 <script lang="ts">
     //----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         //Imports List. 
