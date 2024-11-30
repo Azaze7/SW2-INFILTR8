@@ -3,7 +3,9 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "dev": "vite dev",
+    "frontend": "vite dev",
+    "backend": "cd server && node server.js",
+    "dev": "concurrently \"npm run frontend\" \"npm run backend\"",
     "build": "vite build",
     "preview": "vite preview",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
@@ -24,6 +26,7 @@
     "@types/node": "22.7.5",
     "@types/papaparse": "^5.3.14",
     "autoprefixer": "^10.4.20",
+    "concurrently": "^9.1.0",
     "postcss": "^8.4.47",
     "prettier": "^3.3.3",
     "prettier-plugin-svelte": "^3.2.7",
@@ -68,6 +71,6 @@
   "description": "Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/main/packages/create-svelte).",
   "main": "svelte.config.js",
   "keywords": [],
-  "author": "",
+  "author": "CS4311 Team 6 Nine-Bytes_Fall2024",
   "license": "ISC"
 }
