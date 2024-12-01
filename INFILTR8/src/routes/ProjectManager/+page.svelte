@@ -88,6 +88,8 @@
 
 
     let activeTable: Writable<string> = writable(''); // Track the active table view
+    let activeProject: Writable<string> = writable('');// Track the active project view
+
 
     // Function to set the active table
     function showTable(table: string) {
@@ -107,30 +109,52 @@
         }
     }
     //Automatically fetch project data when a project is selected
-    $: if (selectedProject) {
+    $: if (selectedProject && selectedProject !== $activeProject) {
+        console.log('Switching project to:', selectedProject);
+
+        // Clear data and reset the table
+        exploits.set([]);
+        entryPoints.set([]);
+        rankedEntries.set([]);
+        portEntries.set([]);
+        activeTable.set('');
+
+        // Update active project
+        activeProject.set(selectedProject);
+        console.log('Fetching data for:', selectedProject);
+
+        // Fetch new data
         fetchProjectData(selectedProject);
     }
+
+
     //Fetches and parses various CSV files related to a specific project
     async function fetchProjectData(project: string) {
-        loading.set(true);
-        error.set(null);
-        const basePath = `/server/data/${project}`;
+    loading.set(true); // Start loading
+    error.set(null); // Clear error state
+    
+    // Clear existing data before loading
+    exploits.set([]);
+    entryPoints.set([]);
+    rankedEntries.set([]);
+    portEntries.set([]);
 
-        try {
-            //Fetch and parse multiple datasets simultaneously
-            await Promise.all([
-                fetchAndParse<ExploitData>(`${basePath}/data_with_exploits.csv`, exploits),
-                fetchAndParse<EntryPoint>(`${basePath}/entrypoint_most_info.csv`, entryPoints),
-                fetchAndParse<RankedEntry>(`${basePath}/ranked_entry_points.csv`, rankedEntries),
-                fetchAndParse<ExploitData>(`${basePath}/port_0_entries.csv`, portEntries)
-            ]);
-        } catch (err) {
-            error.set(`Failed to load data for project: ${project}`);
-            console.error(err);
-        } finally {
-            loading.set(false);//stop loading after data fetch
-        }
+    try {
+        const basePath = `/server/data/${project}`;
+        await Promise.all([
+            fetchAndParse<ExploitData>(`${basePath}/data_with_exploits.csv`, exploits),
+            fetchAndParse<EntryPoint>(`${basePath}/entrypoint_most_info.csv`, entryPoints),
+            fetchAndParse<RankedEntry>(`${basePath}/ranked_entry_points.csv`, rankedEntries),
+            fetchAndParse<ExploitData>(`${basePath}/port_0_entries.csv`, portEntries),
+        ]);
+    } catch (err) {
+        error.set(`Failed to load data for project: ${project}`);
+        console.error(err);
+    } finally {
+        loading.set(false); // End loading
     }
+}
+
     //Helper function to fetch CSV files and parse them into Svelte stores
     async function fetchAndParse<T>(url: string, store: Writable<T[]>) {
         try {
@@ -157,12 +181,24 @@
     <section class="flex gap-4 overflow-x-auto px-4 py-2">
         <h3>Projects</h3>
         <div class="flex gap-4 overflow-x-auto px-4 py-2">
+
+            
+
+
             {#each $projectFolders as folder, index}
                 <button
                     id={`project-${index}`}
                     name={`project-${index}`}
                     class="card"
-                    on:click={() => (selectedProject = folder)}
+                    on:click={() => {
+                        selectedProject = folder;
+                        activeProject.set(''); // Clear activeProject before loading the new one
+                        exploits.set([]);
+                        entryPoints.set([]);
+                        rankedEntries.set([]);
+                        portEntries.set([]);
+                        activeTable.set(''); // Clear activeTable
+                    }}
                 >
                     {folder}
                 </button>
@@ -184,34 +220,35 @@
     <p>Loading data...</p>
 {:else if $error}
     <p class="text-red-500">{$error}</p>
-{:else}
-    {#if $activeTable === 'DataExplot'}
+    {:else}
+    {#if $activeProject === selectedProject && $activeTable === 'DataExplot'}
         <section>
             <h3>Data with Exploits</h3>
             <Datatable data={$exploits} columns={exploitColumns} />
         </section>
     {/if}
 
-    {#if $activeTable === 'EntryPoint'}
+    {#if $activeProject === selectedProject && $activeTable === 'EntryPoint'}
         <section>
             <h3>Entry Points (Most Info)</h3>
             <Datatable data={$entryPoints} columns={entryPointColumns} />
         </section>
     {/if}
 
-    {#if $activeTable === 'RankedEntry'}
+    {#if $activeProject === selectedProject && $activeTable === 'RankedEntry'}
         <section>
             <h3>Ranked Entry Points</h3>
             <Datatable data={$rankedEntries} columns={rankedEntryColumns} />
         </section>
     {/if}
 
-    {#if $activeTable === 'Port0'}
+    {#if $activeProject === selectedProject && $activeTable === 'Port0'}
         <section>
             <h3>Port 0 Entries</h3>
             <Datatable data={$portEntries} columns={exploitColumns} />
         </section>
     {/if}
+
 {/if}
 </div>
 
