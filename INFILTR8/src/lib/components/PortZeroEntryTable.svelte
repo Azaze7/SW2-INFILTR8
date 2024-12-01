@@ -1,3 +1,10 @@
+<!-- The PortZeroEntryTable Component presents a comprehensive table showcasing detailed information about network services 
+   and associated vulnerabilities. It takes an array of entry objects as input, where each object contains fields such as 
+   file name, service name, IP address, port, protocol, severity, and exploit details. The `#each` directive iterates through 
+   the entries array to generate a table row for every item, ensuring the data is systematically displayed. This component 
+   is designed to offer clear and thorough insights into network services and their vulnerabilities, making it a useful 
+   tool for security evaluation and monitoring. -->
+
 <script lang="ts">
   export let entries: Array<{
       file: string;
