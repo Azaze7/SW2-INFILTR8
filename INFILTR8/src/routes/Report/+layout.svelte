@@ -1,3 +1,10 @@
+<!-- The backend report module serves as the foundation for generating, managing, and displaying project-specific reports. 
+It integrates seamlessly with user and project data, fetching necessary information from the backend API. 
+It includes functionality to handle file uploads, track progress, and navigate through different project reports. 
+The system uses dynamic links and a customizable sidebar to ensure smooth navigation between report-related tasks. 
+Its robust architecture supports the efficient processing of uploaded files and allows users to select projects or 
+view detailed reports, maintaining a user-friendly and interactive experience. -->
+
 <script lang="ts">
     import '/src/app.postcss';
     import { page } from '$app/stores';

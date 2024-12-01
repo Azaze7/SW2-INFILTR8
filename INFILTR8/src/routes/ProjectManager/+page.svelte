@@ -1,3 +1,12 @@
+<!-- The Frontend Project Manager Page provides a dynamic interface for 
+ managing and analyzing project data. It enables users to select a project 
+ folder and fetch associated data, including exploit data, entry points, ranked 
+ entry points, and port-specific entries. The data is displayed in interactive 
+ tables using the `Datatable` component, with support for dynamic updates based 
+ on the selected project. The page includes a responsive layout, intuitive project 
+ selection, and real-time loading indicators or error messages to enhance user 
+ experience. Its clean design and smooth transitions ensure ease of use for 
+ configuring and analyzing projects effectively. -->
 <script lang="ts">
     //Import writable stores from Svelte and other required libraries and components
     import { writable, type Writable } from 'svelte/store';

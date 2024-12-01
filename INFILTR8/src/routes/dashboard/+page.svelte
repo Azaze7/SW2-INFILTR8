@@ -1,3 +1,12 @@
+<!-- The Dashboard Frontend Page offers a user-friendly interface
+  for managing projects and handling file uploads in the INFILTR8 application. 
+  It allows users to create, delete, and select project folders while displaying 
+  the available folders dynamically. The page integrates features such as 
+  drag-and-drop file uploads, progress tracking with radial indicators, and 
+  dropdown menus for project creation. Users can upload `.nessus` files or 
+  trigger CSV uploads to a Neo4j database, with real-time feedback and logging 
+  for successful or failed operations. The layout is designed to ensure accessibility, 
+  responsiveness, and seamless interaction for efficient project management. -->
 <script lang="ts">
   import { onMount } from 'svelte';
   import { writable } from 'svelte/store';

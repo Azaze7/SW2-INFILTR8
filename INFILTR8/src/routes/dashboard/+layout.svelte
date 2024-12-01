@@ -1,3 +1,14 @@
+<!-- The Dashboard Backend Layout Page integrates key functionalities 
+ for managing project folders and user interactions within the application. 
+ It provides a responsive and interactive UI with a dual-sidebar layout, 
+ enabling navigation through different sections such as Dashboard, Analysis, 
+ and Reports. The left sidebar includes navigation links and user account 
+ details, while the right sidebar displays selectable project folders. 
+ This page dynamically fetches and displays available projects, tracks file 
+ uploads with progress indicators, and allows users to select projects for 
+ further actions. It incorporates features like popups for account and 
+ notifications, support for file uploads, and a greeting system based on the time
+ of day. The layout is designed for accessibility and responsive user experiences. -->
 <script lang="ts">
   import '/src/app.postcss';
   import { page } from '$app/stores';
