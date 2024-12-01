@@ -130,30 +130,30 @@
 
     //Fetches and parses various CSV files related to a specific project
     async function fetchProjectData(project: string) {
-    loading.set(true); // Start loading
-    error.set(null); // Clear error state
+        loading.set(true); // Start loading
+        error.set(null); // Clear error state
     
-    // Clear existing data before loading
-    exploits.set([]);
-    entryPoints.set([]);
-    rankedEntries.set([]);
-    portEntries.set([]);
+        // Clear existing data before loading
+        exploits.set([]);
+        entryPoints.set([]);
+        rankedEntries.set([]);
+        portEntries.set([]);
 
-    try {
-        const basePath = `/server/data/${project}`;
-        await Promise.all([
-            fetchAndParse<ExploitData>(`${basePath}/data_with_exploits.csv`, exploits),
-            fetchAndParse<EntryPoint>(`${basePath}/entrypoint_most_info.csv`, entryPoints),
-            fetchAndParse<RankedEntry>(`${basePath}/ranked_entry_points.csv`, rankedEntries),
-            fetchAndParse<ExploitData>(`${basePath}/port_0_entries.csv`, portEntries),
-        ]);
-    } catch (err) {
-        error.set(`Failed to load data for project: ${project}`);
-        console.error(err);
-    } finally {
-        loading.set(false); // End loading
+        try {
+            const basePath = `/server/data/${project}`;
+            await Promise.all([
+                fetchAndParse<ExploitData>(`${basePath}/data_with_exploits.csv`, exploits),
+                fetchAndParse<EntryPoint>(`${basePath}/entrypoint_most_info.csv`, entryPoints),
+                fetchAndParse<RankedEntry>(`${basePath}/ranked_entry_points.csv`, rankedEntries),
+                fetchAndParse<ExploitData>(`${basePath}/port_0_entries.csv`, portEntries),
+            ]);
+        } catch (err) {
+            error.set(`Failed to load data for project: ${project}`);
+            console.error(err);
+        } finally {
+            loading.set(false); // End loading
+        }
     }
-}
 
     //Helper function to fetch CSV files and parse them into Svelte stores
     async function fetchAndParse<T>(url: string, store: Writable<T[]>) {
@@ -177,14 +177,9 @@
     <header class="flex justify-between gap-4">
         <h2 class="text-2xl font-semibold">Configure Project and Analysis</h2>
     </header>
-
     <section class="flex gap-4 overflow-x-auto px-4 py-2">
         <h3>Projects</h3>
         <div class="flex gap-4 overflow-x-auto px-4 py-2">
-
-            
-
-
             {#each $projectFolders as folder, index}
                 <button
                     id={`project-${index}`}
@@ -198,14 +193,11 @@
                         rankedEntries.set([]);
                         portEntries.set([]);
                         activeTable.set(''); // Clear activeTable
-                    }}
-                >
+                    }}>
                     {folder}
                 </button>
             {/each}
-        </div>
-
-        
+        </div>  
         <div class="flex gap-4 overflow-x-auto px-4 py-2">
             <h3>Tables</h3>
             <button class="card" on:click={() => showTable('DataExplot')}>DataExplots</button>
@@ -213,43 +205,42 @@
             <button class="card" on:click={() => showTable('RankedEntry')}>RankedEntry</button>
             <button class="card" on:click={() => showTable('Port0')}>Port0</button>
         </div>
-
     </section>
     <!-- Show loading, error messages, or data tables based on current state -->
     {#if $loading}
-    <p>Loading data...</p>
-{:else if $error}
-    <p class="text-red-500">{$error}</p>
+        <p>Loading data...</p>
+    {:else if $error}
+        <p class="text-red-500">{$error}</p>
     {:else}
-    {#if $activeProject === selectedProject && $activeTable === 'DataExplot'}
-        <section>
-            <h3>Data with Exploits</h3>
-            <Datatable data={$exploits} columns={exploitColumns} />
-        </section>
-    {/if}
+        {#if $activeProject === selectedProject && $activeTable === 'DataExplot'}
+            <section>
+                <h3>Data with Exploits</h3>
+                <Datatable data={$exploits} columns={exploitColumns} />
+            </section>
+        {/if}
 
-    {#if $activeProject === selectedProject && $activeTable === 'EntryPoint'}
-        <section>
-            <h3>Entry Points (Most Info)</h3>
-            <Datatable data={$entryPoints} columns={entryPointColumns} />
-        </section>
-    {/if}
+        {#if $activeProject === selectedProject && $activeTable === 'EntryPoint'}
+            <section>
+                <h3>Entry Points (Most Info)</h3>
+                <Datatable data={$entryPoints} columns={entryPointColumns} />
+            </section>
+        {/if}
 
-    {#if $activeProject === selectedProject && $activeTable === 'RankedEntry'}
-        <section>
-            <h3>Ranked Entry Points</h3>
-            <Datatable data={$rankedEntries} columns={rankedEntryColumns} />
-        </section>
-    {/if}
+        {#if $activeProject === selectedProject && $activeTable === 'RankedEntry'}
+            <section>
+                <h3>Ranked Entry Points</h3>
+                <Datatable data={$rankedEntries} columns={rankedEntryColumns} />
+            </section>
+        {/if}
 
-    {#if $activeProject === selectedProject && $activeTable === 'Port0'}
-        <section>
-            <h3>Port 0 Entries</h3>
-            <Datatable data={$portEntries} columns={exploitColumns} />
-        </section>
-    {/if}
+        {#if $activeProject === selectedProject && $activeTable === 'Port0'}
+            <section>
+                <h3>Port 0 Entries</h3>
+                <Datatable data={$portEntries} columns={exploitColumns} />
+            </section>
+        {/if}
 
-{/if}
+    {/if}
 </div>
 
 <!-- Styles -->
