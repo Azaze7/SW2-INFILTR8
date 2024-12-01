@@ -1,4 +1,13 @@
 <!--Analysis Frontend Layout Page Code -- Gilbert Guzman & Christian Garcia -->
+<!-- The Analysis Frontend Layout Page provides a user interface for managing and 
+ analyzing project data within the application. It displays available project 
+ folders, allows users to select and load specific projects, and dynamically 
+ updates progress bars and reports as data is processed. This layout includes 
+ interactive features such as dropdown menus for scheduling analyses, selecting 
+ attack types, and exporting reports in PDF or XML formats. Users can view, 
+ filter, and prioritize exploit data, entry points, and ranked vulnerabilities 
+ through scrollable lists. It integrates logging for user actions and uses animations,
+  custom styles, and responsive design for an enhanced user experience. -->
 <script lang="ts"> 
     //----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         //Imports List. 

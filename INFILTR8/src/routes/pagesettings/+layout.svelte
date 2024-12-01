@@ -1,3 +1,12 @@
+<!-- The Backend Page Settings Page provides a structured layout for 
+ managing and configuring application settings. It features a responsive 
+ interface with a sidebar for navigation between different sections like 
+ Dashboard, Analysis, and Logs. The page header highlights the current section 
+ ("Settings"), and the left sidebar displays user-specific greetings and a logout 
+ option. This page includes utilities for file uploads with progress tracking and 
+ uses `AppShell` for a consistent design. It integrates Skeleton UI components for 
+ enhanced interactivity and Highlight.js for code styling. This setup ensures a 
+ streamlined user experience for managing and customizing application settings. -->
 <script lang="ts">
     import '/src/app.postcss';
     import { page } from '$app/stores';

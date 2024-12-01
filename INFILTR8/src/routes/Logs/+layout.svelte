@@ -1,3 +1,13 @@
+<!-- The Backend Logs Page provides an interface for viewing and 
+ managing logs within the application. It includes a responsive layout 
+ with an interactive sidebar for navigation between different sections 
+ such as Dashboard, Analysis, and Reports. The page header displays the 
+ current section ("Logs"), and the left sidebar features user-specific 
+ greetings and a logout option. It supports file uploads with progress tracking, 
+ allowing users to upload logs or other related files. The design integrates 
+ `AppShell` for layout consistency, Skeleton UI components for enhanced interactivity, 
+ and Highlight.js for syntax styling, ensuring a streamlined and user-friendly 
+ experience for log management. -->
 <script lang="ts">
     import '/src/app.postcss';
     import { page } from '$app/stores';

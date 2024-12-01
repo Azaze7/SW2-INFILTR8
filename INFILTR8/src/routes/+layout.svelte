@@ -1,3 +1,9 @@
+<!-- The backend support page provides a secure environment for authenticated users to access support functionalities. 
+This page dynamically adjusts its layout based on the user's authentication status, rendering the main application 
+layout for logged-in users or redirecting to a login interface for unauthenticated users. It integrates user-specific 
+settings, such as colorblind filters, which are applied on page load from local storage. Highlight.js is used to enable 
+syntax highlighting for code-related content. This setup ensures a user-friendly experience while maintaining robust 
+access control and customization capabilities tailored to individual user needs. -->
 <script lang="ts">
     import '/src/app.postcss';
     import { goto } from '$app/navigation';
