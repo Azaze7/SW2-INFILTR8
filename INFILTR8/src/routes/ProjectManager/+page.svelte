@@ -86,6 +86,14 @@
         { key: 'combined_score', label: 'Combined Score' }
     ];
 
+
+    let activeTable: Writable<string> = writable(''); // Track the active table view
+
+    // Function to set the active table
+    function showTable(table: string) {
+        activeTable.set(table);
+    }
+
     //Fetch project folders on mount
     onMount(fetchProjectFolders);
     //Fetches list of project folders from an API and updates the store
@@ -146,7 +154,7 @@
         <h2 class="text-2xl font-semibold">Configure Project and Analysis</h2>
     </header>
 
-    <section>
+    <section class="flex gap-4 overflow-x-auto px-4 py-2">
         <h3>Projects</h3>
         <div class="flex gap-4 overflow-x-auto px-4 py-2">
             {#each $projectFolders as folder, index}
@@ -160,33 +168,51 @@
                 </button>
             {/each}
         </div>
+
+        
+        <div class="flex gap-4 overflow-x-auto px-4 py-2">
+            <h3>Tables</h3>
+            <button class="card" on:click={() => showTable('DataExplot')}>DataExplots</button>
+            <button class="card" on:click={() => showTable('EntryPoint')}>EntryPoint</button>
+            <button class="card" on:click={() => showTable('RankedEntry')}>RankedEntry</button>
+            <button class="card" on:click={() => showTable('Port0')}>Port0</button>
+        </div>
+
     </section>
     <!-- Show loading, error messages, or data tables based on current state -->
     {#if $loading}
-        <p>Loading data...</p>
-    {:else if $error}
-        <p class="text-red-500">{$error}</p>
-    {:else}
+    <p>Loading data...</p>
+{:else if $error}
+    <p class="text-red-500">{$error}</p>
+{:else}
+    {#if $activeTable === 'DataExplot'}
         <section>
             <h3>Data with Exploits</h3>
             <Datatable data={$exploits} columns={exploitColumns} />
         </section>
+    {/if}
 
+    {#if $activeTable === 'EntryPoint'}
         <section>
             <h3>Entry Points (Most Info)</h3>
             <Datatable data={$entryPoints} columns={entryPointColumns} />
         </section>
+    {/if}
 
+    {#if $activeTable === 'RankedEntry'}
         <section>
             <h3>Ranked Entry Points</h3>
             <Datatable data={$rankedEntries} columns={rankedEntryColumns} />
         </section>
+    {/if}
 
+    {#if $activeTable === 'Port0'}
         <section>
             <h3>Port 0 Entries</h3>
             <Datatable data={$portEntries} columns={exploitColumns} />
         </section>
     {/if}
+{/if}
 </div>
 
 <!-- Styles -->
