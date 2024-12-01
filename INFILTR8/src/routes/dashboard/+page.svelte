@@ -13,7 +13,7 @@
   import { ProgressRadial, FileDropzone, FileButton, popup } from "@skeletonlabs/skeleton";
   import type { PopupSettings } from "@skeletonlabs/skeleton";
   import { projectFolders } from '$lib/stores/projectFoldersStore'; 
-  import { createLogEntry, fetchLogs } from '../../routes/Logs/logservice';
+  import { createLogEntry } from '../../routes/Logs/logservice';
   import { user } from "$lib/components/loginUI/userStore";
 
   let button: HTMLButtonElement | null = null;
@@ -48,17 +48,8 @@
     }
   }
 
-  async function fetchUserLogs() {
-    try {
-      await fetchLogs();
-    } catch (error) {
-      console.error('Error fetching logs:', error);
-    }
-  }
-
   onMount(() => {
     fetchProjectFolders();
-    fetchUserLogs();
   });
 
   // Function to trigger CSV upload to Neo4j
@@ -194,9 +185,6 @@
 </script>
 
 <div class="container h-full mx-auto flex justify-center items-start py-10 space-x-10">
-  <!-- Notifications Section -->
-  <div class="notifications-container"></div>
-
   <!-- Main Content -->
   <div class="space-y-8 w-full max-w-5xl text-center flex flex-wrap justify-between items-start">
     <h2 class="text-2xl font-bold text-white-800 w-full">

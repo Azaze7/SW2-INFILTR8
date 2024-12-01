@@ -16,14 +16,16 @@
   import { user } from "$lib/components/loginUI/userStore";
   import type { PopupSettings } from '@skeletonlabs/skeleton';
   import { projectFolders } from '$lib/stores/projectFoldersStore';
-  import { computePosition, autoUpdate, flip, shift, offset, arrow } from '@floating-ui/dom';    
+  import { computePosition, autoUpdate, flip, shift, offset, arrow } from '@floating-ui/dom';
   import { storePopup, storeHighlightJs, AppShell } from '@skeletonlabs/skeleton';
-  import { initializeStores, getDrawerStore, } from '@skeletonlabs/skeleton';
-  import { ArrowLeft, Home, Settings, FlaskConical, FolderRoot, Clipboard, BadgeHelp, Scroll} from "lucide-svelte";
+  import { initializeStores, getDrawerStore } from '@skeletonlabs/skeleton';
+  import { ArrowLeft, Home, Settings, FlaskConical, FolderRoot, Clipboard, BadgeHelp, Scroll } from "lucide-svelte";
   import Sidebar from '$lib/components/AceternityUI/Sidebar/Sidebar.svelte';
   import SidebarLink from '$lib/components/AceternityUI/Sidebar/SidebarLink.svelte';
   import { vopen } from '$lib/stores/svelteContent';
-  
+  import { onMount } from 'svelte';
+  import { fetchLogs } from '../../routes/Logs/logservice';
+
   // Highlight JS imports
   import 'highlight.js/styles/github-dark.css';
   import hljs from 'highlight.js/lib/core';
@@ -32,7 +34,7 @@
   import javascript from 'highlight.js/lib/languages/javascript';
   import typescript from 'highlight.js/lib/languages/typescript';
 
-  hljs.registerLanguage('xml', xml); // for HTML
+  hljs.registerLanguage('xml', xml);
   hljs.registerLanguage('css', css);
   hljs.registerLanguage('javascript', javascript);
   hljs.registerLanguage('typescript', typescript);
@@ -55,8 +57,6 @@
   } else {
       greeting = "Good evening!";
   }
-
-
 
   let username = '';
 
@@ -105,12 +105,6 @@
       placement: 'bottom',
   };
 
-  const NotificationPopup: PopupSettings = {
-      event: 'click',
-      target: 'NotificationPopup',
-      placement: 'bottom',
-  };
-
   // Function to handle project selection
   function selectProject(folder: string) {
       console.log('Selected Project:', folder);
@@ -133,32 +127,117 @@
       { label: "Reports", href: "/Report", icon: Clipboard },
       { label: "Logs", href: "/Logs", icon: Scroll },
       { label: "Settings", href: "/pagesettings", icon: Settings },
-      { label: "Support", href: "/support", icon: BadgeHelp} 
-      
+      { label: "Support", href: "/support", icon: BadgeHelp } 
   ];
+
+  let logs: any[] = [];
+  let filteredLogs: any[] = [];
+
+  async function fetchUserLogs() {
+    const fetchedLogs = await fetchLogs();
+
+    if (fetchedLogs !== undefined && fetchedLogs !== null) {
+      logs = fetchedLogs;
+    } else {
+      logs = [];
+    }
+
+    // Sort logs by date, newest first
+    logs.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+    filteredLogs = logs.slice(0, 5);
+    console.log(filteredLogs);
+  }
+
+  // State for the notification dropdown
+  let showNotifications = false;
+  onMount(() => {
+    fetchUserLogs();
+  });
 </script>
 
-<AppShell>
-  <svelte:fragment slot="sidebarRight">
-  <h1 class="text-2xl font-bold mb-4">Current Project Folder</h1>
-  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 px-4 py-2 rounded-md shadow-sm">
-      {#each $projectFolders as folder, index}
-          <button 
-              class="card py-4 px-6 w-full text-center cursor-pointer hover:bg-primary-100 rounded-md shadow transition duration-300"
-              on:click={() => selectProject(folder)}
-              on:keydown={(event) => {
-                  if (event.key === 'Enter' || event.key === ' ') {
-                      selectProject(folder);
-                  }
-              }}
-              aria-label={`Select project ${folder}`}
-          >
-              {folder}
-          </button>
-      {/each}
-  </div>
-</svelte:fragment>
+<style>
+  .bell-icon {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 24px;
+      height: 24px;
+      cursor: pointer;
+      fill: #ffffff;
+  }
 
+  .notification-dropdown {
+    position: absolute;
+    top: 50px;
+    right: 20px;
+    background-color: #1f2937;
+    color: #ffffff;
+    border: 1px solid #374151;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    width: 300px;
+    max-height: 400px;
+    overflow-y: auto;
+    z-index: 1000;
+    padding: 10px; /* Added padding for spacing around the dropdown */
+  }
+
+  .notification-item {
+      display: flex;
+      flex-direction: column; /* Stack content vertically */
+      justify-content: flex-start; /* Align content to the start of the container */
+      padding: 10px 15px;
+      border-bottom: 1px solid #374151;
+      cursor: pointer;
+      text-align: left; /* Align text to the left for better readability */
+      width: 100%;
+      box-sizing: border-box;
+  }
+
+  .notification-item p {
+      margin: 0;
+      padding: 1px 0;
+  }
+
+  .notification-item small {
+      font-size: 0.85rem;
+      color: #bbb; /* Lighter color for the date/time */
+      margin-top: 5px;
+  }
+  
+  .notification-item:last-child {
+      border-bottom: none;
+  }
+  .notification-item:hover {
+      background-color: #374151;
+  }
+</style>
+
+<AppShell>
+  <!-- Bell Icon (SVG) as a Button -->
+  <button class="bell-icon" on:click={() => (showNotifications = !showNotifications)}>
+      <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          aria-label="Notifications"
+      >
+          <path d="M12 2C10.34 2 9 3.34 9 5v2.07C6.72 7.57 5 9.64 5 12v5l-1 1v1h16v-1l-1-1v-5c0-2.36-1.72-4.43-4-4.93V5c0-1.66-1.34-3-3-3zM12 23c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2z" />
+      </svg>
+  </button>
+
+  <!-- Notification Dropdown -->
+  {#if showNotifications}
+      <div class="notification-dropdown">
+          {#each filteredLogs as notification}
+                <button class="notification-item">
+                    <p>{notification.type}</p>
+                    <p>{notification.message}</p>
+                    <small>{notification.date}</small>
+                </button>
+          {/each}
+      </div>
+  {/if}
 
   <!-- Sidebar with Drawer -->
   <svelte:fragment slot="sidebarLeft">
