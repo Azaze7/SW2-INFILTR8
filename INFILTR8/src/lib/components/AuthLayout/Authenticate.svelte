@@ -1,12 +1,14 @@
 <script lang="ts">
-    import { page } from '$app/stores';
-    
+    import { page } from '$app/stores'; 
     import Authenticate from '$lib/components/AuthLayout/Authenticate.svelte';
-    import { AppShell } from '@skeletonlabs/skeleton';
+    import { AppShell } from '@skeletonlabs/skeleton'; 
     import { user } from '$lib/stores/user';
 
-    // Reactive value for authentication status
+    
     $: isAuthenticated = !!$user;
+
+ 
+    console.log('isAuthenticated:', isAuthenticated);
 </script>
 
 {#if isAuthenticated}

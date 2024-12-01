@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import neo4j from 'neo4j-driver';
 import bcrypt from 'bcrypt';
 import session from 'express-session';
+import crypto from 'crypto';
 
 dotenv.config({ path: '../.env' });
 
@@ -16,6 +17,7 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'X-Requested-With', 'Accept'],
 }));
 
+// Neo4j Driver Initialization
 const driver = neo4j.driver(
     process.env.NEO4J_URI,
     neo4j.auth.basic(process.env.NEO4J_USERNAME, process.env.NEO4J_PASSWORD)
@@ -28,10 +30,14 @@ app.use(session({
     cookie: { secure: false }
 }));
 
+// Generate a secure token
+function generateToken() {
+    return crypto.randomBytes(32).toString('hex');
+}
+
 // Account Lock Check Endpoint
 app.post('/check-lock', async (req, res) => {
     const { username } = req.body;
-    console.log(`Checking lock status for user: ${username}`);
     const session = driver.session();
     try {
         const result = await session.run(
@@ -39,7 +45,6 @@ app.post('/check-lock', async (req, res) => {
             { username }
         );
         const locked = result.records[0]?.get('locked') || false;
-        console.log(`Account lock status for ${username}: ${locked}`);
         res.json({ locked });
     } finally {
         await session.close();
@@ -49,7 +54,6 @@ app.post('/check-lock', async (req, res) => {
 // Increment Attempts Endpoint
 app.post('/increment-attempts', async (req, res) => {
     const { username } = req.body;
-    console.log(`Incrementing login attempts for user: ${username}`);
     const session = driver.session();
     try {
         const result = await session.run(
@@ -61,7 +65,6 @@ app.post('/increment-attempts', async (req, res) => {
         );
         const attempts = result.records[0]?.get('attempts');
         const locked = result.records[0]?.get('locked');
-        console.log(`User ${username} now has ${attempts} failed attempts. Locked: ${locked}`);
         res.json({ attempts, locked });
     } finally {
         await session.close();
@@ -71,7 +74,6 @@ app.post('/increment-attempts', async (req, res) => {
 // Reset Attempts Endpoint
 app.post('/reset-attempts', async (req, res) => {
     const { username } = req.body;
-    console.log(`Resetting login attempts for user: ${username}`);
     const session = driver.session();
     try {
         await session.run(
@@ -89,18 +91,32 @@ app.post('/register', async (req, res) => {
     const { username, password } = req.body;
     const session = driver.session();
     try {
-        const userResult = await session.run('MATCH (u:User {username: $username}) RETURN u', { username });
+        const userResult = await session.run(
+            'MATCH (u:User {username: $username}) RETURN u',
+            { username }
+        );
 
         if (userResult.records.length > 0) {
-            console.log(`Registration failed: User ${username} already exists`);
             return res.status(400).send('User already exists');
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
-        await session.run('CREATE (u:User {username: $username, password: $password, attempts: 0, locked: false}) RETURN u', { username, password: hashedPassword });
+        const token = generateToken();
+
+        // Ensure `token` is added when creating the user
+        const result = await session.run(
+            `
+            CREATE (u:User {username: $username, password: $password, token: $token, attempts: 0, locked: false})
+            RETURN u
+            `,
+            { username, password: hashedPassword, token }
+        );
+
+        // Debugging: Log the created user
+        console.log('Created User:', result.records[0].get('u').properties);
 
         req.session.user = { username };
-        res.json({ user: { username } });
+        res.json({ user: { username, token } });
     } catch (err) {
         console.error('Registration error:', err);
         res.status(500).send('An error occurred during registration');
@@ -109,45 +125,59 @@ app.post('/register', async (req, res) => {
     }
 });
 
+
+// Password Reset Endpoint
+app.post('/reset-password', async (req, res) => {
+    const { token, newPassword } = req.body;
+    const session = driver.session();
+    try {
+        const userResult = await session.run(
+            'MATCH (u:User {token: $token}) RETURN u',
+            { token }
+        );
+
+        if (userResult.records.length === 0) {
+            return res.status(400).send('Invalid or expired token');
+        }
+
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        const newToken = generateToken();
+        await session.run(
+            'MATCH (u:User {token: $token}) ' +
+            'SET u.password = $password, u.token = $newToken RETURN u',
+            { token, password: hashedPassword, newToken }
+        );
+
+        res.send('Password reset successful');
+    } catch (err) {
+        console.error('Password reset error:', err);
+        res.status(500).send('An error occurred during password reset');
+    } finally {
+        await session.close();
+    }
+});
+
 // User Login
 app.post('/login', async (req, res) => {
     const { username, password } = req.body;
-    console.log(`Login attempt for user: ${username}`);
     const session = driver.session();
     try {
-        // Check if account is locked
         const lockResult = await session.run('MATCH (u:User {username: $username}) RETURN u.locked AS locked', { username });
         const isLocked = lockResult.records[0]?.get('locked') || false;
         if (isLocked) {
-            console.log(`Login failed for ${username}: Account is locked`);
             return res.status(403).send('Account is locked due to multiple failed attempts.');
         }
 
         const userResult = await session.run('MATCH (u:User {username: $username}) RETURN u', { username });
         if (userResult.records.length === 0) {
-            console.log(`Invalid username: ${username}`);
-            // Increment failed attempts
-            const incrementResult = await session.run(
-                'MATCH (u:User {username: $username}) ' +
-                'SET u.attempts = coalesce(u.attempts, 0) + 1 ' +
-                'WITH u WHERE u.attempts >= 3 ' +
-                'SET u.locked = true RETURN u.attempts AS attempts, u.locked AS locked',
-                { username }
-            );
-            const attempts = incrementResult.records[0]?.get('attempts');
-            const attemptsLeft = 3 - attempts;
-            console.log(`Attempts left for ${username}: ${attemptsLeft}`);
-            return res.status(400).send(`Invalid username or password. Attempts remaining: ${attemptsLeft}`);
+            return res.status(400).send('Invalid username or password.');
         }
 
         const userNode = userResult.records[0].get('u').properties;
         const hashedPassword = userNode.password;
-
         const passwordMatch = await bcrypt.compare(password, hashedPassword);
 
         if (!passwordMatch) {
-            console.log(`Incorrect password for ${username}`);
-            // Increment failed attempts
             const incrementResult = await session.run(
                 'MATCH (u:User {username: $username}) ' +
                 'SET u.attempts = coalesce(u.attempts, 0) + 1 ' +
@@ -157,16 +187,14 @@ app.post('/login', async (req, res) => {
             );
             const attempts = incrementResult.records[0]?.get('attempts');
             const attemptsLeft = 3 - attempts;
-            console.log(`Attempts left for ${username}: ${attemptsLeft}`);
             return res.status(400).send(`Invalid username or password. Attempts remaining: ${attemptsLeft}`);
         }
 
-        // Reset attempts and unlock account on successful login
         await session.run(
             'MATCH (u:User {username: $username}) SET u.attempts = 0, u.locked = false RETURN u',
             { username }
         );
-        console.log(`Login successful for user: ${username}`);
+
         req.session.user = { username };
         res.json({ user: { username } });
     } catch (err) {
@@ -181,7 +209,6 @@ app.post('/login', async (req, res) => {
 app.post('/logout', (req, res) => {
     req.session.destroy((err) => {
         if (err) {
-            console.error('Logout error:', err);
             return res.status(500).send('Could not log out');
         }
         res.send('Logged out');
