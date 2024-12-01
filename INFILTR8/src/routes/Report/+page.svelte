@@ -174,6 +174,9 @@ through real-time notifications. This streamlined interface supports intuitive n
             doc.text(`INFILTR8 REPORT`, 10, 10);
             //Get the current date and time for the document title.
             const now = new Date();
+            const month = now.getMonth();
+            const date = now.getDate();
+            const year = now.getFullYear();
             const formattedDateTime = now.toLocaleString();
     
             //Add generated time for title on report.
@@ -232,7 +235,7 @@ through real-time notifications. This streamlined interface supports intuitive n
             `30% from Exploit Score of ${entry.exploit_score}\n` +
             `20% from Distinct Vulnerabilities count of ${entry.distinct_vulnerabilities}\n\n`);
             addEntriesToPage("Ranked Entries", rankedEntries);
-            const fileName = `${selectedProjectName}.pdf`;
+            const fileName = `${selectedProjectName} (${month}-${date}-${year}).pdf`;
             doc.save(fileName);
         }
 
