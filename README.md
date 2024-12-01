@@ -92,6 +92,12 @@ Special Thanks to All of those who contributed! We could not do it without you!
 | .package-lock | .json | Contains a snapshot of your entire dependency tree for Node.js. |
 | .package | .json | Contains the snapshot of the Node.js databse. |
 
+**The following file was created as a "Bonus Presentation" for the INFILTR8 Project. It wasn't a requirement, but was made as a last hurrah for this project.**
+
+| Filename | Type | Description | 
+| --------------- | --------------- | --------------- |
+| Team6_TheNineBytes_INFILTR8_FinalPresentation | 📊 | .pptx containing our *bonus presentation*. Shows final video demo & Team #6's thoughts on developing INFILTR8. |
+
 ## 🖥️ Tech Stack Foundation.
 
 **The following table shows the technology to be used to develop INFILTR8, taken explicitly from the given SRS document.**
@@ -193,5 +199,5 @@ Short video archives demonstrating the various vertical slices for INFILTR8 have
 
 * DEMO #6 - README & GitHub Update, INFILTR8 Installer, All Tech Debt Resolved, Clean GitHub Repo, Final Demo Video.
 * Due: [12/2/24].
-* [Pending ⚠️].
+* [Shipped ✅].
   * https://www.youtube.com/watch?v=t4JFM3Ws0uA
