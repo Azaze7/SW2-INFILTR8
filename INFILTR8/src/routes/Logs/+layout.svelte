@@ -22,7 +22,6 @@
     import { initializeStores, Drawer, getDrawerStore, } from '@skeletonlabs/skeleton';
     import { ArrowLeft, Bolt, Home, Settings, UserCircle2, Squircle, FlaskConical, FolderRoot, Clipboard, BadgeHelp, Scroll} from "lucide-svelte";
     import { slide } from "svelte/transition";
-    
     import Sidebar from '$lib/components/AceternityUI/Sidebar/Sidebar.svelte';
     import SidebarLink from '$lib/components/AceternityUI/Sidebar/SidebarLink.svelte';
     import { vopen } from '$lib/stores/svelteContent';

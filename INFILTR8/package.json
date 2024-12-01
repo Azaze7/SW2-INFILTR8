@@ -16,6 +16,7 @@
   "devDependencies": {
     "@electron-forge/publisher-github": "^7.5.0",
     "@iconify-json/svg-spinners": "^1.2.1",
+    "@rollup/plugin-commonjs": "^28.0.1",
     "@skeletonlabs/skeleton": "2.10.2",
     "@skeletonlabs/tw-plugin": "0.4.0",
     "@sveltejs/adapter-auto": "^3.2.5",
@@ -30,6 +31,7 @@
     "postcss": "^8.4.47",
     "prettier": "^3.3.3",
     "prettier-plugin-svelte": "^3.2.7",
+    "rollup": "^4.28.0",
     "svelte": "^4.2.19",
     "svelte-check": "^4.0.4",
     "tailwindcss": "^3.4.13",
@@ -39,6 +41,7 @@
   },
   "type": "module",
   "dependencies": {
+    "@esbuild/darwin-arm64": "^0.24.0",
     "@floating-ui/dom": "1.6.11",
     "@vincjo/datatables": "^1.14.10",
     "bcrypt": "^5.1.1",
