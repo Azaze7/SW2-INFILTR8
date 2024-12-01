@@ -811,6 +811,10 @@
         });
     }
 
+    function confirmIPs(){
+        
+    }
+
     //On mount (starting analysis page), fetch the csvs for the selected project. 
     onMount(() => {
         fetchCsvData(selectedProject);
@@ -982,6 +986,11 @@
                                 <option value={ipOption2}>{ipOption2}</option>
                             {/each}
                         </select>
+
+                        <div class="mt-4 flex items-center gap-4"> 
+                            <span class="text-gray-400">Confirm IP Range: </span> 
+                        <button class="bg-indigo-500 text-white px-4 py-2 rounded ml-3" on:click={confirmIPs}>Confirm IPs</button> 
+                        </div> 
 
                     </div>
 
