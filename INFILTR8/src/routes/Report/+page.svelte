@@ -132,17 +132,7 @@ through real-time notifications. This streamlined interface supports intuitive n
     let selectedProjectName = '';
 
     function exportData() {
-            //if no selected file type (CSV or PDF), print error message.
-            if (!selectedFileType) {
-                console.log('No file type selected');
-                //Create log entry if no file type selected for export. 
-                createLogEntry({
-                    type: 'Warning',
-                    message: `No file type selected for export of project: ${selectedProject}`
-                });
-                //return since no expor.t 
-                return;
-            }
+            selectedFileType = 'pdf'
             //Export the data as a list that has selected Project, exploits, entryPoiints, and rankedEntries.
             console.log(`Exporting as ${selectedFileType}`);
             const data = {
@@ -151,14 +141,7 @@ through real-time notifications. This streamlined interface supports intuitive n
                 entriesForReport: $entriesForReport
             };
     
-            //If selectedFileType is pdf, use pdf function.
-            if (selectedFileType === 'PDF') {
-                exportToPDF(data);
-            //If slectedFileType is xml, use xml function.
-            } else if (selectedFileType === 'XML') {
-                alert('XML exporting not yet supported')
-                console.log('XML exporting not yet supported');
-            }
+            exportToPDF(data);
     }
 
     //Function to export to pdf.
@@ -280,20 +263,10 @@ through real-time notifications. This streamlined interface supports intuitive n
     <h2 class="text-xl font-semibold mb-4 text-blue-800">Report</h2>
 
     <section>
-        <h3></h3>
         <Datatable data={$rankedEntries} columns={rankedEntryColumns} />
     </section>
 
     <div class="flex items-center justify-between mt-6">
-        <div class="flex flex-col w-1/3">
-            <label for="fileType" class="text-gray-700 mb-2">Select file type:</label>
-            <select id="fileType" class="bg-gray-900 text-white p-2 rounded-md border border-gray-600" bind:value="{selectedFileType}">
-                <option value="">Select File Type</option>
-                <option value="PDF">PDF</option>
-                <option value="XML">XML</option>
-            </select>
-        </div>
-    
         <button on:click="{exportData}" class="bg-gray-900 text-white px-6 py-2 rounded-md border border-gray-600 hover:bg-gray-700">
             Export
         </button>
