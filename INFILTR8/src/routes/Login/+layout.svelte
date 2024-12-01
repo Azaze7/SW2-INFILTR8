@@ -1,7 +1,7 @@
 <script lang="ts">
     import '/src/app.postcss';
-    import { user } from "$lib/components/loginUI/userStore"; // Correctly import the user store from the separate store file
-    import Authenticate from "$lib/components/loginUI/Authenticate.svelte"; // Import the Authenticate component
+    import { user } from "$lib/components/loginUI/userStore"; 
+    import Authenticate from "$lib/components/loginUI/Authenticate.svelte";
     import { AppShell } from '@skeletonlabs/skeleton';
 
     // Highlight JS imports
@@ -19,17 +19,13 @@
     hljs.registerLanguage('typescript', typescript);
     storeHighlightJs.set(hljs);
 
-    // Reactive value for authentication status
     $: isAuthenticated = !!$user;
 </script>
 
 {#if isAuthenticated}
     <AppShell>
-        <!-- Render the main application layout when authenticated -->
         <slot />
-
     </AppShell>
 {:else}
-    <!-- Render the login UI when not authenticated -->
     <Authenticate />
 {/if}
