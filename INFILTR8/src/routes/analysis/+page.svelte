@@ -107,6 +107,9 @@
         let fullTime = '';
         //Variable to hold the selected attack type.
         let attackType = '';
+
+        let startingIP = '';  
+        let endingIP = '';  
     
         //Array to hold the 2 file types of the report.
         const fileTypes = ['PDF', 'XML'];
@@ -808,6 +811,38 @@
         });
     }
 
+    function confirmIPs(){
+        //Change ScopeIPs to fit in range.
+        //Store scopeIP Data.
+        let tempScopeIPs: Writable<string[]> = writable([]);
+
+        //make a log with the IP Range.
+        console.log('Analysis IP Range Confirmed: ', startingIP, " to ", endingIP);
+        //If we messed up while making the appointment, make a log for it.
+        if (startingIP === '' || endingIP === '') {
+            createLogEntry({
+                type: 'Warning',
+                message: `No starting or ending IP was selected when confirming IP range`
+            });
+        } else {
+            //else successful, update IPs and make a successful log entry.
+
+            $scopeIPs.forEach(ip=>{
+            if (ip >= startingIP && ip<=endingIP){
+                tempScopeIPs.update(IPs => [...IPs, ip]);
+            }
+            });
+
+            scopeIPs = tempScopeIPs
+            alert('IP Range Set. Reload project to reset the original IP list');
+
+            createLogEntry({
+                type: 'Information',
+                message: `${startingIP} to ${endingIP} is confirmed as the Analysis IP Range for Project ${selectedProject}`
+            });
+        }
+    }
+
     //On mount (starting analysis page), fetch the csvs for the selected project. 
     onMount(() => {
         fetchCsvData(selectedProject);
@@ -963,6 +998,30 @@
                             <option value={attackType}>{attackType}</option> 
                         {/each}
                     </select> 
+
+                    <div class="IP Range">
+                        <span class="text-gray-400">Select Range of IPs:</span> 
+                        <select id="startingIP" class="bg-indigo-500 text-white px-4 py-2 rounded select-dropdown ml-2" bind:value={startingIP}>
+                            <option value="" disabled>From</option>
+                            {#each $scopeIPs as ipOption}
+                                <option value={ipOption}>{ipOption}</option>
+                            {/each}
+                        </select>
+
+                        <select id="endingIP" class="bg-indigo-500 text-white px-4 py-2 rounded select-dropdown" bind:value={endingIP}>
+                            <option value="" disabled>To</option>
+                            {#each $scopeIPs as ipOption2}
+                                <option value={ipOption2}>{ipOption2}</option>
+                            {/each}
+                        </select>
+
+                        <div class="mt-4 flex items-center gap-4"> 
+                            <span class="text-gray-400">Confirm IP Range: </span> 
+                        <button class="bg-indigo-500 text-white px-4 py-2 rounded ml-3" on:click={confirmIPs}>Confirm IPs</button> 
+                        </div> 
+
+                    </div>
+
                 </div> 
                 <div class="mt-4 flex items-center gap-4"> 
                     <span class="text-gray-400">Schedule An Analysis:</span> 
@@ -999,7 +1058,6 @@
                         <div class="mt-4 flex items-center gap-2 "> 
                             <span class="mr-2 text-gray-400">Select File Type:</span> 
                             <select id="fileType" class="select-dropdown text-gray-400" bind:value={selectedFileType}> 
-                            <select id="fileTypeSelect" class="select-dropdown" bind:value={selectedFileType}> 
                                 <option value="" disabled>Select File Type</option> 
                                 {#each fileTypes as fileType} 
                                     <option value={fileType}>{fileType}</option> 

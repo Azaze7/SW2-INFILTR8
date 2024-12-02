@@ -1,3 +1,31 @@
+/**
+ * The `logendpoints.js` module handles logging functionality for the INFILTR8 backend. 
+ * It provides endpoints for creating, fetching, and deleting user-specific log entries. 
+ * Utilizing Express.js for HTTP routing, Neo4j for database operations, and the filesystem for storing logs, 
+ * this module ensures efficient and secure logging management. Key features include:
+ * 
+ * - **Log Deletion**: 
+ *   - Endpoint: `/deletelogs`
+ *   - Deletes all logs associated with a specific user by removing relationships and nodes in the Neo4j database.
+ *   - Responds with appropriate messages when no logs are found or deletion is successful.
+ * 
+ * - **Log Creation**: 
+ *   - Endpoint: `/createlog`
+ *   - Appends new log entries to a central log file while linking the log to the user in the database.
+ *   - Ensures timestamped entries are formatted consistently and safely handles file operations, creating directories if needed.
+ * 
+ * - **Log Retrieval**:
+ *   - Endpoint: `/fetchlogs`
+ *   - Reads the centralized log file, parses log entries into structured JSON objects, and returns them to the client.
+ *   - Responds with a meaningful error if the log file does not exist or is inaccessible.
+ * 
+ * - **Error Handling**:
+ *   - Comprehensive error management ensures database sessions and file operations are safely closed or reported upon failure.
+ * 
+ * This module offers a dependable and intuitive solution for managing logs, enabling effective auditing, monitoring, 
+ * and debugging in the INFILTR8 system. It balances database interactions with efficient file-based storage for flexible log management.
+ */
+
 // server/logendpoints.js
 
 import dotenv from 'dotenv';

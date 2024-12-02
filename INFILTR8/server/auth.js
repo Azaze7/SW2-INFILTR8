@@ -1,3 +1,26 @@
+/**
+ * The `auth.js` module provides the authentication and user management functionality for the INFILTR8 backend. 
+ * Built with Express.js, it uses Neo4j to manage user data, bcrypt for password hashing, and express-session 
+ * for handling user sessions securely. Key features of this module include:
+ * 
+ * - **User Registration**: Ensures unique usernames and securely stores passwords using bcrypt.
+ * - **User Login**: Authenticates user credentials and resets failed login attempts after successful authentication.
+ * - **Account Locking**: Protects accounts by locking them after three consecutive failed login attempts.
+ * - **Password Reset**: Supports password reset functionality via secure tokens.
+ * - **Session Management**: Manages user sessions for persistent logins and secure logout processes.
+ * - **API Endpoints**:
+ *   - `/register`: Registers new users with secure password storage.
+ *   - `/login`: Verifies user credentials, tracks login attempts, and handles account locks.
+ *   - `/logout`: Safely ends user sessions and logs out the user.
+ *   - `/check-lock`: Verifies if a user account is locked.
+ *   - `/increment-attempts`: Tracks failed login attempts and locks accounts when limits are exceeded.
+ *   - `/reset-attempts`: Unlocks accounts and resets login attempt counters.
+ *   - `/reset-password`: Enables password changes through secure token validation.
+ * 
+ * This module emphasizes security and reliability with features like password hashing, secure token generation, 
+ * and account lockout policies. It integrates seamlessly with the INFILTR8 system, ensuring a dependable user authentication workflow.
+ */
+
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
