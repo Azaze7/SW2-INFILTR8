@@ -1,3 +1,11 @@
+<!-- The UserActionLog Component displays a log of user actions in a table format. 
+   It imports the user store to access the logged actions and updates the log data 
+   using the `onMount` lifecycle function. Each user action includes a description 
+   of the action and a timestamp, which are displayed in a structured table with 
+   headers for clarity. If no actions are logged, a message indicating the absence 
+   of logs is shown. This component offers a clear and accessible method for 
+   tracking and reviewing user activity, making it valuable for monitoring and audit tasks. -->
+
 <script lang="ts">
     import { onMount } from 'svelte';
     import { user } from '../stores/user'; // Correcting the import path
