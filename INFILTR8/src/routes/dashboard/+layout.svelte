@@ -225,6 +225,15 @@
           <path d="M12 2C10.34 2 9 3.34 9 5v2.07C6.72 7.57 5 9.64 5 12v5l-1 1v1h16v-1l-1-1v-5c0-2.36-1.72-4.43-4-4.93V5c0-1.66-1.34-3-3-3zM12 23c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2z" />
       </svg>
   </button>
+  <button class="folder-icon" onclick="toggleFolderDropdown()" aria-label="Toggle Folder">
+    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+    >
+        <path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z" />
+    </svg>
+</button>
 
   <!-- Notification Dropdown -->
   {#if showNotifications}
