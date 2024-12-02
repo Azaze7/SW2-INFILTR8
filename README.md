@@ -116,10 +116,21 @@ Special Thanks to All of those who contributed! We could not do it without you!
 | XML | Language | - | Markup language designed for storing and transporting data in configuration files. |
 
 ## 💾 Install Instructions.
-* After pulling GitHub code (via your preferred method), open the terminal in Split Terminal.
+* After pulling GitHub code (via your preferred method), open the terminal and input the following:
+1. `cd` into the folder called "INFILTR8":
+      ```bash
+      cd INFILTR8
+      ```
+2. Start INFILTR8:
+      ```bash
+      npm run dev
+      ```
+
 
 <details>
   <summary>Legacy Instructions (Pre-Final Build)</summary>
+
+* After pulling GitHub code (via your preferred method), open two terminal in Split View.
 
   ### A. In terminal #1.
   1. `cd` into the folder called "INFILTR8":
