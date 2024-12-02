@@ -200,4 +200,4 @@ Short video archives demonstrating the various vertical slices for INFILTR8 have
 * DEMO #6 - README & GitHub Update, INFILTR8 Installer, All Tech Debt Resolved, Clean GitHub Repo, Final Demo Video.
 * Due: [12/2/24].
 * [Shipped ✅].
-  * https://www.youtube.com/watch?v=t4JFM3Ws0uA
+  * https://youtu.be/TogXvEa8B3M?feature=shared
