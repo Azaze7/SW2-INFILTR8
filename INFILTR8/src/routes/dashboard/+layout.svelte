@@ -148,6 +148,7 @@
     filteredLogs = logs.slice(0, 5);
     console.log(filteredLogs);
   }
+  
 
   // State for the notification dropdown
   let showNotifications = false;
@@ -329,13 +330,17 @@
   <!-- Folder Dropdown -->
     {#if showFolders}
         <div class="folder-dropdown">
+        {#if $projectFolders.length > 0}
             {#each $projectFolders as folder}
-                <button class="folder-item" on:click={() => selectProject(folder)}>
-                {folder}
-                </button>
-            {/each}
-        </div>
+            <button class="folder-item" on:click={() => selectProject(folder)}>
+            {folder}
+            </button>
+      {/each}
+        {:else}
+             <p class="folder-item">No folders available</p>
     {/if}
+</div>
+{/if}
 
   <!-- Sidebar with Drawer -->
   <svelte:fragment slot="sidebarLeft">
