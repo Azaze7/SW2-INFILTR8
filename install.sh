@@ -11,7 +11,7 @@ check_command() {
 # Variables
 # Assuming the source code has been downloaded directly from GitHub
 ZIP_FILE="CS4311_INFILTR8_6TheNine-Bytes_Fall2024-main.zip"
-APP_DIR="CS4311_INFILTR8_6TheNine-Bytes_Fall2024-main/my-app"
+APP_DIR="CS4311_INFILTR8_6TheNine-Bytes_Fall2024-main/INFILTR8"
 
 # Check if the OS is macOS or Linux
 if [ "$os_name" == "Darwin" ]; then
@@ -97,7 +97,7 @@ elif [ "$os_name" == "Linux" ]; then
     if [ ! -f ".env" ]; then
         echo ".env file not found in $APP_DIR"
         echo "Please create a .env file to configure your environment"
-        echo "To connect to the database server, execute the following command: node my-app/server/auth.js"
+        echo "To connect to the database server, execute the following command: node INFILTR8/server/server.js"
     fi
 
     # Install dependencies
