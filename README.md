@@ -128,7 +128,7 @@ Special Thanks to All of those who contributed! We could not do it without you!
 
 
 <details>
-  <summary>Legacy Instructions (Pre-Final Build)</summary>
+  <summary>*Legacy Instructions (Pre-Final Build)*</summary>
 
 * After pulling GitHub code (via your preferred method), open two terminal in Split View.
 
