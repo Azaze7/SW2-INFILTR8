@@ -1,3 +1,37 @@
+/**
+ * The `server.js` file serves as the central hub for the INFILTR8 backend server, managing core functionality 
+ * such as file handling, project operations, and routing. It sets up the necessary middleware, routes, and 
+ * configurations to enable seamless backend processes. Key features include:
+ * 
+ * - **Server Initialization**:
+ *   - Configures Express.js to handle incoming requests, parse JSON payloads, and enable CORS for communication with the frontend.
+ *   - Ensures essential directories (`data` and `uploads`) are created at startup to avoid runtime errors.
+ *   - Establishes a connection to the Neo4j database using secure credentials from environment variables.
+ * 
+ * - **Middleware and Routing**:
+ *   - Integrates middleware for file uploads using Multer.
+ *   - Mounts external route handlers for authentication (`auth.js`) and logging functionality (`logendpoints.js`).
+ * 
+ * - **File Upload and Processing**:
+ *   - Endpoint: `/upload-nessus`
+ *   - Handles `.nessus` file uploads, processes them via an external Python script, and stores the results in project-specific directories.
+ *   - Provides robust error handling for file operations and script execution issues.
+ * 
+ * - **Project Management**:
+ *   - Endpoints:
+ *     - `/create-project`: Creates new directories to organize project-specific data.
+ *     - `/projects`: Lists all existing project folders for easy retrieval.
+ *     - `/delete-project`: Removes project directories and their contents when no longer needed.
+ *   - Ensures validation and error handling for project names and file operations.
+ * 
+ * - **Error and Exception Handling**:
+ *   - Captures and logs uncaught exceptions and unhandled promise rejections to prevent server crashes.
+ *   - Manages file system and database errors gracefully, delivering meaningful responses to the client.
+ * 
+ * This file acts as the backbone of the INFILTR8 backend, ensuring efficient and reliable management of data, 
+ * projects, and user interactions while providing a stable infrastructure for the system’s workflows.
+ */
+
 import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
