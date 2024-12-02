@@ -812,7 +812,7 @@
     }
 
     function confirmIPs(){
-        
+
     }
 
     //On mount (starting analysis page), fetch the csvs for the selected project. 
@@ -1030,7 +1030,6 @@
                         <div class="mt-4 flex items-center gap-2 "> 
                             <span class="mr-2 text-gray-400">Select File Type:</span> 
                             <select id="fileType" class="select-dropdown text-gray-400" bind:value={selectedFileType}> 
-                            <select id="fileTypeSelect" class="select-dropdown" bind:value={selectedFileType}> 
                                 <option value="" disabled>Select File Type</option> 
                                 {#each fileTypes as fileType} 
                                     <option value={fileType}>{fileType}</option> 
