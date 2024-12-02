@@ -812,7 +812,35 @@
     }
 
     function confirmIPs(){
+        //Change ScopeIPs to fit in range.
+        //Store scopeIP Data.
+        let tempScopeIPs: Writable<string[]> = writable([]);
 
+        //make a log with the IP Range.
+        console.log('Analysis IP Range Confirmed: ', startingIP, " to ", endingIP);
+        //If we messed up while making the appointment, make a log for it.
+        if (startingIP === '' || endingIP === '') {
+            createLogEntry({
+                type: 'Warning',
+                message: `No starting or ending IP was selected when confirming IP range`
+            });
+        } else {
+            //else successful, update IPs and make a successful log entry.
+
+            $scopeIPs.forEach(ip=>{
+            if (ip >= startingIP && ip<=endingIP){
+                tempScopeIPs.update(IPs => [...IPs, ip]);
+            }
+            });
+
+            scopeIPs = tempScopeIPs
+            alert('IP Range Set. Reload project to reset the original IP list');
+
+            createLogEntry({
+                type: 'Information',
+                message: `${startingIP} to ${endingIP} is confirmed as the Analysis IP Range for Project ${selectedProject}`
+            });
+        }
     }
 
     //On mount (starting analysis page), fetch the csvs for the selected project. 
