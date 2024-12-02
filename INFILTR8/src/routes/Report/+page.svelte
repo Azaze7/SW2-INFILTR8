@@ -266,7 +266,7 @@ through real-time notifications. This streamlined interface supports intuitive n
         <div class="flex gap-4 overflow-x-auto px-4 py-2">
             <select id="project" class="bg-gray-700 text-white border border-gray-600 p-2 rounded focus:ring-2 focus:ring-gray-500 ml-[-14px]" bind:value={$selectedProject}>
                 <option value="" disabled>Select Project</option>
-                {#each $projectFolders as folder, index}
+                {#each $projectFolders as folder}
                   <option value={folder}>{folder}</option>
                 {/each}
               </select>
