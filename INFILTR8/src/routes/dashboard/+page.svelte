@@ -146,42 +146,6 @@
       console.error('Error creating project folder:', error);
     }
   }
-
-  async function deleteProjectFolder() {
-    if (!selectedProject) {
-      alert("Please select a project to delete.");
-      await createLogEntry({
-        type: 'Warning',
-        message: `No project folder was selected for deletion`
-      });
-      return;
-    }
-
-    try {
-      const response = await fetch('http://localhost:3000/delete-project', {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ projectName: selectedProject }),
-      });
-
-      if (response.ok) {
-        console.log('Project folder deleted successfully');
-        await createLogEntry({
-          type: 'Information',
-          message: `Project folder: ${selectedProject} was deleted`
-        });
-        fetchProjectFolders();
-      } else {
-        console.error('Failed to delete project folder');
-        await createLogEntry({
-          type: 'Error',
-          message: `Failed to delete project folder: ${selectedProject}`
-        });
-      }
-    } catch (error) {
-      console.error('Error deleting project folder:', error);
-    }
-  }
 </script>
 
 <div class="container h-full mx-auto flex justify-center items-start py-10 space-x-10">
@@ -215,13 +179,6 @@
           </button>
         </div>
       </div>
-
-      <!-- Delete Project -->
-      <button 
-        class="w-full p-3 mt-4 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors" 
-        on:click={deleteProjectFolder}>
-        Delete Project
-      </button>
     </div>
 
     <!-- Right Side -->

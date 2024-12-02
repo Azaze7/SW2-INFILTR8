@@ -24,7 +24,7 @@
   import SidebarLink from '$lib/components/AceternityUI/Sidebar/SidebarLink.svelte';
   import { vopen } from '$lib/stores/svelteContent';
   import { onMount } from 'svelte';
-  import { fetchLogs } from '../../routes/Logs/logservice';
+  import { fetchLogs, createLogEntry } from '../../routes/Logs/logservice';
 
   // Highlight JS imports
   import 'highlight.js/styles/github-dark.css';
@@ -98,19 +98,30 @@
       xhr.open('POST', '/upload', true);
       xhr.send(formData);
   }
+
   async function confirmAndDelete(folder: string) {
   const confirmed = confirm(`Are you sure you want to delete the folder: "${folder}"?`);
   if (confirmed) {
     try {
-      const response = await fetch(`http://localhost:3000/projects/${folder}`, {
+      const response = await fetch('http://localhost:3000/delete-project', {
         method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ projectName: folder }),
       });
 
       if (response.ok) {
+        await createLogEntry({
+          type: 'Information',
+          message: `Project folder: ${folder} was deleted`
+        });
         // Update the projectFolders store
         projectFolders.update(folders => folders.filter(f => f !== folder));
         alert(`Folder "${folder}" deleted successfully.`);
       } else {
+        await createLogEntry({
+          type: 'Error',
+          message: `Failed to delete project folder: ${folder}`
+        });
         alert('Failed to delete the folder.');
       }
     } catch (error) {
@@ -201,10 +212,6 @@
 
 /* Notification Dropdown */
 .notification-dropdown {
-    all: unset; 
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
     position: absolute;
     top: 50px;
     right: 20px;
@@ -217,43 +224,39 @@
     max-height: 400px;
     overflow-y: auto;
     z-index: 1000;
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
-}
+    padding: 10px;
+  }
 
-.notification-item {
-  margin: 0; 
-  padding: 5px 15px; 
-  line-height: 1; 
-  box-sizing: border-box;
-  border: none;
-}
+  .notification-item {
+      display: flex;
+      flex-direction: column; /* Stack content vertically */
+      justify-content: flex-start; /* Align content to the start of the container */
+      padding: 10px 15px;
+      border-bottom: 1px solid #374151;
+      cursor: pointer;
+      text-align: left; /* Align text to the left for better readability */
+      width: 100%;
+      box-sizing: border-box;
+  }
 
-.notification-item:last-child {
-  border-bottom: none;
-}
+  .notification-item p {
+      margin: 0;
+      padding: 1px 0;
+  }
 
-.notification-item:last-child {
-  border-bottom: none; 
-}
-
-.notification-item:hover {
-  background-color: #374151;
-}
-
-.notification-item p {
-  margin: 0; 
-  line-height: 1.5;
-  color: #ffffff;
-}
-
-.notification-item small {
-  display: block;
-  font-size: 0.85rem;
-  color: #bbb;
-  margin: 0; 
-}
+  .notification-item small {
+      font-size: 0.85rem;
+      color: #bbb; /* Lighter color for the date/time */
+      margin-top: 5px;
+  }
+  
+  .notification-item:last-child {
+      border-bottom: none;
+  }
+  .notification-item:hover {
+      background-color: #374151;
+  }
+  
 /* Folder Dropdown */
 .folder-dropdown {
   position: absolute;
