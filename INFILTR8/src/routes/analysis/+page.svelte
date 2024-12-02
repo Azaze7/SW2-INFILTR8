@@ -943,17 +943,115 @@
             {/if} 
             <div class="space-y-10 text-center flex flex-col items-center"> 
                 
-        <div class="spacer" style="height: 20px;"></div>
-                <h2 class="text-3xl font-bold">Schedule Analysis & Quick Report Export</h2> 
+                <div class="spacer" style="height: 20px;"></div>
+                <h2 class="text-3xl font-bold text-center">Schedule Analysis & Quick Report Export</h2> 
                 <figure> 
                     <div class="container h-full mx-auto flex justify-center items-center"> 
                         <div class="container h-full mx-auto flex justify-center items-center"> 
-                        <figure>
-                        </figure> 
-                    </div> 
-                </figure> 
-            </div> 
-            <div class="bg-gray-800 p-6 rounded-lg shadow-lg"> 
+                            <figure>
+                            </figure> 
+                        </div> 
+                    </div>
+                </figure>
+                
+                <div class="flex h-full">
+                    <!-- Left Column -->
+                    <div class="left-column flex-[2] flex flex-col">
+                        <!-- First Box -->
+                        <div class="box p-4 border rounded-lg mb-0">
+                            <div>
+                                <span class="text-gray-400">Select Analysis Type:</span>
+                                <select id="attackTypeSelect" class="bg-indigo-500 text-white px-4 py-2 rounded select-dropdown" bind:value={selectedAttackType}>
+                                    <option value="" disabled>Select Attack Type</option>
+                                    {#each attackTypes as attackType}
+                                        <option value={attackType}>{attackType}</option>
+                                    {/each}
+                                </select>
+                            </div>
+                
+                            <div class="IP Range mt-4">
+                                <span class="text-gray-400">Select Range of IPs:</span>
+                                <select id="startingIP" class="bg-indigo-500 text-white px-4 py-2 rounded select-dropdown ml-2" bind:value={startingIP}>
+                                    <option value="" disabled>From</option>
+                                    {#each $scopeIPs as ipOption}
+                                        <option value={ipOption}>{ipOption}</option>
+                                    {/each}
+                                </select>
+                
+                                <select id="endingIP" class="bg-indigo-500 text-white px-4 py-2 rounded select-dropdown" bind:value={endingIP}>
+                                    <option value="" disabled>To</option>
+                                    {#each $scopeIPs as ipOption2}
+                                        <option value={ipOption2}>{ipOption2}</option>
+                                    {/each}
+                                </select>
+                
+                                <div class="mt-4 flex items-center gap-4">
+                                    <span class="text-gray-400">Confirm IP Range: </span>
+                                    <button class="bg-indigo-500 text-white px-4 py-2 rounded ml-3" on:click={confirmIPs}>Confirm IPs</button>
+                                </div>
+                            </div>
+                        </div>
+                
+                        <!-- Second Box -->
+                        <div class="box p-4 border rounded-lg mt-0 flex-grow">
+                            <div class="mt-4 flex items-center gap-4">
+                                <span class="text-gray-400">Schedule An Analysis: </span>
+                                <div class="time-dropdown">
+                                    <select id="time" class="bg-indigo-500 text-white px-4 py-2 rounded select-dropdown" bind:value={selectedTime}>
+                                        <option value="" disabled>Select Time</option>
+                                        {#each timeOptions as timeOption}
+                                            <option value={timeOption}>{timeOption}</option>
+                                        {/each}
+                                    </select>
+                                </div>
+                
+                                <div class="ampm-dropdown flex items-center gap-2 ml-2">
+                                    <select id="ampm" class="bg-indigo-500 text-white px-4 py-2 rounded select-dropdown" bind:value={selectedAMPM}>
+                                        <option value="" disabled>AM/PM</option>
+                                        {#each ampmOptions as ampmOption}
+                                            <option value={ampmOption}>{ampmOption}</option>
+                                    {/each}
+                                    </select>
+                                </div>
+                            </div>
+                
+                            <div class="mt-4">
+                                <span class="text-gray-400">Confirm Analysis Appointment: </span>
+                                <button class="bg-indigo-500 text-white px-4 py-2 rounded" on:click={confirmAnalysis}>Confirm Time</button>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <!-- Right Column -->
+                    <div class="right-column flex-[1] flex flex-col justify-between" style="height: calc(100% - 8px);">
+                        <div class="box p-4 border rounded-lg flex-grow">
+                            <div class="mt-4">
+                                <span class="text-gray-400">Select File Type:</span>
+                                <select id="fileType" class="select-dropdown text-gray-400 bg-indigo-500 text-white px-4 py-2 rounded" bind:value={selectedFileType}>
+                                    <option value="" disabled>Select File Type</option>
+                                    {#each fileTypes as fileType}
+                                        <option value={fileType}>{fileType}</option>
+                                    {/each}
+                                </select>
+                            </div>
+                
+                            <div class="flex flex-col justify-center mt-4 gap-2">
+                                <button class="bg-indigo-500 text-white px-4 py-2 rounded" on:click={exportData}>Quick Export All Data</button>
+                                <button class="bg-green-500 text-white px-4 py-2 rounded" on:click={handleRunAnalysis}>Run Selected Analysis!</button>
+                                <button class="bg-blue-500 text-white px-4 py-2 rounded" on:click={exportDataAnalyzed}>Export Analyzed Report</button>
+                            </div>
+                
+                            <div class="mt-4 flex justify-center items-center">
+                                <span class="mr-2 text-gray-400 underline">Analysis Progress</span>
+                            </div>
+                
+                            <div class="progress-bar-container mt-4">
+                                <div class="progress-bar" style="width: {$progressAnalysis}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <style> 
                     .breathing {
                         width: 250px;
@@ -989,92 +1087,14 @@
                     }
                 </style>
     
-                <img src="src/Brain.png" alt="Wireframe Brain" class="w-80 h-80 absolute top-2 right-2 breathing"> 
+                <img src="src/Brain.png" alt="Wireframe Brain" class="w-80 h-60 absolute top-0 right-2 breathing"> 
                 <div class="mt-4 flex items-center gap-4"> 
-                    <span class="text-gray-400">Select Analysis Type:</span> 
-                    <select id="attackTypeSelect" class="bg-indigo-500 text-white px-4 py-2 rounded select-dropdown" bind:value={selectedAttackType}> 
-                        <option value="" disabled>Select Attack Type</option> 
-                        {#each attackTypes as attackType} 
-                            <option value={attackType}>{attackType}</option> 
-                        {/each}
-                    </select> 
 
-                    <div class="IP Range">
-                        <span class="text-gray-400">Select Range of IPs:</span> 
-                        <select id="startingIP" class="bg-indigo-500 text-white px-4 py-2 rounded select-dropdown ml-2" bind:value={startingIP}>
-                            <option value="" disabled>From</option>
-                            {#each $scopeIPs as ipOption}
-                                <option value={ipOption}>{ipOption}</option>
-                            {/each}
-                        </select>
 
-                        <select id="endingIP" class="bg-indigo-500 text-white px-4 py-2 rounded select-dropdown" bind:value={endingIP}>
-                            <option value="" disabled>To</option>
-                            {#each $scopeIPs as ipOption2}
-                                <option value={ipOption2}>{ipOption2}</option>
-                            {/each}
-                        </select>
-
-                        <div class="mt-4 flex items-center gap-4"> 
-                            <span class="text-gray-400">Confirm IP Range: </span> 
-                        <button class="bg-indigo-500 text-white px-4 py-2 rounded ml-3" on:click={confirmIPs}>Confirm IPs</button> 
-                        </div> 
-
-                    </div>
-
+        </main>
                 </div> 
-                <div class="mt-4 flex items-center gap-4"> 
-                    <span class="text-gray-400">Schedule An Analysis:</span> 
-                    <div class="time-dropdown">
-                        <select id="time" class="bg-indigo-500 text-white px-4 py-2 rounded select-dropdown" bind:value={selectedTime}>
-                            <option value="" disabled>Select Time</option>
-                            {#each timeOptions as timeOption}
-                                <option value={timeOption}>{timeOption}</option>
-                            {/each}
-                        </select>
-                    </div>
-                    
-                    <div class="ampm-dropdown">
-                        <select id="ampm" class="bg-indigo-500 text-white px-4 py-2 rounded select-dropdown" bind:value={selectedAMPM}>
-                            <option value="" disabled>AM/PM</option>
-                            {#each ampmOptions as ampmOption}
-                                <option value={ampmOption}>{ampmOption}</option>
-                            {/each}
-                        </select>
-                    </div>
-                </div> 
-    
-                <div class="mt-4 flex items-center gap-4"> 
-                    <span class="text-gray-400">Confirm Analysis Appointment: </span> 
-                <button class="bg-indigo-500 text-white px-4 py-2 rounded" on:click={confirmAnalysis}>Confirm Time</button> 
-                </div> 
-    
-                <div class="mt-4 flex items-center gap-2 justify-center"> 
-                    <span class="mr-2 text-gray-400 underline">View/Export Analysis Report</span> 
-                </div> 
-    
-                <div class="action-container"> 
-                    <div class="file-type-selection"> 
-                        <div class="mt-4 flex items-center gap-2 "> 
-                            <span class="mr-2 text-gray-400">Select File Type:</span> 
-                            <select id="fileType" class="select-dropdown text-gray-400" bind:value={selectedFileType}> 
-                                <option value="" disabled>Select File Type</option> 
-                                {#each fileTypes as fileType} 
-                                    <option value={fileType}>{fileType}</option> 
-                                {/each} 
-                            </select> 
-                        </div> 
-                        <div class="flex justify-center mt-4 gap-2"> 
-                            <button class="bg-indigo-500 text-white px-4 py-2 rounded" on:click={exportData}>Quick Export All Data</button> 
-                            <button class="bg-green-500 text-white px-4 py-2 rounded" on:click={handleRunAnalysis}>Run Selected Analysis!</button> 
-                            <button class="bg-blue-500 text-white px-4 py-2 rounded" on:click={exportDataAnalyzed}>Export Analyzed Report</button>
-                        </div> 
-                        <div class="progress-bar-container"> <div class="progress-bar" style="width: {$progressAnalysis}%"> </div>
-                    </div> 
-                </div>
-            </div> 
-        </main> 
-    </div>
+            
+
     <!-- Closing the TypeScript portion of the .svelte file. -->
     
     <!-- Style Guide Code for Analysis Page. -->
