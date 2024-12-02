@@ -8,12 +8,18 @@ through real-time notifications. This streamlined interface supports intuitive n
 <script lang="ts">
 	import { writable, type Writable } from 'svelte/store';
     import { onMount } from 'svelte';
+    // Use papaparse for writing the pdf file
     import Papa from 'papaparse';
+    // Datatable will be used to display the contents of the report before the export
     import Datatable from '$lib/components/datatable/Datatable.svelte';
+    //Import a fetch data function from $lib/api library.
     import { fetchData } from '$lib/api';
+    //Import createLogEntry from logservice function from our custom log service. 
     import { createLogEntry } from '../../routes/Logs/logservice';
+    //Import jsPDF so we can make pdf of the report.
     import jsPDF from 'jspdf';
 
+    //Interface for the ExploitData as obtained from our CSV files.
     interface ExploitData {
         file: string;
         name: string;
@@ -28,6 +34,7 @@ through real-time notifications. This streamlined interface supports intuitive n
         pluginName: string;
         pluginFamily: string;
     }
+    //Interface for the RankedEntry to structure ranked information based off of the CSV file.
     interface RankedEntry {
         ip: string;
         port: number;
@@ -37,7 +44,8 @@ through real-time notifications. This streamlined interface supports intuitive n
         combined_score: number;
     }
 
-
+    //Various datatypes we will need to store exploit and project information. 
+    //Create Writable Stores for the various Data Types.
     let exploits: Writable<ExploitData[]> = writable([]);
     let projectFolders: Writable<string[]> = writable([]);
     let selectedProject: Writable<string> = writable('');
@@ -46,8 +54,10 @@ through real-time notifications. This streamlined interface supports intuitive n
     let loading = writable(false);
     let error = writable<string | null>(null);
 
+    // Make sure we are mounting all of the available project folders
     onMount(fetchProjectFolders);
 
+    //Fetches list of project folders from an API and updates the store
     async function fetchProjectFolders() {
         try {
             const folders = await fetchData<string[]>('http://localhost:3000/projects');
@@ -57,7 +67,7 @@ through real-time notifications. This streamlined interface supports intuitive n
             console.error(err);
         }
     }
-
+     // Column Definitions
     const exploitColumns = [
         { key: 'file', label: 'File' },
         { key: 'name', label: 'Name' },
@@ -88,6 +98,7 @@ through real-time notifications. This streamlined interface supports intuitive n
         { key: 'combined_score', label: 'Combined Score' }
     ]
 
+    //Fetches and parses various CSV files related to a specific project
     async function fetchProjectData(project: string) {
         loading.set(true);
         error.set(null);
@@ -106,31 +117,34 @@ through real-time notifications. This streamlined interface supports intuitive n
             loading.set(false);
         }
     }
-
+    //Helper function to fetch CSV files and parse them into Svelte stores
     async function fetchAndParse<T>(url: string, store: Writable<T[]>) {
         try {
             const response = await fetch(url);
             if (!response.ok) throw new Error(`Failed to fetch ${url}`);
             const text = await response.text();
             Papa.parse(text, {
-                header: true,
-                skipEmptyLines: true,
+                header: true, //uses the first row as column headers
+                skipEmptyLines: true, //ignores empty rows
                 complete: (results) => store.set(results.data as T[])
             });
         } catch (err) {
             console.error(`Error fetching or parsing ${url}:`, err);
         }
     }
-
+    // Whatever project is selected from the options, will be the
+    // one for which data is returned from
     $: {
       if ($selectedProject) {
           fetchProjectData($selectedProject);
       }
     }
 
+    // Initialized the user selected values
     let selectedFileType = ''; 
     let selectedProjectName = '';
 
+    // Begins the exporting process, prepares the data needed and logs
     function exportData() {
             selectedFileType = 'pdf'
             //Export the data as a list that has selected Project, exploits, entryPoiints, and rankedEntries.
@@ -229,6 +243,8 @@ through real-time notifications. This streamlined interface supports intuitive n
             };
     
             //Write rankedEntries to pdf.
+            //Report entries are based off research from the python model developed by DEVCOM
+            //Informs the analyst of how the score is broken down
             const rankedEntries = data.entriesForReport.map((entry: RankedEntry, index: number) => `${index + 1}. ${entry.ip}:${entry.port} - Score: ${entry.combined_score}\n` +
             `Breakdown of Combined Score:\n` +
             `50% from Severity Score of ${entry.severity_score}\n` +
