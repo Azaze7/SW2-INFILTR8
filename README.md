@@ -118,54 +118,60 @@ Special Thanks to All of those who contributed! We could not do it without you!
 ## 💾 Install Instructions.
 * After pulling GitHub code (via your preferred method), open the terminal in Split Terminal.
 
-A. In terminal #1.
-1. `cd` into the folder called "INFILTR8":
-    ```bash
-    cd INFILTR8
-    ```
+<details>
+  <summary>Legacy Instructions (Pre-Final Build)</summary>
 
-2. Install dependencies
-    ```bash
-    npm i
-    ```
+  ### A. In terminal #1.
+  1. `cd` into the folder called "INFILTR8":
+      ```bash
+      cd INFILTR8
+      ```
 
-3. Fund if prompted to:
-    ```bash
-    npm fund
-    ```
+  2. Install dependencies
+      ```bash
+      npm i
+      ```
 
-4. Build INFILTR8:
-    ```bash
-    npm run build
-    ```
+  3. Fund if prompted to:
+      ```bash
+      npm fund
+      ```
 
-5. Start INFILTR8:
-    ```bash
-    npm run dev
-    ```
+  4. Build INFILTR8:
+      ```bash
+      npm run build
+      ```
 
-B. In terminal #2.
-1. `cd` into the folder called "INFILTR8":
-    ```bash
-    cd INFILTR8
-    ```
-    
-2. `cd` into the folder called "server":
-    ```bash
-    cd server
-    ```
-    
-3. Run the database:
-    ```bash
-    node server.js
-    ```
+  5. Start INFILTR8:
+      ```bash
+      npm run dev
+      ```
 
-***C. You can also use the install script if you’ve downloaded the source code from GitHub as a ZIP file.***
+  ### B. In terminal #2.
+  1. `cd` into the folder called "INFILTR8":
+      ```bash
+      cd INFILTR8
+      ```
+      
+  2. `cd` into the folder called "server":
+      ```bash
+      cd server
+      ```
 
-1. Run Install Script for Linux:
-    ```bash
-    ./install.sh
-    ```
+  3. Run the database:
+      ```bash
+      node server.js
+      ```
+
+  ### C. You can also use the install script if you’ve downloaded the source code from GitHub as a ZIP file.
+
+  1. Run Install Script for Linux:
+      ```bash
+      ./install.sh
+      ```
+
+</details>
+
 
 ## 🎞️ Project Milestones & Video Demonstrations.
 
