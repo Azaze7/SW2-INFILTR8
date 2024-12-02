@@ -24,7 +24,7 @@
   import SidebarLink from '$lib/components/AceternityUI/Sidebar/SidebarLink.svelte';
   import { vopen } from '$lib/stores/svelteContent';
   import { onMount } from 'svelte';
-  import { fetchLogs } from '../../routes/Logs/logservice';
+  import { fetchLogs, createLogEntry } from '../../routes/Logs/logservice';
 
   // Highlight JS imports
   import 'highlight.js/styles/github-dark.css';
@@ -99,6 +99,38 @@
       xhr.send(formData);
   }
 
+  async function confirmAndDelete(folder: string) {
+  const confirmed = confirm(`Are you sure you want to delete the folder: "${folder}"?`);
+  if (confirmed) {
+    try {
+      const response = await fetch('http://localhost:3000/delete-project', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ projectName: folder }),
+      });
+
+      if (response.ok) {
+        await createLogEntry({
+          type: 'Information',
+          message: `Project folder: ${folder} was deleted`
+        });
+        // Update the projectFolders store
+        projectFolders.update(folders => folders.filter(f => f !== folder));
+        alert(`Folder "${folder}" deleted successfully.`);
+      } else {
+        await createLogEntry({
+          type: 'Error',
+          message: `Failed to delete project folder: ${folder}`
+        });
+        alert('Failed to delete the folder.');
+      }
+    } catch (error) {
+      console.error('Error deleting folder:', error);
+      alert('An error occurred while deleting the folder.');
+    }
+  }
+}
+
   const AccountPopup: PopupSettings = {
       event: 'click',
       target: 'AccountPopup',
@@ -148,26 +180,38 @@
     filteredLogs = logs.slice(0, 5);
     console.log(filteredLogs);
   }
+  
 
   // State for the notification dropdown
   let showNotifications = false;
+
+  // State for the folder dropdown
+  let showFolders = false;
+  
   onMount(() => {
     fetchUserLogs();
   });
+
 </script>
 
 <style>
-  .bell-icon {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      width: 24px;
-      height: 24px;
-      cursor: pointer;
-      fill: #ffffff;
-  }
+/* General Icon Styles */
+.bell-icon, .folder-icon {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  fill: #ffffff;
+}
 
-  .notification-dropdown {
+.folder-icon {
+  top: 60px; 
+}
+
+/* Notification Dropdown */
+.notification-dropdown {
     position: absolute;
     top: 50px;
     right: 20px;
@@ -180,7 +224,7 @@
     max-height: 400px;
     overflow-y: auto;
     z-index: 1000;
-    padding: 10px; /* Added padding for spacing around the dropdown */
+    padding: 10px;
   }
 
   .notification-item {
@@ -212,19 +256,73 @@
   .notification-item:hover {
       background-color: #374151;
   }
+  
+/* Folder Dropdown */
+.folder-dropdown {
+  position: absolute;
+  top: 100px;
+  right: 20px;
+  background-color: #1f2937;
+  color: #ffffff;
+  border: 1px solid #374151;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  width: 300px;
+  max-height: 400px;
+  overflow-y: auto;
+  z-index: 1000;
+  padding: 10px;
+}
+
+.folder-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px;
+  border-bottom: 1px solid #374151;
+}
+
+.folder-item:hover {
+  background-color: #374151;
+}
+
+.delete-button {
+  background: none;
+  border: none;
+  color: #ff5e57;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0 10px;
+}
+
+.delete-button:hover {
+  color: #ff3b30;
+  transform: scale(1.2); /* Slightly enlarge the button on hover */
+  transition: transform 0.2s ease; 
+}
 </style>
 
 <AppShell>
-  <!-- Bell Icon (SVG) as a Button -->
-  <button class="bell-icon" on:click={() => (showNotifications = !showNotifications)}>
-      <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          aria-label="Notifications"
-      >
-          <path d="M12 2C10.34 2 9 3.34 9 5v2.07C6.72 7.57 5 9.64 5 12v5l-1 1v1h16v-1l-1-1v-5c0-2.36-1.72-4.43-4-4.93V5c0-1.66-1.34-3-3-3zM12 23c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2z" />
-      </svg>
-  </button>
+<!-- Folder Icon (SVG) as a Button -->
+<button class="folder-icon" on:click={() => (showFolders = !showFolders)}>
+    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        aria-label="Folder"
+    >
+        <path d="M10 4L12 6h8c1.1 0 2 .9 2 2v10c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2h6zM4 8v10h16V8H4z" />
+    </svg>
+</button>
+<!-- Bell Icon (SVG) as a Button -->
+<button class="bell-icon" on:click={() => (showNotifications = !showNotifications)}>
+    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        aria-label="Notifications"
+    >
+        <path d="M12 2C10.34 2 9 3.34 9 5v2.07C6.72 7.57 5 9.64 5 12v5l-1 1v1h16v-1l-1-1v-5c0-2.36-1.72-4.43-4-4.93V5c0-1.66-1.34-3-3-3zM12 23c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2z" />
+    </svg>
+</button>
 
   <!-- Notification Dropdown -->
   {#if showNotifications}
@@ -238,6 +336,28 @@
           {/each}
       </div>
   {/if}
+
+<!-- Folder Dropdown -->
+{#if showFolders}
+  <div class="folder-dropdown">
+    {#if $projectFolders.length > 0}
+      {#each $projectFolders as folder}
+        <div class="folder-item">
+          <span>{folder}</span>
+          <button
+            class="delete-button"
+            on:click={() => confirmAndDelete(folder)}
+            aria-label="Delete Folder"
+          >
+            ✖
+          </button>
+        </div>
+      {/each}
+    {:else}
+      <p class="folder-item">No folders available</p>
+    {/if}
+  </div>
+{/if}
 
   <!-- Sidebar with Drawer -->
   <svelte:fragment slot="sidebarLeft">
@@ -274,6 +394,5 @@
           </Sidebar>
       </div>
   </svelte:fragment>
-  <!-- Page Route Content -->
   <slot />
 </AppShell>
