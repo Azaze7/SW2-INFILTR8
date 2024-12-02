@@ -162,14 +162,15 @@ through real-time notifications. This streamlined interface supports intuitive n
     function exportToPDF(data: any) {
             //Log if exporting project to PDF.
             console.log('Exporting Project Folder to PDF:', selectedProject);
+            selectedProjectName = $selectedProject
             //If no project selected while export, print warning log.
             if (selectedProjectName === "") {
                 //Give popup alert if no project was selected for exporting.
-                alert(`No project was selected for exporting! [(As PDF)]`);
+                alert(`No project was selected for exporting!`);
                 //Make Failed Project PDF log.
                 createLogEntry({
                     type: 'Warning',
-                    message: `No project was selected for exporting! [(As PDF)]`
+                    message: `No project was selected for exporting!`
                 });
                 //Exit since we failed export.
                 return;
@@ -263,19 +264,12 @@ through real-time notifications. This streamlined interface supports intuitive n
     <section>
         <h3>Projects</h3>
         <div class="flex gap-4 overflow-x-auto px-4 py-2">
-            {#each $projectFolders as folder, index}
-                <button
-                    id={`project-${index}`}
-                    name={`project-${index}`}
-                    class="card p-4 text-1xl"
-                    on:click={() => {
-                        selectedProject.set(folder);           
-                        selectedProjectName = folder;           
-                    }}
-                >
-                    {folder}
-                </button>
-            {/each}
+            <select id="project" class="bg-gray-700 text-white border border-gray-600 p-2 rounded focus:ring-2 focus:ring-gray-500 ml-[-14px]" bind:value={$selectedProject}>
+                <option value="" disabled>Select Project</option>
+                {#each $projectFolders as folder, index}
+                  <option value={folder}>{folder}</option>
+                {/each}
+              </select>
         </div>
     </section>
   
